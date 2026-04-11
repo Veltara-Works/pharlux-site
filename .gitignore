@@ -1,0 +1,16 @@
+# Editor / OS junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Never commit secrets anywhere in the tree
+**/.secrets/
+**/.secrets
+**/secrets/
+*.secret
+*.secrets
+.secrets.md
+.env
+.env.*

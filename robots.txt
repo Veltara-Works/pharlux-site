@@ -1,0 +1,42 @@
+# Pharlux — robots.txt
+# Policy: explicitly allow all known AI crawlers, per MARKETING_AND_GEO_POLICY.md
+# §9. Reviewed annually as part of the quarterly GEO audit.
+# Last reviewed: 2026-04-11
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://pharlux.com/sitemap.xml
