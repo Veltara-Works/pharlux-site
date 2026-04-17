@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pharlux — Replace your LGTM stack with a single binary</title>
-<meta name="description" content="Pharlux is a single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics, logs, traces) for small teams running 1-10 services on a single VPS. One binary, one config file, one systemd unit — no external databases, no Docker, no multi-component stack.">
+<meta name="description" content="Pharlux is a single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs) for small teams running 1-10 services on a single VPS. One binary, one config file, one systemd unit — no external databases, no Docker, no multi-component stack. V1.0.0 now shipping under AGPL-3.0 + commercial dual license.">
 <link rel="canonical" href="https://pharlux.com/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
 <meta property="og:title" content="Pharlux — Replace your LGTM stack with a single binary">
-<meta property="og:description" content="Unified OpenTelemetry-native observability as a single Rust binary. Coming soon. Dual-license AGPL-3.0 + commercial.">
+<meta property="og:description" content="Unified OpenTelemetry-native observability as a single Rust binary. V1.0.0 shipping now. Dual-license AGPL-3.0 + commercial.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pharlux.com/">
 <meta name="twitter:card" content="summary_large_image">
@@ -36,13 +36,40 @@
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Observability",
       "operatingSystem": "Linux",
-      "description": "A single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics, logs, traces) for small teams running 1-10 services on a single VPS.",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "category": "Community edition (AGPL-3.0, self-hosted)"
-      },
+      "softwareVersion": "1.0.0",
+      "datePublished": "2026-04-17",
+      "description": "A single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs) for small teams running 1-10 services on a single VPS.",
+      "downloadUrl": "https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Community",
+          "price": "0",
+          "priceCurrency": "USD",
+          "category": "AGPL-3.0 self-hosted, full community feature set"
+        },
+        {
+          "@type": "Offer",
+          "name": "Team",
+          "price": "49",
+          "priceCurrency": "USD",
+          "category": "10 hosts, 30-day retention, basic SAML — commercial license"
+        },
+        {
+          "@type": "Offer",
+          "name": "Business",
+          "price": "199",
+          "priceCurrency": "USD",
+          "category": "50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log — commercial license"
+        },
+        {
+          "@type": "Offer",
+          "name": "Scale",
+          "price": "999",
+          "priceCurrency": "USD",
+          "category": "250 hosts, 1-year retention, white-label, S3 cold tier — commercial license"
+        }
+      ],
       "publisher": {
         "@id": "https://pharlux.com/#veltara-works"
       },
@@ -77,7 +104,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 main {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
   padding: 4rem 1.5rem 6rem;
 }
@@ -110,6 +137,32 @@ h1 {
   border-radius: 999px;
   margin-bottom: 1rem;
 }
+.cta-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 0;
+}
+.btn {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+}
+.btn-primary:hover { background: #a2d4ff; text-decoration: none; }
+.btn-secondary {
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+.btn-secondary:hover { border-color: var(--accent-dim); color: var(--accent); text-decoration: none; }
 section { margin: 2.5rem 0; }
 h2 {
   font-size: 1.125rem;
@@ -124,6 +177,66 @@ li strong { color: var(--fg); font-weight: 500; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 code, .mono { font-family: var(--mono); font-size: 0.9em; }
+pre {
+  background: #10141a;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--fg);
+  margin: 0.75rem 0;
+}
+pre code { font-size: inherit; color: inherit; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0 1rem;
+  font-size: 0.95rem;
+}
+th, td {
+  text-align: left;
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+th {
+  font-weight: 600;
+  color: var(--fg);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+td { color: var(--fg-dim); }
+td:first-child { color: var(--fg); font-weight: 500; }
+td .mono, th .mono { color: var(--accent); }
+.perf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.perf-stat {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  background: #10141a;
+}
+.perf-stat .num {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  color: var(--accent);
+  font-weight: 600;
+  display: block;
+  line-height: 1.1;
+}
+.perf-stat .label {
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+  margin-top: 0.25rem;
+  display: block;
+}
 .contact-box {
   border: 1px solid var(--border);
   padding: 1.25rem 1.5rem;
@@ -148,14 +261,36 @@ footer p { margin: 0.25rem 0; }
 <main>
   <header>
     <p class="brand">Pharlux by Veltara Works</p>
-    <span class="badge">Coming soon &middot; Dual-license AGPL-3.0 + commercial</span>
+    <span class="badge">v1.0.0 released &middot; 2026-04-17</span>
     <h1>Replace your LGTM stack with a single binary.</h1>
     <p class="tagline">Unified OpenTelemetry-native observability for small teams. One binary. One config file. One systemd unit. No Docker, no Kafka, no Postgres, no ClickHouse.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</a>
+      <a class="btn btn-secondary" href="https://github.com/Veltara-Works/pharlux">View on GitHub</a>
+      <a class="btn btn-secondary" href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md">Get started</a>
+    </div>
   </header>
 
   <section>
+    <h2>Quickstart</h2>
+    <pre><code># Download the statically-linked binary (83 MB, OpenSSL-free)
+curl -L https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64 \
+  -o /usr/local/bin/pharlux
+chmod +x /usr/local/bin/pharlux
+
+# Install the systemd unit and start
+sudo pharlux install
+sudo systemctl daemon-reload
+sudo systemctl enable --now pharlux
+
+# Verify
+curl http://localhost:3100/api/v1/health</code></pre>
+    <p>Point your OpenTelemetry Collector at <code>:4317</code> (gRPC) or <code>:4318</code> (HTTP). Full walkthrough in the <a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md">getting started guide</a>.</p>
+  </section>
+
+  <section>
     <h2>What it is</h2>
-    <p>Pharlux is a single statically-linked Rust binary that ingests OpenTelemetry metrics and logs (traces in V1.1), stores them in per-signal Parquet files with a custom write-ahead log, and serves interactive SQL queries through embedded Apache DataFusion. The whole system runs comfortably on an 8&nbsp;GB VPS.</p>
+    <p>Pharlux is a single statically-linked Rust binary that ingests OpenTelemetry metrics and logs, stores them in per-signal Parquet files with a custom write-ahead log, and serves interactive SQL queries through embedded Apache DataFusion. The whole system runs comfortably on an 8&nbsp;GB VPS. Traces ship in V1.1.</p>
   </section>
 
   <section>
@@ -168,8 +303,65 @@ footer p { margin: 0.25rem 0; }
   </section>
 
   <section>
+    <h2>What's in V1</h2>
+    <ul>
+      <li><strong>OTLP-native ingest.</strong> gRPC on <code>:4317</code>, HTTP/protobuf on <code>:4318</code> — both on a shared Tokio runtime with the API.</li>
+      <li><strong>SQL over metrics and logs.</strong> Apache DataFusion with a custom <code>TableProvider</code> that unions the live WAL with on-disk Parquet. Cross-signal JOINs on <code>trace_id</code>.</li>
+      <li><strong>Multi-tenant from day one.</strong> Every query goes through a logical-plan tenant filter on every table scan. Community deployments use the constant <code>"default"</code> tenant — same code path.</li>
+      <li><strong>Built-in alerting.</strong> SQL rules in SQLite, state-machine evaluator with circuit-breaker self-disable, webhook + Slack notifications.</li>
+      <li><strong>Embedded React + ECharts UI.</strong> Login, SQL editor (CodeMirror 6), dashboards (metrics bar, log severity pie, recent logs) — served from the same binary via <code>rust-embed</code>.</li>
+      <li><strong>Prometheus-format self-metrics.</strong> <code>GET /metrics</code> exposes live atomic counters for ingestion rate, query duration, active queries, and WAL size.</li>
+      <li><strong>Operator-ready.</strong> CLI subcommands for <code>install</code>, <code>backup</code>, <code>compact</code>, <code>migrate</code>, <code>version</code>. Crash-safe backup/restore. Full operator <a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md">runbook</a>.</li>
+      <li><strong>Memory-safe TLS.</strong> <code>rustls</code> for all outbound connections. Zero OpenSSL in the dependency tree. Genuinely static musl binary.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Performance</h2>
+    <p>Load-tested on a BinaryLane Singapore VPS (4 vCPU / 8&nbsp;GB):</p>
+    <div class="perf">
+      <div class="perf-stat"><span class="num">577k</span><span class="label">points/sec sustained</span></div>
+      <div class="perf-stat"><span class="num">0</span><span class="label">errors over 17.36 M points</span></div>
+      <div class="perf-stat"><span class="num">7 ms</span><span class="label">avg request latency</span></div>
+      <div class="perf-stat"><span class="num">83 MB</span><span class="label">static binary</span></div>
+    </div>
+    <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 149 / 149 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes.</p>
+  </section>
+
+  <section>
+    <h2>Pricing</h2>
+    <table>
+      <thead>
+        <tr><th>Tier</th><th>Price</th><th>Highlights</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Community</td><td><span class="mono">Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td></tr>
+        <tr><td>Team</td><td><span class="mono">$49/mo</span></td><td>10 hosts, 30-day retention, basic SAML</td></tr>
+        <tr><td>Business</td><td><span class="mono">$199/mo</span></td><td>50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log</td></tr>
+        <tr><td>Scale</td><td><span class="mono">$999/mo</span></td><td>250 hosts, 1-year retention, white-label, S3 cold tier</td></tr>
+        <tr><td>Custom</td><td><span class="mono">$4,000+/mo</span></td><td>Unlimited hosts, negotiated MSA, 24×7 support, named TAM</td></tr>
+      </tbody>
+    </table>
+    <p>Commercial tiers include the Pharlux Enterprise binary. See <a href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">licensing@pharlux.com</a> for Enterprise quotes.</p>
+  </section>
+
+  <section>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md">Getting started</a> — install, configure, ingest, query</li>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/otlp-configuration.md">OTLP configuration reference</a></li>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/sql-query-reference.md">SQL query reference</a></li>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/reverse-proxy.md">Reverse proxy and TLS setup (Caddy / nginx)</a></li>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/backup-restore.md">Backup and restore</a></li>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md">Operator runbook</a></li>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/troubleshooting.md">Troubleshooting</a></li>
+      <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/CHANGELOG.md">Full v1.0.0 changelog</a></li>
+    </ul>
+  </section>
+
+  <section>
     <h2>Licensing</h2>
-    <p>Pharlux is dual-licensed. The Community edition is free and self-hosted under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU Affero General Public License v3.0</a>. Commercial licenses are available for teams that cannot accept AGPL terms or need enterprise features.</p>
+    <p>Pharlux is dual-licensed. The Community edition is free and self-hosted under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU Affero General Public License v3.0</a>. Commercial licenses are available for teams that cannot accept AGPL terms or need Enterprise features.</p>
     <div class="contact-box">
       <p><strong>Commercial licensing enquiries</strong></p>
       <p><a href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">licensing@pharlux.com</a></p>
@@ -177,10 +369,20 @@ footer p { margin: 0.25rem 0; }
     </div>
   </section>
 
+  <section>
+    <h2>Support</h2>
+    <ul>
+      <li><strong>Bug reports:</strong> <a href="https://github.com/Veltara-Works/pharlux/issues">GitHub Issues</a></li>
+      <li><strong>Questions and community help:</strong> <a href="https://github.com/Veltara-Works/pharlux/discussions">GitHub Discussions</a></li>
+      <li><strong>Security reports:</strong> see <a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md">SECURITY.md</a> for the coordinated disclosure process</li>
+      <li><strong>Commercial support:</strong> <a href="mailto:licensing@pharlux.com">licensing@pharlux.com</a></li>
+    </ul>
+  </section>
+
   <footer>
     <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/">Veltara Works</a>.</p>
-    <p>Source code will be published at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a> when the V1 beta opens.</p>
-    <p class="meta">Last updated: 2026-04-11</p>
+    <p>Source at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a>. Releases at <a href="https://github.com/Veltara-Works/pharlux/releases">github.com/Veltara-Works/pharlux/releases</a>.</p>
+    <p class="meta">Last updated: 2026-04-17 &middot; v1.0.0</p>
   </footer>
 </main>
 </body>
