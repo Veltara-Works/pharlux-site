@@ -234,6 +234,8 @@ header { margin-bottom: 3rem; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+.brand a { color: inherit; }
+.brand a:hover { color: var(--accent); text-decoration: none; }
 h1 {
   font-size: clamp(1.75rem, 5vw, 2.75rem);
   line-height: 1.15;
@@ -413,7 +415,7 @@ footer p { margin: 0.25rem 0; }
 <body>
 <main>
   <header>
-    <p class="brand">Pharlux by Veltara Works</p>
+    <p class="brand">Pharlux by <a href="https://veltaraworks.com/">Veltara Works</a></p>
     <span class="badge">v1.0.0 released &middot; 2026-04-17</span>
     <p class="last-updated">Last updated 2026-05-04</p>
     <h1>Replace your LGTM stack with a single binary.</h1>
@@ -587,7 +589,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
   <footer>
     <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/">Veltara Works</a>.</p>
     <p>Source at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a>. Releases at <a href="https://github.com/Veltara-Works/pharlux/releases">github.com/Veltara-Works/pharlux/releases</a>.</p>
-    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs + HowTo + header date + vs-LGTM block + animated quickstart) &middot; v1.0.0</p>
+    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs + HowTo + header date + vs-LGTM block + animated quickstart + brand link) &middot; v1.0.0</p>
   </footer>
 </main>
 </body>
