@@ -19,6 +19,10 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
   markdown: {
+    // .md = plain CommonMark, .mdx = full MDX. Lets us mirror upstream
+    // pharlux/docs/*.md files that contain `<` and `!` (e.g. Slack mrkdwn
+    // <!date^...|...> syntax in dev/crate-map.md) without rewriting them.
+    format: 'detect',
     hooks: {
       onBrokenMarkdownLinks: 'warn',
     },

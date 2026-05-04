@@ -1,22 +1,42 @@
 ---
-title: Pharlux docs
-description: Documentation index for Pharlux V1.0.0.
+title: Pharlux documentation
+description: Documentation index for Pharlux V1.0.0 — installation, OTLP configuration, SQL query reference, alerts, dashboards, backup/restore, troubleshooting, and the architecture reference.
 sidebar_position: 1
 slug: /
 ---
 
 # Pharlux documentation
 
-This is the placeholder docs index for the Tier-2 IA migration. The full
-docs site mirrors the markdown sources in the
-[main Pharlux repo](https://github.com/Veltara-Works/pharlux/tree/v1.0.0/docs)
-and lands in IA-4 (next migration step after the homepage).
+This is the documentation for **Pharlux V1.0.0** &mdash; a single statically-linked Rust binary delivering unified OpenTelemetry-native observability for small teams. Mirrored from the [`pharlux/docs/`](https://github.com/Veltara-Works/pharlux/tree/v1.0.0/docs) directory in the main repo. The repo is the source of truth; this site is regenerated when a new version ships.
 
-Until then, the canonical docs live on GitHub:
+## Operator docs
 
-- [Getting started](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)
-- [OTLP configuration](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/otlp-configuration.md)
-- [SQL query reference](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/sql-query-reference.md)
-- [Reverse proxy and TLS](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/reverse-proxy.md)
-- [Backup and restore](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/backup-restore.md)
-- [Operator runbook](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md)
+Day-to-day operating reference for running Pharlux in production.
+
+- [Getting started](getting-started) &mdash; install, configure, ingest, query
+- [Sizing guide](sizing-guide) &mdash; memory + disk accounting, the 10&nbsp;GB/day FTS threshold, tuning knobs
+- [OTLP configuration reference](otlp-configuration) &mdash; gRPC :4317 + HTTP/protobuf :4318
+- [SQL query reference](sql-query-reference) &mdash; DataFusion dialect, cross-signal JOINs, examples
+- [Logs query performance](logs-query-performance) &mdash; LIKE thresholds, the V1.1 tantivy plan
+- [Dashboards](dashboards) &mdash; the embedded React+ECharts surface, layout JSON, CRUD endpoints
+- [Alerts](alerts) &mdash; SQL-rule lifecycle, state machine, circuit-breaker semantics, webhook + Slack payloads
+- [Auth](auth) &mdash; JWT + Argon2id, user / API-key management, secret rotation
+- [Reverse proxy and TLS](reverse-proxy) &mdash; Caddy and nginx setups in front of Pharlux
+- [Backup and restore](backup-restore) &mdash; the `pharlux backup` flow and crash-safe restore
+- [Upgrade](upgrade) &mdash; V1.0.x patches and the V1.0 → V1.1 path
+- [Troubleshooting](troubleshooting) &mdash; symptom-driven triage with pointers into the operator runbook
+
+## Developer reference
+
+For contributors working on the Pharlux source tree itself.
+
+- [Architecture](dev/architecture) &mdash; runtime layout, data flow, crate boundaries
+- [Crate map](dev/crate-map) &mdash; the workspace at a glance: what each crate does and where its tests live
+- [Testing](dev/testing) &mdash; the four required commands, crash-recovery tier, proptest invariants
+
+## Beyond this site
+
+- [Operator runbook](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md) &mdash; numbered procedures referenced by the troubleshooting page
+- [SECURITY.md](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md) &mdash; threat model, trust boundaries, coordinated-disclosure process
+- [CHANGELOG.md](/whatsnew) &mdash; release notes by version
+- [GitHub repository](https://github.com/Veltara-Works/pharlux) &mdash; source, issues, releases, discussions
