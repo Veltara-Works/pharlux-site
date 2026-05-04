@@ -158,6 +158,43 @@
           }
         }
       ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://pharlux.com/#quickstart-howto",
+      "name": "Install Pharlux on a Linux VPS",
+      "description": "Install the Pharlux observability binary on a Linux server with systemd, start it as a service, and configure your OpenTelemetry Collector to ingest into it.",
+      "totalTime": "PT2M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Download the Pharlux binary",
+          "text": "Download the statically-linked Pharlux binary (83 MB, OpenSSL-free) to /usr/local/bin/pharlux and make it executable.",
+          "url": "https://pharlux.com/#quickstart"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Install the systemd unit and start the service",
+          "text": "Run `sudo pharlux install` to install the systemd unit, then `sudo systemctl daemon-reload` and `sudo systemctl enable --now pharlux` to start the service at boot.",
+          "url": "https://pharlux.com/#quickstart"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Verify the install",
+          "text": "Confirm Pharlux is responding by curling its health endpoint at http://localhost:3100/api/v1/health — a successful response means the binary is running and the API is reachable.",
+          "url": "https://pharlux.com/#quickstart"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Configure your OpenTelemetry Collector",
+          "text": "Point your OpenTelemetry Collector at port 4317 (gRPC) or port 4318 (HTTP/protobuf) on the Pharlux host to start sending metrics and logs.",
+          "url": "https://pharlux.com/#quickstart"
+        }
+      ]
     }
   ]
 }
@@ -217,6 +254,13 @@ h1 {
   color: var(--accent);
   border-radius: 999px;
   margin-bottom: 1rem;
+}
+.last-updated {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+  margin: 0 0 1.25rem;
 }
 .cta-row {
   display: flex;
@@ -353,6 +397,7 @@ footer p { margin: 0.25rem 0; }
   <header>
     <p class="brand">Pharlux by Veltara Works</p>
     <span class="badge">v1.0.0 released &middot; 2026-04-17</span>
+    <p class="last-updated">Last updated 2026-05-04</p>
     <h1>Replace your LGTM stack with a single binary.</h1>
     <p class="tagline">Unified OpenTelemetry-native observability for small teams. One binary. One config file. One systemd unit. No Docker, no Kafka, no Postgres, no ClickHouse.</p>
     <div class="cta-row">
@@ -362,7 +407,7 @@ footer p { margin: 0.25rem 0; }
     </div>
   </header>
 
-  <section>
+  <section id="quickstart">
     <h2>Quickstart</h2>
     <pre><code># Download the statically-linked binary (83 MB, OpenSSL-free)
 curl -L https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64 \
@@ -500,7 +545,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
   <footer>
     <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/">Veltara Works</a>.</p>
     <p>Source at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a>. Releases at <a href="https://github.com/Veltara-Works/pharlux/releases">github.com/Veltara-Works/pharlux/releases</a>.</p>
-    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs) &middot; v1.0.0</p>
+    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs + HowTo schema + header date) &middot; v1.0.0</p>
   </footer>
 </main>
 </body>
