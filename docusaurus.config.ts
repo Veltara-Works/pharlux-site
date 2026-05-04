@@ -56,13 +56,13 @@ const config: Config = {
       disableSwitch: false,
       respectPrefersColorScheme: false,
     },
-    // Navbar / footer are intentionally minimal during IA-1.
-    // /pricing, /whatsnew, /about land in IA-3 / IA-5 / IA-6 and get added
-    // back as those pages exist.
+    // /about is added back as IA-6 builds the page.
     navbar: {
       title: 'Pharlux',
       items: [
+        {to: '/pricing', label: 'Pricing', position: 'left'},
         {to: '/docs', label: 'Docs', position: 'left'},
+        {to: '/whatsnew', label: "What's New", position: 'left'},
         {
           href: 'https://github.com/Veltara-Works/pharlux',
           label: 'GitHub',
@@ -76,7 +76,9 @@ const config: Config = {
         {
           title: 'Product',
           items: [
+            {label: 'Pricing', to: '/pricing'},
             {label: 'Docs', to: '/docs'},
+            {label: "What's New", to: '/whatsnew'},
           ],
         },
         {

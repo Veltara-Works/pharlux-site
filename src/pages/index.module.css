@@ -152,12 +152,20 @@
   padding: 0;
 }
 
+.tableScroll {
+  overflow-x: auto;
+  margin: 0.75rem 0 1rem;
+}
+
 .dataTable {
   width: 100%;
   border-collapse: collapse;
   margin: 0.75rem 0 1rem;
   font-size: 0.95rem;
   display: table;
+}
+.tableScroll .dataTable {
+  margin: 0;
 }
 .dataTable th,
 .dataTable td {

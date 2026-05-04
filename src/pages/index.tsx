@@ -259,7 +259,7 @@ export default function Home(): ReactNode {
             <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">
               talk to us
             </Link>
-            .
+            . See <Link to="/pricing">full feature comparison</Link>.
           </p>
         </section>
 

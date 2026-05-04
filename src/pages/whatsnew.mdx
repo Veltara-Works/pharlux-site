@@ -1,0 +1,93 @@
+---
+title: What's New — Pharlux changelog
+description: Pharlux release notes by version. V1.0.0 shipped 2026-04-17 with the V1 feature-complete metrics and logs surface. Source-of-truth changelog mirrored from pharlux/CHANGELOG.md.
+---
+
+# What's New
+
+This page mirrors [`CHANGELOG.md`](https://github.com/Veltara-Works/pharlux/blob/main/CHANGELOG.md) in the main Pharlux repo. The repo file is the source of truth; this page is regenerated when a new version ships. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Unreleased
+
+### Security
+
+- Bumped `tar` from `0.4.44` to `0.4.45` to address RUSTSEC-2026-0067 (`unpack_in` symlink chmod escape, medium 5.1) and RUSTSEC-2026-0068 (PAX size header inconsistency, medium 5.1). Used by the `pharlux backup` subcommand. Commit `515fef3`.
+- Bumped `rustls-webpki` (transitive via `rustls 0.23` → `reqwest`) from `0.103.11` to `0.103.13` to address RUSTSEC-2026-0098 (URI-name constraint bypass), RUSTSEC-2026-0099 (wildcard-name constraint bypass), and RUSTSEC-2026-0104 (reachable panic in CRL parsing). Commit `515fef3`.
+- Bumped `rand` from `0.9.1` to `0.9.4` (workspace direct pin) and `0.8.5` to `0.8.6` (transitive via `num-bigint-dig` → `rsa` → `jsonwebtoken`) to address RUSTSEC-2026-0097 (unsoundness with custom logger using `rand::rng()`). Not reachable in Pharlux's build (we use `tracing`, not a custom `log` logger), but the patch is taken on principle. Commit `64162be`.
+- Documented one remaining unfixable advisory with reachability justification: RUSTSEC-2023-0071 (`rsa 0.9.10` Marvin attack). Pharlux uses `jsonwebtoken` with HS256 only, so the RSA decryption code paths the Marvin attack targets are unreachable in our binary. No upstream fix is available. Documented in `deny.toml` `[advisories.ignore]` with re-evaluation steps if RS256/RS384/RS512 support is added in future. Commit `20c0ed5`.
+
+### Added
+
+- New `deny.toml` project policy file for `cargo deny check`. Encodes the SPDX license allow-list (covering every license observed in the resolved dependency tree as of 2026-05-03), the no-OpenSSL family TLS policy as a hard `[bans] deny` rule, the per-advisory ignore list with written justifications, and crates.io as the only allowed source registry. Commit `2de8eb4`.
+
+## 1.0.0 — 2026-04-17
+
+First public release. V1 feature-complete. All Phase 0, 1, 2, and 3 exit gates passed.
+
+Version 1.0.0 signals a commitment to semver on the public API surface: the REST endpoints, the `pharlux.toml` config schema, the OTLP ingest subset, the Parquet on-disk schemas, and the WAL record framing. Breaking changes to any of these require a 2.0.0 bump.
+
+### Added
+
+#### Storage
+
+- Production WAL (prost + CRC32 + length prefix, ADR-0018) with segment rotation and tenant-aware replay
+- Parquet writer with per-signal, per-tenant, hourly partitioning
+- Per-tenant retention, manual compaction with crash-safe marker protocol
+- WAL + Parquet union TableProvider for DataFusion (RwLock snapshot design)
+
+#### Ingestion
+
+- OTLP gRPC (port 4317): MetricsService + LogsService
+- OTLP HTTP/protobuf (port 4318): `/v1/metrics` + `/v1/logs`
+- Backpressure: bounded mpsc channel, HTTP 429 / gRPC RESOURCE_EXHAUSTED
+- Timestamp validation, metric name validation, attribute length caps, 2 MB body limit
+- TenantResolver trait for API-key-to-tenant mapping
+
+#### Query
+
+- DataFusion QueryEngine with logical-plan tenant filter on every TableScan
+- Per-request SessionContext, 256 MB MemoryPool cap (ADR-0011)
+
+#### Auth
+
+- JWT (HS256) with required exp claim, Argon2id (OWASP 2023: 19 MiB)
+- SQLite user/API key tables, tenant-scoped operations
+
+#### API
+
+- REST: `/health`, `/query`, `/auth/login`, `/metrics`, `/admin/tenants` (CRUD)
+- Prometheus exposition at `GET /metrics` with live atomic counters
+
+#### Alerting
+
+- SQL-based rules in SQLite, state machine (OK/PENDING/FIRING/RESOLVED)
+- Circuit breaker: 3 consecutive panics → self-disable (Decision 16)
+
+#### Frontend
+
+- React 18 + TypeScript + Vite, embedded via rust-embed
+- Login, SQL editor (CodeMirror 6), Dashboard (ECharts: metrics bar, log severity pie, recent logs)
+
+#### CLI
+
+- Subcommands: `compact`, `backup`, `install`, `migrate`, `version`
+- Single-binary deployment (Axum + Tonic on shared Tokio runtime, ADR-0004)
+
+#### Documentation
+
+- Getting started, OTLP config reference, SQL query reference
+- Logs query performance (10 GB/day LIKE threshold), reverse proxy (Caddy/nginx), backup/restore
+
+### Performance
+
+- 577k pts/sec sustained 30s, 0 errors, 7&nbsp;ms avg latency (4&nbsp;vCPU&nbsp;/&nbsp;8&nbsp;GB)
+- 81&nbsp;MB statically-linked musl binary
+
+### Testing
+
+- 149 tests, crash recovery 10/10, e2e integration test, cross-signal JOIN
+- clippy clean, fmt clean
+
+### Security
+
+- Outbound HTTP TLS backend is `rustls` (no OpenSSL in the dep tree). Applies to webhook and Slack alert notifications and the load-test client. Enables a genuinely OpenSSL-free musl static-pie binary.
