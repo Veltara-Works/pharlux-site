@@ -322,6 +322,24 @@ pre {
   margin: 0.75rem 0;
 }
 pre code { font-size: inherit; color: inherit; }
+.terminal-cast { margin: 0.75rem 0 0.25rem; }
+.terminal-cast img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+.terminal-cast figcaption {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+  margin: 0.5rem 0 0;
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cast { display: none; }
+}
 table {
   width: 100%;
   border-collapse: collapse;
@@ -409,6 +427,10 @@ footer p { margin: 0.25rem 0; }
 
   <section id="quickstart">
     <h2>Quickstart</h2>
+    <figure class="terminal-cast">
+      <img src="quickstart.svg" alt="Animated terminal of the Pharlux install: download the binary with curl, chmod +x, run sudo pharlux install (writes the systemd unit, config, system user, and data directory), systemctl daemon-reload and enable --now, then curl the health endpoint and see it return ok." width="992" height="570" loading="lazy">
+      <figcaption>Demo of the commands below &mdash; about 25 seconds end to end.</figcaption>
+    </figure>
     <pre><code># Download the statically-linked binary (83 MB, OpenSSL-free)
 curl -L https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64 \
   -o /usr/local/bin/pharlux
@@ -565,7 +587,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
   <footer>
     <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/">Veltara Works</a>.</p>
     <p>Source at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a>. Releases at <a href="https://github.com/Veltara-Works/pharlux/releases">github.com/Veltara-Works/pharlux/releases</a>.</p>
-    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs + HowTo + header date + vs-LGTM block) &middot; v1.0.0</p>
+    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs + HowTo + header date + vs-LGTM block + animated quickstart) &middot; v1.0.0</p>
   </footer>
 </main>
 </body>
