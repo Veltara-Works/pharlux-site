@@ -14,3 +14,8 @@ Thumbs.db
 .secrets.md
 .env
 .env.*
+
+# Internal marketing/strategy context (mirrors main-repo _internal/ pattern).
+# product-marketing-context.md is auto-loaded by marketing skills; stays local
+# to avoid any risk of public CDN exposure of internal positioning notes.
+.agents/
