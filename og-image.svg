@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0b0d10"/>
+
+  <!-- Subtle accent stripe at top (monospace-stat-tile aesthetic) -->
+  <rect x="0" y="0" width="1200" height="4" fill="#7cc4ff"/>
+
+  <!-- Faint perimeter inset border (matches the bordered-card aesthetic of the site's perf-stat tiles) -->
+  <rect x="48" y="48" width="1104" height="534" fill="none" stroke="#1d2227" stroke-width="2" rx="12"/>
+
+  <!-- Brand line: PHARLUX BY VELTARA WORKS, top -->
+  <text x="100" y="148"
+        font-family="'DejaVu Sans Mono', monospace"
+        font-size="22"
+        font-weight="400"
+        letter-spacing="6"
+        fill="#9aa0a6">PHARLUX  ·  BY VELTARA WORKS</text>
+
+  <!-- Wordmark: PHARLUX, big, accent color -->
+  <text x="100" y="270"
+        font-family="'DejaVu Sans Mono', monospace"
+        font-size="116"
+        font-weight="700"
+        letter-spacing="-2"
+        fill="#7cc4ff">Pharlux</text>
+
+  <!-- Tagline -->
+  <text x="100" y="358"
+        font-family="'DejaVu Sans', sans-serif"
+        font-size="50"
+        font-weight="700"
+        fill="#e6e8eb">Replace your LGTM stack</text>
+  <text x="100" y="418"
+        font-family="'DejaVu Sans', sans-serif"
+        font-size="50"
+        font-weight="700"
+        fill="#e6e8eb">with a single binary.</text>
+
+  <!-- Sub-tagline -->
+  <text x="100" y="478"
+        font-family="'DejaVu Sans', sans-serif"
+        font-size="24"
+        font-weight="400"
+        fill="#9aa0a6">Unified OpenTelemetry-native observability.</text>
+  <text x="100" y="510"
+        font-family="'DejaVu Sans', sans-serif"
+        font-size="24"
+        font-weight="400"
+        fill="#9aa0a6">One binary. One config. One systemd unit.</text>
+
+  <!-- Bottom row: site URL + license. License-only (no version) so this asset
+       does not need regeneration on V1.0.x patches or V1.1 release. -->
+  <text x="100" y="560"
+        font-family="'DejaVu Sans Mono', monospace"
+        font-size="20"
+        font-weight="400"
+        fill="#7cc4ff">pharlux.com</text>
+
+  <text x="1100" y="560"
+        text-anchor="end"
+        font-family="'DejaVu Sans Mono', monospace"
+        font-size="20"
+        font-weight="400"
+        fill="#9aa0a6">AGPL-3.0 + Commercial</text>
+</svg>
