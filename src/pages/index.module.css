@@ -1,14 +1,15 @@
-.placeholderMain {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - var(--ifm-navbar-height) - 200px);
-  padding: 4rem 1.5rem;
+/* Pharlux homepage — ported from _pre-docusaurus/index.html (Tier-2 IA-2). */
+
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-.placeholderInner {
-  max-width: 760px;
-  width: 100%;
+.heroHeader {
+  margin-bottom: 3rem;
 }
 
 .brand {
@@ -17,20 +18,40 @@
   color: var(--ifm-color-content-secondary);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin: 0 0 1.5rem;
+  margin: 0 0 0.5rem;
+}
+.brand a { color: inherit; text-decoration: none; }
+.brand a:hover { color: var(--ifm-color-primary); text-decoration: none; }
+
+.badge {
+  display: inline-block;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid #3a6b8f;
+  color: var(--ifm-color-primary);
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+.lastUpdated {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  color: var(--ifm-color-content-secondary);
+  letter-spacing: 0.02em;
+  margin: 0 0 1.25rem;
 }
 
 .heroTitle {
   font-size: clamp(1.75rem, 5vw, 2.75rem);
   line-height: 1.15;
-  margin: 0 0 1.5rem;
+  margin: 0.5rem 0 1rem;
   font-weight: 700;
 }
 
-.note {
+.tagline {
   color: var(--ifm-color-content-secondary);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.125rem;
   margin: 0 0 2rem;
 }
 
@@ -38,8 +59,189 @@
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  margin: 1.5rem 0 0;
 }
 
-.cta {
+.btn {
+  display: inline-block;
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.95rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 6px;
   text-decoration: none;
+  transition: all 0.15s ease;
+}
+.btn:hover { text-decoration: none; }
+
+.btnPrimary {
+  background: var(--ifm-color-primary);
+  color: var(--ifm-background-color);
+  font-weight: 600;
+}
+.btnPrimary:hover {
+  background: var(--ifm-color-primary-light);
+  color: var(--ifm-background-color);
+}
+
+.btnSecondary {
+  border: 1px solid var(--ifm-toc-border-color);
+  color: var(--ifm-color-content);
+}
+.btnSecondary:hover {
+  border-color: #3a6b8f;
+  color: var(--ifm-color-primary);
+}
+
+.section {
+  margin: 2.5rem 0;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+
+.faq .faqQ {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.5rem;
+}
+.faq .faqQ:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.terminalCast {
+  margin: 0.75rem 0 0.25rem;
+}
+.terminalCast img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+.terminalCast figcaption {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  color: var(--ifm-color-content-secondary);
+  letter-spacing: 0.02em;
+  margin: 0.5rem 0 0;
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .terminalCast {
+    display: none;
+  }
+}
+
+.codeBlock {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  margin: 0.75rem 0;
+}
+.codeBlock code {
+  font-size: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0 1rem;
+  font-size: 0.95rem;
+  display: table;
+}
+.dataTable th,
+.dataTable td {
+  text-align: left;
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+.dataTable th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.dataTable td {
+  color: var(--ifm-color-content-secondary);
+}
+.dataTable td:first-child {
+  color: var(--ifm-color-content);
+  font-weight: 500;
+}
+.dataTable .mono,
+.dataTable th .mono {
+  color: var(--ifm-color-primary);
+}
+
+.ctaCol {
+  text-align: right;
+  white-space: nowrap;
+}
+.ctaCol a {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85rem;
+}
+
+.mono {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.9em;
+}
+
+.perfGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.perfStat {
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  background: var(--ifm-background-surface-color);
+}
+.perfNum {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 1.5rem;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  display: block;
+  line-height: 1.1;
+}
+.perfLabel {
+  font-size: 0.8rem;
+  color: var(--ifm-color-content-secondary);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.contactBox {
+  border: 1px solid var(--ifm-toc-border-color);
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+  margin-top: 1rem;
+}
+.contactBox p {
+  margin: 0.25rem 0;
+  color: var(--ifm-color-content-secondary);
+}
+.contactBox a {
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.meta {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  color: var(--ifm-color-content-secondary);
 }
