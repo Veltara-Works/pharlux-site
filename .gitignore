@@ -19,3 +19,12 @@ Thumbs.db
 # product-marketing-context.md is auto-loaded by marketing skills; stays local
 # to avoid any risk of public CDN exposure of internal positioning notes.
 .agents/
+
+# Docusaurus 3 (Tier-2 IA migration, started 2026-05-04)
+node_modules/
+build/
+.docusaurus/
+.cache-loader/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

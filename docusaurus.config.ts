@@ -1,0 +1,107 @@
+import {themes as prismThemes} from 'prism-react-renderer';
+import type {Config} from '@docusaurus/types';
+import type * as Preset from '@docusaurus/preset-classic';
+
+const config: Config = {
+  title: 'Pharlux',
+  tagline: 'Replace your LGTM stack with a single binary.',
+  favicon: 'favicon.svg',
+
+  future: {
+    v4: true,
+  },
+
+  url: 'https://pharlux.com',
+  baseUrl: '/',
+
+  organizationName: 'Veltara-Works',
+  projectName: 'pharlux-site',
+
+  onBrokenLinks: 'throw',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
+
+  presets: [
+    [
+      'classic',
+      {
+        docs: {
+          sidebarPath: './sidebars.ts',
+          routeBasePath: 'docs',
+        },
+        blog: false,
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+        sitemap: {
+          changefreq: 'weekly',
+          priority: 0.5,
+        },
+      } satisfies Preset.Options,
+    ],
+  ],
+
+  themeConfig: {
+    image: 'og-image.png',
+    colorMode: {
+      defaultMode: 'dark',
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
+    },
+    // Navbar / footer are intentionally minimal during IA-1.
+    // /pricing, /whatsnew, /about land in IA-3 / IA-5 / IA-6 and get added
+    // back as those pages exist.
+    navbar: {
+      title: 'Pharlux',
+      items: [
+        {to: '/docs', label: 'Docs', position: 'left'},
+        {
+          href: 'https://github.com/Veltara-Works/pharlux',
+          label: 'GitHub',
+          position: 'right',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Product',
+          items: [
+            {label: 'Docs', to: '/docs'},
+          ],
+        },
+        {
+          title: 'Source',
+          items: [
+            {label: 'GitHub', href: 'https://github.com/Veltara-Works/pharlux'},
+            {label: 'Releases', href: 'https://github.com/Veltara-Works/pharlux/releases'},
+            {label: 'Issues', href: 'https://github.com/Veltara-Works/pharlux/issues'},
+          ],
+        },
+        {
+          title: 'Veltara Works',
+          items: [
+            {label: 'Veltara Works', href: 'https://veltaraworks.com/'},
+          ],
+        },
+      ],
+      copyright: `Pharlux © ${new Date().getFullYear()} Veltara Works · AGPL-3.0 + Commercial`,
+    },
+    prism: {
+      theme: prismThemes.vsDark,
+      darkTheme: prismThemes.vsDark,
+      additionalLanguages: ['bash', 'toml', 'sql', 'rust'],
+    },
+  } satisfies Preset.ThemeConfig,
+};
+
+export default config;

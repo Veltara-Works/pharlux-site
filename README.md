@@ -1,40 +1,64 @@
 # pharlux-site
 
-Source for the `pharlux.com` holding page. A single static HTML page deployed via **Cloudflare Pages**.
+Source for `pharlux.com`. Currently mid-migration from a single-page static site
+to **Docusaurus 3** (Tier-2 IA, started 2026-05-04). The legacy single page is
+preserved at [`_pre-docusaurus/index.html`](_pre-docusaurus/index.html) as the
+content source for the IA-2 homepage migration.
 
 ## What this is
 
-This repository contains the Phase 0 marketing placeholder for Pharlux — a one-page "coming soon" site with:
+- `docusaurus.config.ts` — Docusaurus 3 site config (title, navbar, footer, theme, sitemap)
+- `src/pages/index.tsx` — homepage React component (currently a placeholder; IA-2 migrates the full marketing content)
+- `src/css/custom.css` — Pharlux palette overrides for Infima
+- `docs/` — Docusaurus docs section (placeholder; IA-4 mirrors `pharlux/docs/user/*.md` here)
+- `static/` — files copied verbatim into the build output:
+  - `_headers` — Cloudflare Pages security headers
+  - `robots.txt` — explicit AI-crawler allow-list per Policy §3 Principle 9
+  - `llms.txt` — AI-crawler content manifest
+  - `og-image.png` / `og-image.svg` — social-card image
+  - `quickstart.svg` — animated terminal of the install (QW-7)
+  - `favicon.svg` — site icon
+  - `404.html` — branded 404 page (B)
+- `_pre-docusaurus/index.html` — frozen snapshot of the pre-migration single-page site
 
-- `index.html` — the holding page with `Organization` + `SoftwareApplication` JSON-LD structured data
-- `robots.txt` — explicit AI crawler allow-list per `MARKETING_AND_GEO_POLICY.md` §9
-- `llms.txt` — authoritative content manifest for AI crawlers, Jeremy Howard `llms.txt` standard
-- `_headers` — Cloudflare Pages security headers (HSTS, CSP, X-Frame-Options, etc.)
-- `favicon.svg` — placeholder mark until the Veltara Works brand work ships
+`sitemap.xml` is **auto-generated** by the Docusaurus classic preset's sitemap plugin (no longer hand-maintained).
 
-No build step. No framework. Cloudflare Pages serves these files as-is.
+## Local development
+
+Requires Node ≥ 20.
+
+```bash
+npm install
+npm run start    # dev server at http://localhost:3000
+npm run build    # production build → ./build/
+npm run serve    # serve the production build locally
+```
 
 ## Deployment
 
-Cloudflare Pages project: `pharlux-site`
-Custom domain: `pharlux.com`, `www.pharlux.com`
-Build command: *(none)*
-Build output directory: `/`
-Production branch: `main`
+Cloudflare Pages project: `pharlux-site`. Custom domain: `pharlux.com`, `www.pharlux.com`.
 
-A push to `main` triggers an automatic deploy.
+**Cloudflare Pages config — needs updating before this branch merges to `main`:**
+
+| Setting | Current (legacy single-page) | After Docusaurus migration |
+|---|---|---|
+| Build command | *(none)* | `npm run build` |
+| Build output directory | `/` | `build` |
+| Production branch | `main` | `main` |
+| Node version | *(default)* | `20` or higher |
+
+A push to `main` triggers an automatic deploy. The `tier2-docusaurus` feature branch deploys to a Cloudflare Pages preview URL while the migration is in progress; **the production site stays on the legacy single page until IA-2 lands and the build config is updated.**
+
+## Migration tracker
+
+The Tier-2 IA migration is tracked in [`pharlux/_internal/WOW_FACTORS_ANALYSIS.md`](https://github.com/Veltara-Works/pharlux) §6 (private to the main Pharlux repo). Status as of 2026-05-04: IA-1 done (this commit), IA-2 through IA-9 pending.
 
 ## Relationship to other Pharlux repositories
 
 This is the **marketing site** only. It is not the product.
 
-- `github.com/Veltara-Works/pharlux` — production source code (Phase 1+, currently design artifacts)
-- `github.com/Veltara-Works/pharlux-poc` — Phase 0 DataFusion + WAL proof-of-concept (throwaway)
-- `github.com/Veltara-Works/pharlux-site` — this repo, the marketing placeholder
-
-## Upgrade path
-
-When Phase 1 ships real documentation, this repo is replaced by a Docusaurus 3 project with the same custom domain. The static HTML survives until then.
+- `github.com/Veltara-Works/pharlux` — production source code (V1.0.0 shipped 2026-04-17)
+- `github.com/Veltara-Works/pharlux-site` — this repo
 
 ---
 
