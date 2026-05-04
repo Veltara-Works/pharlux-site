@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>404 — Pharlux</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<style>
+:root {
+  --bg: #0b0d10;
+  --fg: #e6e8eb;
+  --fg-dim: #9aa0a6;
+  --accent: #7cc4ff;
+  --accent-dim: #3a6b8f;
+  --border: #1d2227;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+  flex: 1;
+  width: 100%;
+}
+.brand {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 3rem;
+}
+.brand a { color: inherit; text-decoration: none; }
+.brand a:hover { color: var(--accent); }
+.code {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--accent-dim);
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem;
+}
+h1 {
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+  font-weight: 700;
+}
+.tagline {
+  color: var(--fg-dim);
+  font-size: 1.125rem;
+  margin: 0 0 2.5rem;
+}
+code { font-family: var(--mono); font-size: 0.9em; color: var(--fg); }
+h2 {
+  font-size: 1.125rem;
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+ul.links {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+ul.links li {
+  margin: 0.5rem 0;
+  color: var(--fg-dim);
+}
+ul.links a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+ul.links a:hover { text-decoration: underline; }
+ul.links .desc {
+  color: var(--fg-dim);
+  font-weight: 400;
+}
+footer {
+  border-top: 1px solid var(--border);
+  margin: 0;
+  padding: 2rem 1.5rem;
+  max-width: 880px;
+  width: 100%;
+  margin: 0 auto;
+}
+footer p {
+  color: var(--fg-dim);
+  font-size: 0.875rem;
+  margin: 0;
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<main>
+  <p class="brand">Pharlux by <a href="https://veltaraworks.com/" target="_blank" rel="noopener">Veltara Works</a></p>
+
+  <p class="code">404 &middot; Not found</p>
+  <h1>That page isn&rsquo;t here.</h1>
+  <p class="tagline">It may have moved, never existed, or be planned for a later release. Pharlux V1 is a single homepage; sub-paths like <code>/docs</code>, <code>/pricing</code>, and <code>/about</code> arrive with the V1.x docs-site migration.</p>
+
+  <h2>Where you might have meant to go</h2>
+  <ul class="links">
+    <li><a href="/">Home</a> <span class="desc">&mdash; product overview, pricing, FAQ</span></li>
+    <li><a href="/#quickstart">Quickstart</a> <span class="desc">&mdash; install in about 30 seconds</span></li>
+    <li><a href="/#pricing">Pricing</a> <span class="desc">&mdash; Community, Pro, Scale, Enterprise tiers</span></li>
+    <li><a href="https://github.com/Veltara-Works/pharlux">GitHub repo</a> <span class="desc">&mdash; source, issues, discussions</span></li>
+    <li><a href="https://github.com/Veltara-Works/pharlux/releases">Releases</a> <span class="desc">&mdash; statically-linked binary downloads</span></li>
+    <li><a href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md">Get started guide</a> <span class="desc">&mdash; full walkthrough</span></li>
+  </ul>
+</main>
+
+<footer>
+  <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/" target="_blank" rel="noopener">Veltara Works</a>. If you arrived from a broken link on someone else&rsquo;s site, <a href="https://github.com/Veltara-Works/pharlux/issues">let us know</a> so we can ask them to update.</p>
+</footer>
+</body>
+</html>
