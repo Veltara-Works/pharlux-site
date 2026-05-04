@@ -299,6 +299,9 @@ th {
 td { color: var(--fg-dim); }
 td:first-child { color: var(--fg); font-weight: 500; }
 td .mono, th .mono { color: var(--accent); }
+th.cta-col, td.cta-col { text-align: right; white-space: nowrap; }
+td.cta-col a { color: var(--accent); font-family: var(--mono); font-size: 0.85rem; }
+td.cta-col a:hover { text-decoration: underline; }
 .perf {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -420,13 +423,13 @@ curl http://localhost:3100/api/v1/health</code></pre>
     <h2>Pricing</h2>
     <table>
       <thead>
-        <tr><th>Tier</th><th>Price</th><th>Highlights</th></tr>
+        <tr><th>Tier</th><th>Price</th><th>Highlights</th><th class="cta-col">Action</th></tr>
       </thead>
       <tbody>
-        <tr><td>Community</td><td><span class="mono">Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td></tr>
-        <tr><td>Team</td><td><span class="mono">$49/mo</span></td><td>10 hosts, 30-day retention, basic SAML</td></tr>
-        <tr><td>Business</td><td><span class="mono">$199/mo</span></td><td>50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log</td></tr>
-        <tr><td>Scale</td><td><span class="mono">$899/mo</span></td><td>250 hosts, 1-year retention, white-label, S3 cold tier</td></tr>
+        <tr><td>Community</td><td><span class="mono">Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td><td class="cta-col"><a href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download</a></td></tr>
+        <tr><td>Team</td><td><span class="mono">$49/mo</span></td><td>10 hosts, 30-day retention, basic SAML</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Business</td><td><span class="mono">$199/mo</span></td><td>50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Scale</td><td><span class="mono">$899/mo</span></td><td>250 hosts, 1-year retention, white-label, S3 cold tier</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</a></td></tr>
       </tbody>
     </table>
     <p>Commercial tiers include the Pharlux Enterprise binary. For deployments beyond 250 hosts or custom requirements, <a href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">talk to us</a>.</p>
@@ -497,7 +500,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
   <footer>
     <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/">Veltara Works</a>.</p>
     <p>Source at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a>. Releases at <a href="https://github.com/Veltara-Works/pharlux/releases">github.com/Veltara-Works/pharlux/releases</a>.</p>
-    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ added) &middot; v1.0.0</p>
+    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs) &middot; v1.0.0</p>
   </footer>
 </main>
 </body>
