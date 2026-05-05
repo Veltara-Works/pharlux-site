@@ -20,6 +20,9 @@ Thumbs.db
 # to avoid any risk of public CDN exposure of internal positioning notes.
 .agents/
 
+# Blog post drafts in progress (pre-Ian-edit). Move to blog/ when ready.
+_drafts/
+
 # Docusaurus 3 (Tier-2 IA migration, started 2026-05-04)
 node_modules/
 build/

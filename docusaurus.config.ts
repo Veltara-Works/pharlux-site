@@ -41,7 +41,19 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           routeBasePath: 'docs',
         },
-        blog: false,
+        blog: {
+          routeBasePath: 'blog',
+          blogTitle: 'Pharlux Blog',
+          blogDescription: 'Tutorials, technical deep-dives, and operator stories from the Pharlux team.',
+          postsPerPage: 10,
+          showReadingTime: true,
+          authorsMapPath: 'authors.yml',
+          feedOptions: {
+            type: ['rss', 'atom'],
+            title: 'Pharlux Blog',
+            copyright: `Pharlux © ${new Date().getFullYear()} Veltara Works · AGPL-3.0 + Commercial`,
+          },
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -66,6 +78,7 @@ const config: Config = {
       items: [
         {to: '/pricing', label: 'Pricing', position: 'left'},
         {to: '/docs', label: 'Docs', position: 'left'},
+        {to: '/blog', label: 'Blog', position: 'left'},
         {to: '/whatsnew', label: "What's New", position: 'left'},
         {
           href: 'https://github.com/Veltara-Works/pharlux',
@@ -82,6 +95,7 @@ const config: Config = {
           items: [
             {label: 'Pricing', to: '/pricing'},
             {label: 'Docs', to: '/docs'},
+            {label: 'Blog', to: '/blog'},
             {label: "What's New", to: '/whatsnew'},
           ],
         },
