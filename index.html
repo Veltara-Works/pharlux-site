@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pharlux — Replace your LGTM stack with a single binary</title>
+<title>Pharlux — Replace Grafana + Prometheus + Loki with a single binary</title>
 <meta name="description" content="Pharlux is a single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs) for small teams running 1-10 services on a single VPS. One binary, one config file, one systemd unit — no external databases, no Docker, no multi-component stack. V1.0.0 now shipping under AGPL-3.0 + commercial dual license.">
 <link rel="canonical" href="https://pharlux.com/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
-<meta property="og:title" content="Pharlux — Replace your LGTM stack with a single binary">
+<meta property="og:title" content="Pharlux — Replace Grafana + Prometheus + Loki with a single binary">
 <meta property="og:description" content="Unified OpenTelemetry-native observability as a single Rust binary. V1.0.0 shipping now. Dual-license AGPL-3.0 + commercial.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pharlux.com/">
@@ -16,14 +16,14 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
-<meta property="og:image:alt" content="Pharlux — Replace your LGTM stack with a single binary. Unified OpenTelemetry-native observability. One binary. One config. One systemd unit.">
+<meta property="og:image:alt" content="Pharlux — Replace Grafana + Prometheus + Loki with a single binary. Unified OpenTelemetry-native observability. One binary. One config. One systemd unit.">
 <meta property="og:site_name" content="Pharlux">
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Pharlux — Replace your LGTM stack with a single binary">
+<meta name="twitter:title" content="Pharlux — Replace Grafana + Prometheus + Loki with a single binary">
 <meta name="twitter:description" content="Unified OpenTelemetry-native observability as a single Rust binary. V1.0.0 shipping now. Dual-license AGPL-3.0 + commercial.">
 <meta name="twitter:image" content="https://pharlux.com/og-image.png">
-<meta name="twitter:image:alt" content="Pharlux — Replace your LGTM stack with a single binary.">
+<meta name="twitter:image:alt" content="Pharlux — Replace Grafana + Prometheus + Loki with a single binary.">
 
 <script type="application/ld+json">
 {
@@ -64,21 +64,21 @@
           "name": "Team",
           "price": "49",
           "priceCurrency": "USD",
-          "category": "10 hosts, 30-day retention, basic SAML — commercial license"
+          "category": "10 hosts, 30-day retention, basic SAML (roadmap) — commercial license"
         },
         {
           "@type": "Offer",
           "name": "Business",
           "price": "199",
           "priceCurrency": "USD",
-          "category": "50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log — commercial license"
+          "category": "50 hosts, 90-day retention, full SAML/OIDC/LDAP + audit log (roadmap) — commercial license"
         },
         {
           "@type": "Offer",
           "name": "Scale",
           "price": "899",
           "priceCurrency": "USD",
-          "category": "250 hosts, 1-year retention, white-label, S3 cold tier — commercial license"
+          "category": "250 hosts, 1-year retention, white-label + S3 cold tier (roadmap) — commercial license"
         }
       ],
       "publisher": {
@@ -154,7 +154,7 @@
           "name": "How do I know it is production-ready?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 293 of 293 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX."
+            "text": "V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 360 of 360 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX."
           }
         }
       ]
@@ -417,8 +417,8 @@ footer p { margin: 0.25rem 0; }
   <header>
     <p class="brand">Pharlux by <a href="https://veltaraworks.com/" target="_blank" rel="noopener">Veltara Works</a></p>
     <span class="badge">v1.0.0 released &middot; 2026-04-17</span>
-    <p class="last-updated">Last updated 2026-05-04</p>
-    <h1>Replace your LGTM stack with a single binary.</h1>
+    <p class="last-updated">Last updated 2026-06-01</p>
+    <h1>Replace Grafana + Prometheus + Loki with a single binary.</h1>
     <p class="tagline">Unified OpenTelemetry-native observability for small teams. One binary. One config file. One systemd unit. No Docker, no Kafka, no Postgres, no ClickHouse.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</a>
@@ -467,7 +467,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
     <p>The headline is not metaphorical. Component by component, here is what you stop running once Pharlux is in.</p>
     <table>
       <thead>
-        <tr><th>Today, with the Grafana&nbsp;/&nbsp;LGTM stack</th><th>With Pharlux</th></tr>
+        <tr><th>Today, with a Grafana&nbsp;+&nbsp;Prometheus&nbsp;+&nbsp;Loki stack</th><th>With Pharlux</th></tr>
       </thead>
       <tbody>
         <tr><td><strong>Loki</strong> for log aggregation and query</td><td>Logs ingested via OTLP, stored in per-signal Parquet &mdash; same binary</td></tr>
@@ -475,7 +475,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
         <tr><td><strong>Tempo</strong> for traces</td><td>Traces share the same binary and storage path <em>(V1.1, ADR-0005)</em></td></tr>
         <tr><td><strong>Grafana</strong> for dashboards and querying</td><td>Embedded React&nbsp;+&nbsp;ECharts UI served from the same binary; SQL via Apache DataFusion</td></tr>
         <tr><td><strong>Alertmanager</strong> for alerts and notifications</td><td>Built-in SQL-based alerts, state-machine evaluator, webhook&nbsp;+&nbsp;Slack output</td></tr>
-        <tr><td>Choose, deploy, and operate <strong>object storage</strong> (S3&nbsp;/&nbsp;MinIO) for log retention</td><td>Local Parquet on disk; optional S3 cold tier in the Scale tier</td></tr>
+        <tr><td>Choose, deploy, and operate <strong>object storage</strong> (S3&nbsp;/&nbsp;MinIO) for log retention</td><td>Local Parquet on disk; S3 cold tier is V1.1+ (Scale tier roadmap)</td></tr>
         <tr><td><strong>5+ config files</strong>, 5+ upgrade cycles, 5+ failure surfaces</td><td>One <code>pharlux.toml</code>, one binary, one systemd unit</td></tr>
       </tbody>
     </table>
@@ -505,7 +505,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
       <div class="perf-stat"><span class="num">7 ms</span><span class="label">avg request latency</span></div>
       <div class="perf-stat"><span class="num">83 MB</span><span class="label">static binary</span></div>
     </div>
-    <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 293 / 293 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes.</p>
+    <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 360 / 360 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes.</p>
   </section>
 
   <section>
@@ -516,12 +516,13 @@ curl http://localhost:3100/api/v1/health</code></pre>
       </thead>
       <tbody>
         <tr><td>Community</td><td><span class="mono">Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td><td class="cta-col"><a href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download</a></td></tr>
-        <tr><td>Team</td><td><span class="mono">$49/mo</span></td><td>10 hosts, 30-day retention, basic SAML</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</a></td></tr>
-        <tr><td>Business</td><td><span class="mono">$199/mo</span></td><td>50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</a></td></tr>
-        <tr><td>Scale</td><td><span class="mono">$899/mo</span></td><td>250 hosts, 1-year retention, white-label, S3 cold tier</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Team</td><td><span class="mono">$49/mo</span></td><td>10 hosts, 30-day retention, basic SAML <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Business</td><td><span class="mono">$199/mo</span></td><td>50 hosts, 90-day retention, full SAML/OIDC/LDAP + audit log <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Scale</td><td><span class="mono">$899/mo</span></td><td>250 hosts, 1-year retention, white-label + S3 cold tier <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</a></td></tr>
       </tbody>
     </table>
     <p>Commercial tiers include the Pharlux Enterprise binary. For deployments beyond 250 hosts or custom requirements, <a href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">talk to us</a>.</p>
+    <p><strong>Feature availability:</strong> items marked <em>(roadmap)</em> &mdash; SSO/SAML/OIDC/LDAP, audit log, white-label, and the S3 cold tier &mdash; are planned for V1.1+ and are not yet available. Current commercial tiers provide the host and retention limits shown above plus the Pharlux Enterprise binary.</p>
   </section>
 
   <section class="faq">
@@ -549,7 +550,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
     <p>Not in V1. Pharlux is intentionally self-hosted-first &mdash; that's core to the value proposition. A hosted offering may follow at some point, but it's not committed for V1.1 and not on the near-term roadmap.</p>
 
     <h3>How do I know it's production-ready?</h3>
-    <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 293&nbsp;/&nbsp;293 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works' own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
+    <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 360&nbsp;/&nbsp;360 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works' own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
   </section>
 
   <section>
@@ -589,7 +590,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
   <footer>
     <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/" target="_blank" rel="noopener">Veltara Works</a>.</p>
     <p>Source at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a>. Releases at <a href="https://github.com/Veltara-Works/pharlux/releases">github.com/Veltara-Works/pharlux/releases</a>.</p>
-    <p class="meta">Last updated: 2026-05-04 (OG image + FAQ + per-tier CTAs + HowTo + header date + vs-LGTM block + animated quickstart + brand link) &middot; v1.0.0</p>
+    <p class="meta">Last updated: 2026-06-01 (marketing-truth: roadmap feature labels, Grafana+Prometheus+Loki headline, 360-test count) &middot; v1.0.0</p>
   </footer>
 </main>
 </body>
