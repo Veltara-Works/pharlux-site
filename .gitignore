@@ -5,6 +5,16 @@ Thumbs.db
 .idea/
 *.swp
 
+# Dependencies & build output (generated — never commit)
+node_modules/
+# Docusaurus build cache
+.docusaurus/
+# compiled static site (the deploy rebuilds this from source)
+build/
+
+# Local draft content — kept out of the published source tree
+_drafts/
+
 # Never commit secrets anywhere in the tree
 **/.secrets/
 **/.secrets
