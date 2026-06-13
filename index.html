@@ -64,21 +64,39 @@
           "name": "Team",
           "price": "49",
           "priceCurrency": "USD",
-          "category": "10 hosts, 30-day retention, basic SAML (roadmap) — commercial license"
+          "category": "25 hosts, 30-day retention, tamper-evident audit log — commercial license"
         },
         {
           "@type": "Offer",
           "name": "Business",
           "price": "199",
           "priceCurrency": "USD",
-          "category": "50 hosts, 90-day retention, full SAML/OIDC/LDAP + audit log (roadmap) — commercial license"
+          "category": "250 hosts, 90-day retention, tamper-evident audit log; SSO — SAML/OIDC/LDAP (roadmap) — commercial license"
         },
         {
           "@type": "Offer",
           "name": "Scale",
           "price": "899",
           "priceCurrency": "USD",
-          "category": "250 hosts, 1-year retention, white-label + S3 cold tier (roadmap) — commercial license"
+          "category": "Unlimited hosts and retention, air-gapped / binary-redistribution rights, sized for a single high-capacity VPS — commercial license"
+        },
+        {
+          "@type": "Offer",
+          "name": "Custom / Air-gapped",
+          "priceCurrency": "USD",
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "minPrice": "12000",
+            "priceCurrency": "USD"
+          },
+          "category": "Unlimited hosts and retention, air-gapped deployment, white-glove SLA, source escrow — quote-based, from $12,000/mo"
+        },
+        {
+          "@type": "Offer",
+          "name": "Commercial-License-Only",
+          "price": "2400",
+          "priceCurrency": "USD",
+          "category": "AGPL-to-commercial relicense without hosting — billed yearly"
         }
       ],
       "publisher": {
@@ -122,7 +140,7 @@
           "name": "What about scale beyond a single VPS?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "V1's design centre is 1 to 10 services on a single VPS. The Scale tier ($899 per month) covers up to 250 hosts, which suits most growth paths without architectural change. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform."
+            "text": "V1's design centre is 1 to 10 services on a single VPS. The Scale tier ($899 per month) lifts the licensed limits entirely — unlimited hosts and unlimited retention — and adds air-gapped / binary-redistribution rights; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform."
           }
         },
         {
@@ -417,7 +435,7 @@ footer p { margin: 0.25rem 0; }
   <header>
     <p class="brand">Pharlux by <a href="https://veltaraworks.com/" target="_blank" rel="noopener">Veltara Works</a></p>
     <span class="badge">v1.0.0 released &middot; 2026-04-17</span>
-    <p class="last-updated">Last updated 2026-06-01</p>
+    <p class="last-updated">Last updated 2026-06-13</p>
     <h1>Replace Grafana + Prometheus + Loki with a single binary.</h1>
     <p class="tagline">Unified OpenTelemetry-native observability for small teams. One binary. One config file. One systemd unit. No Docker, no Kafka, no Postgres, no ClickHouse.</p>
     <div class="cta-row">
@@ -479,7 +497,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
         <tr><td><strong>5+ config files</strong>, 5+ upgrade cycles, 5+ failure surfaces</td><td>One <code>pharlux.toml</code>, one binary, one systemd unit</td></tr>
       </tbody>
     </table>
-    <p><strong>Where the Grafana stack is the better choice.</strong> If you already run dashboards-as-code with Grafana provisioning and have years of PromQL alert rules, the migration cost may not be worth the operational saving. If you need horizontal scale-out across multiple data centres, Pharlux V1's design centre is a single VPS &mdash; the Scale tier covers up to 250 hosts but does not cluster across regions. If you need traces or PromQL <em>today</em>, both ship in V1.1 (per ADR-0005); until then the Grafana stack covers what Pharlux does not. And if you have a dedicated SRE who enjoys operating the stack, Grafana's decade-deep plugin ecosystem is a real asset.</p>
+    <p><strong>Where the Grafana stack is the better choice.</strong> If you already run dashboards-as-code with Grafana provisioning and have years of PromQL alert rules, the migration cost may not be worth the operational saving. If you need horizontal scale-out across multiple data centres, Pharlux V1's design centre is a single VPS &mdash; the Scale tier lifts the host and retention limits entirely, but Pharlux still runs on a single node and does not cluster across regions. If you need traces or PromQL <em>today</em>, both ship in V1.1 (per ADR-0005); until then the Grafana stack covers what Pharlux does not. And if you have a dedicated SRE who enjoys operating the stack, Grafana's decade-deep plugin ecosystem is a real asset.</p>
   </section>
 
   <section>
@@ -516,13 +534,15 @@ curl http://localhost:3100/api/v1/health</code></pre>
       </thead>
       <tbody>
         <tr><td>Community</td><td><span class="mono">Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td><td class="cta-col"><a href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download</a></td></tr>
-        <tr><td>Team</td><td><span class="mono">$49/mo</span></td><td>10 hosts, 30-day retention, basic SAML <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</a></td></tr>
-        <tr><td>Business</td><td><span class="mono">$199/mo</span></td><td>50 hosts, 90-day retention, full SAML/OIDC/LDAP + audit log <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</a></td></tr>
-        <tr><td>Scale</td><td><span class="mono">$899/mo</span></td><td>250 hosts, 1-year retention, white-label + S3 cold tier <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Team</td><td><span class="mono">$49/mo</span></td><td>25 hosts, 30-day retention, tamper-evident audit log</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Business</td><td><span class="mono">$199/mo</span></td><td>250 hosts, 90-day retention, tamper-evident audit log; SSO &mdash; SAML/OIDC/LDAP <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Scale</td><td><span class="mono">$899/mo</span></td><td>Unlimited hosts &amp; retention, air-gapped / redistribution rights; sized for a single high-capacity VPS. White-label + S3 cold tier <em>(roadmap)</em></td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</a></td></tr>
+        <tr><td>Custom / Air-gapped</td><td><span class="mono">from $12k/mo</span></td><td>Unlimited, air-gapped, white-glove SLA (24&times;7 / 4h SEV-1) + source escrow</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">Talk to us</a></td></tr>
+        <tr><td>Commercial-License-Only</td><td><span class="mono">$2,400/yr</span></td><td>AGPL&rarr;commercial relicense, license only (no hosting)</td><td class="cta-col"><a href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license-only%20enquiry">Get license</a></td></tr>
       </tbody>
     </table>
-    <p>Commercial tiers include the Pharlux Enterprise binary. For deployments beyond 250 hosts or custom requirements, <a href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">talk to us</a>.</p>
-    <p><strong>Feature availability:</strong> items marked <em>(roadmap)</em> &mdash; SSO/SAML/OIDC/LDAP, audit log, white-label, and the S3 cold tier &mdash; are planned for V1.1+ and are not yet available. Current commercial tiers provide the host and retention limits shown above plus the Pharlux Enterprise binary.</p>
+    <p>Commercial tiers include the Pharlux Enterprise binary. Host and retention figures are <strong>generous fair-use ceilings</strong>, not a per-host meter &mdash; tiers ladder on features, support, and redistribution rights, so pricing stays predictable with no per-host surprise bills. For air-gapped deployments, white-glove SLAs, or other custom requirements, <a href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">talk to us</a>.</p>
+    <p><strong>Feature availability:</strong> the <strong>tamper-evident audit log is shipped</strong> and included on every commercial tier today. Items marked <em>(roadmap)</em> &mdash; SSO (SAML/OIDC/LDAP), white-label, and the S3 cold tier &mdash; are planned for V1.1+ and not yet available. Commercial licensing is opening alongside the public release; enquiries are welcome now at <a href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">licensing@pharlux.com</a>.</p>
   </section>
 
   <section class="faq">
@@ -538,7 +558,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
     <p>Yes, gradually. Point your OpenTelemetry Collector at Pharlux's OTLP endpoint and run both stacks in parallel. PromQL support ships in V1.1; until then, queries are SQL via Apache DataFusion. Cross-signal <code>JOIN</code>s on <code>trace_id</code> are something a pure-Prometheus stack cannot do.</p>
 
     <h3>What about scale beyond a single VPS?</h3>
-    <p>V1's design centre is 1&ndash;10 services on a single VPS. The Scale tier (<span class="mono">$899/mo</span>) covers up to 250 hosts, which suits most growth paths without architectural change. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.</p>
+    <p>V1's design centre is 1&ndash;10 services on a single VPS. The Scale tier (<span class="mono">$899/mo</span>) lifts the licensed limits entirely &mdash; unlimited hosts and unlimited retention &mdash; and adds air-gapped / binary-redistribution rights; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.</p>
 
     <h3>AGPL-3.0 &mdash; does that mean I have to open-source my service?</h3>
     <p>No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when <em>you</em> modify and distribute Pharlux. If that's a concern, the commercial license removes the AGPL terms entirely.</p>
@@ -590,7 +610,7 @@ curl http://localhost:3100/api/v1/health</code></pre>
   <footer>
     <p><strong>Pharlux</strong> is a product of <a href="https://veltaraworks.com/" target="_blank" rel="noopener">Veltara Works</a>.</p>
     <p>Source at <a href="https://github.com/Veltara-Works/pharlux">github.com/Veltara-Works/pharlux</a>. Releases at <a href="https://github.com/Veltara-Works/pharlux/releases">github.com/Veltara-Works/pharlux/releases</a>.</p>
-    <p class="meta">Last updated: 2026-06-01 (marketing-truth: roadmap feature labels, Grafana+Prometheus+Loki headline, 360-test count) &middot; v1.0.0</p>
+    <p class="meta">Last updated: 2026-06-13 (pricing accuracy: Option A fair-use host caps 25/250/unlimited, Scale air-gapped framing, Custom + Commercial-License-Only tiers, audit log shipped) &middot; v1.0.0</p>
   </footer>
 </main>
 </body>
