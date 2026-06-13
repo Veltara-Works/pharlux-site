@@ -4,11 +4,30 @@
 
 Pharlux is a product of Veltara Works. It targets teams currently running the Grafana + Prometheus + Loki stack who are frustrated with operating five moving parts to observe three services. The design philosophy is single-binary simplicity: storage is a custom write-ahead log plus per-signal Apache Parquet files queried through embedded Apache DataFusion. HTTP (Axum) and gRPC (Tonic) share one Tokio runtime. TLS uses `rustls` throughout — zero OpenSSL in the dependency tree.
 
-Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average latency, 0 errors over 17.36 M points during a 30-second load test.
+Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average latency, 0 errors over 17.36 M points during a 30-second load test, fully reproducible with a load generator that ships in the source tree.
 
 ## Homepage
 
 - [Pharlux homepage](https://pharlux.com/): product overview, pricing, and commercial licensing contact.
+
+## Pricing
+
+- [Pricing page](https://pharlux.com/pricing): full tier comparison — Community (free, AGPL-3.0), Team ($49/mo), Business ($199/mo), Scale ($899/mo), and Custom / Air-gapped (from $12,000/mo).
+- [Machine-readable pricing](https://pharlux.com/pricing.md): plans, prices, and limits in plain Markdown for programmatic comparison.
+
+## Benchmarks
+
+- [Benchmarks](https://pharlux.com/benchmarks): first-party sustained-ingest results (577k points/sec on a 4 vCPU / 8 GB VPS) with full reproduction methodology.
+
+## Comparisons
+
+- [Compare Pharlux](https://pharlux.com/compare/): how Pharlux compares to the major self-hosted and SaaS observability tools.
+- [Pharlux vs Grafana Loki](https://pharlux.com/compare/grafana-loki/): one binary versus the LGTM stack.
+- [Pharlux vs SigNoz](https://pharlux.com/compare/signoz/): unified observability without operating ClickHouse.
+- [Pharlux vs Prometheus](https://pharlux.com/compare/prometheus/): metrics and logs in one binary versus a metrics-only core plus a stack.
+- [Pharlux vs Datadog](https://pharlux.com/compare/datadog/): a self-hosted, flat-priced alternative to per-host SaaS.
+- [Pharlux vs OpenObserve](https://pharlux.com/compare/openobserve/): two Rust single binaries compared by scope.
+- [Pharlux vs VictoriaMetrics](https://pharlux.com/compare/victoriametrics/): unified metrics + logs versus a dedicated metrics store.
 
 ## Source code and downloads
 
@@ -24,9 +43,14 @@ Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average late
 - [Backup and restore](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/backup-restore.md)
 - [Operator runbook](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md)
 
+## Blog
+
+- [Pharlux blog](https://pharlux.com/blog): tutorials, technical deep-dives, and operator stories from the Pharlux team.
+
 ## Policies
 
 - [robots.txt](https://pharlux.com/robots.txt): crawler permissions. All major AI crawlers are explicitly allowed.
+- [security.txt](https://pharlux.com/.well-known/security.txt): security disclosure information (RFC 9116).
 
 ## Contact
 

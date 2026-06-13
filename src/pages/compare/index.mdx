@@ -1,0 +1,105 @@
+---
+title: "Compare Pharlux: self-hosted observability alternatives"
+description: "How Pharlux — one binary for metrics + logs on a single VPS — compares to Grafana Loki, SigNoz, Prometheus, Datadog, OpenObserve, and VictoriaMetrics. Honest, first-party comparisons."
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+
+<Head>
+  <meta property="og:title" content="Compare Pharlux: self-hosted observability alternatives" />
+  <meta property="og:description" content="How Pharlux — one binary for metrics + logs on a single VPS — compares to Grafana Loki, SigNoz, Prometheus, Datadog, OpenObserve, and VictoriaMetrics." />
+  <meta name="twitter:title" content="Compare Pharlux to other observability tools" />
+  <meta name="twitter:description" content="Honest, first-party comparisons: Pharlux vs Grafana Loki, SigNoz, Prometheus, Datadog, OpenObserve, and VictoriaMetrics." />
+  <link rel="canonical" href="https://pharlux.com/compare/" />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': 'https://pharlux.com/compare/#collection',
+        name: 'Compare Pharlux: self-hosted observability alternatives',
+        description: 'First-party comparisons of Pharlux against the major self-hosted and SaaS observability tools.',
+        url: 'https://pharlux.com/compare/',
+        dateModified: '2026-06-13',
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        isPartOf: {'@type': 'WebSite', name: 'Pharlux', url: 'https://pharlux.com/'},
+      },
+      {
+        '@type': 'ItemList',
+        '@id': 'https://pharlux.com/compare/#list',
+        name: 'Pharlux comparisons',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Pharlux vs Grafana Loki', url: 'https://pharlux.com/compare/grafana-loki/'},
+          {'@type': 'ListItem', position: 2, name: 'Pharlux vs SigNoz', url: 'https://pharlux.com/compare/signoz/'},
+          {'@type': 'ListItem', position: 3, name: 'Pharlux vs Prometheus', url: 'https://pharlux.com/compare/prometheus/'},
+          {'@type': 'ListItem', position: 4, name: 'Pharlux vs Datadog', url: 'https://pharlux.com/compare/datadog/'},
+          {'@type': 'ListItem', position: 5, name: 'Pharlux vs OpenObserve', url: 'https://pharlux.com/compare/openobserve/'},
+          {'@type': 'ListItem', position: 6, name: 'Pharlux vs VictoriaMetrics', url: 'https://pharlux.com/compare/victoriametrics/'},
+        ],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'Compare', item: 'https://pharlux.com/compare/'},
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://pharlux.com/compare/#faq',
+        mainEntity: [
+          {'@type': 'Question', name: 'What is the best self-hosted observability tool for a small team?', acceptedAnswer: {'@type': 'Answer', text: 'It depends on what you need. Most self-hosted options — Grafana Loki, Prometheus, VictoriaMetrics — cover one signal well and expect you to assemble and operate the rest. Pharlux is built for a small team on a single VPS that wants metrics and logs unified in one binary, with dashboards, SQL, and alerting included, rather than a multi-component stack.'}},
+          {'@type': 'Question', name: 'Is Pharlux a self-hosted Datadog alternative?', acceptedAnswer: {'@type': 'Answer', text: 'For metrics and logs on infrastructure you control, yes. Datadog is SaaS-only and priced per host, with telemetry stored on Datadog\'s cloud. Pharlux runs on your own VPS for a flat monthly license and keeps all data local. Pharlux does not match Datadog\'s full breadth of integrations, RUM, and synthetics.'}},
+          {'@type': 'Question', name: 'How is Pharlux different from the Grafana LGTM stack?', acceptedAnswer: {'@type': 'Answer', text: 'The LGTM stack is Loki, Grafana, Tempo, and Mimir — separate components for logs, dashboards, traces, and metrics, plus Alertmanager and object storage. Pharlux replaces that with one 83 MB binary for metrics and logs (traces in V1.1), with built-in dashboards and alerting and no object store to operate.'}},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# Compare Pharlux
+
+**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+
+Pharlux is a single 83 MB binary that ingests OpenTelemetry metrics and logs, stores them as local Parquet, and serves SQL queries, dashboards, and alerting from one process on a single VPS. Most alternatives take the opposite shape: a strong tool for one signal, plus the separate components you assemble around it. These comparisons are first-party and honest — they name where each tool is genuinely good, and where Pharlux's one-binary, single-VPS design is the better fit for a small team running 1–10 services.
+
+## Pick your comparison
+
+| Compared to | In one line | |
+|---|---|---|
+| **Grafana Loki** | Loki is logs-only — Pharlux replaces it plus Mimir, Grafana, Alertmanager, and object storage | [Read →](/compare/grafana-loki) |
+| **SigNoz** | Same unified-observability goal, but SigNoz runs on ClickHouse you operate; Pharlux embeds its storage | [Read →](/compare/signoz) |
+| **Prometheus** | The metrics standard, and metrics only — Pharlux adds logs in the same binary, one SQL surface | [Read →](/compare/prometheus) |
+| **Datadog** | SaaS-only and per-host priced — Pharlux is self-hosted, flat-priced, and keeps your data | [Read →](/compare/datadog) |
+| **OpenObserve** | Also a Rust single binary on Parquet — Pharlux is scoped tighter for the single-VPS team | [Read →](/compare/openobserve) |
+| **VictoriaMetrics** | A fast metrics store with logs/traces as separate products — Pharlux unifies metrics + logs | [Read →](/compare/victoriametrics) |
+
+## How to think about the choice
+
+A useful way to narrow it down:
+
+- **You want one tool, not a stack.** If "observability" currently means running and correlating four or five components for a handful of services, Pharlux collapses that into one binary. Start with [Pharlux vs Grafana Loki](/compare/grafana-loki) or [vs Prometheus](/compare/prometheus).
+- **You're evaluating other unified, self-hosted platforms.** [Pharlux vs SigNoz](/compare/signoz) (no ClickHouse to operate) and [Pharlux vs OpenObserve](/compare/openobserve) (scoped for the single VPS) are the closest head-to-heads.
+- **You're priced out of, or uneasy with, SaaS.** [Pharlux vs Datadog](/compare/datadog) covers the cost and data-residency case for bringing observability back in-house.
+- **You have a dedicated metrics workload.** [Pharlux vs VictoriaMetrics](/compare/victoriametrics) is the honest take on a specialised TSDB versus unified metrics + logs.
+
+Every comparison links through to the same first-party evidence: the [benchmarks](/benchmarks) (577,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS, reproducible from the source tree) and the [pricing](/pricing) (flat tiers, no per-host meter).
+
+## Frequently asked questions
+
+### What is the best self-hosted observability tool for a small team?
+
+It depends on what you need. Most self-hosted options — Grafana Loki, Prometheus, VictoriaMetrics — cover one signal well and expect you to assemble and operate the rest. Pharlux is built for a small team on a single VPS that wants metrics and logs unified in one binary, with dashboards, SQL, and alerting included.
+
+### Is Pharlux a self-hosted Datadog alternative?
+
+For metrics and logs on infrastructure you control, yes. Datadog is SaaS-only and priced per host, with telemetry stored on Datadog's cloud. Pharlux runs on your own VPS for a flat monthly license and keeps all data local. Pharlux does not match Datadog's full breadth of integrations, RUM, and synthetics.
+
+### How is Pharlux different from the Grafana LGTM stack?
+
+The LGTM stack is Loki, Grafana, Tempo, and Mimir — separate components for logs, dashboards, traces, and metrics, plus Alertmanager and object storage. Pharlux replaces that with one 83 MB binary for metrics and logs (traces in V1.1), with built-in dashboards and alerting and no object store to operate.
+
+## Try Pharlux
+
+<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>

@@ -1,0 +1,76 @@
+---
+title: "About Pharlux — single-binary observability by Veltara Works"
+description: "Pharlux is a single-binary, self-hosted observability tool built by Veltara Works and dogfooded on its own production stack. What it is, why it exists, and who builds it."
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+
+<Head>
+  <meta property="og:title" content="About Pharlux — single-binary observability by Veltara Works" />
+  <meta property="og:description" content="Pharlux is a single-binary, self-hosted observability tool built by Veltara Works and dogfooded on its own production stack. What it is, why it exists, and who builds it." />
+  <meta name="twitter:title" content="About Pharlux" />
+  <meta name="twitter:description" content="Single-binary, self-hosted observability built by Veltara Works and run on its own production stack." />
+  <link rel="canonical" href="https://pharlux.com/about/" />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'AboutPage',
+        '@id': 'https://pharlux.com/about/#about',
+        name: 'About Pharlux',
+        description: 'What Pharlux is, why it exists, and who builds it.',
+        url: 'https://pharlux.com/about/',
+        dateModified: '2026-06-13',
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        isPartOf: {'@type': 'WebSite', name: 'Pharlux', url: 'https://pharlux.com/'},
+      },
+      {
+        '@type': 'Organization',
+        '@id': 'https://pharlux.com/#veltara-works',
+        name: 'Veltara Works',
+        url: 'https://veltaraworks.com/',
+        description: 'Veltara Works builds developer tools, including Pharlux (observability), alongside email hosting, cloud infrastructure, and software license management.',
+        sameAs: ['https://github.com/Veltara-Works'],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'About', item: 'https://pharlux.com/about/'},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# About Pharlux
+
+**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+
+Pharlux is a single statically-linked Rust binary for self-hosted, OpenTelemetry-native observability. It ingests metrics and logs (traces in V1.1), stores them as per-signal Apache Parquet on local disk, and serves SQL queries, dashboards, and alerting from one process. It is built for small teams running 1–10 services on a single VPS — the people who need to observe their systems without standing up and operating a five-component stack to do it.
+
+## Why Pharlux exists
+
+Observability for a small team had quietly become a second system to run. Metrics in Prometheus, logs in Loki, dashboards in Grafana, alerts in Alertmanager, storage in an object store — five moving parts, five config files, five upgrade cycles, to watch three services. The alternative was a SaaS bill that scaled with every host and shipped your telemetry to someone else's cloud.
+
+Pharlux is the third option: one binary you install with `sudo pharlux install`, one `pharlux.toml`, one systemd unit, on hardware you own. The design is a series of deliberate refusals — no Docker, no Kafka, no ClickHouse, no external database beyond embedded SQLite, no OpenSSL in the dependency tree. Each constraint forced a simpler system that a single operator can fully reason about.
+
+## Who builds Pharlux
+
+Pharlux is one of several developer tools built by [Veltara Works](https://veltaraworks.com/) — alongside email hosting, cloud infrastructure, and software license management. See [veltaraworks.com](https://veltaraworks.com/) for the full portfolio.
+
+Pharlux is the observability layer Veltara Works runs on its own production stack, including ValidonX and Vectis Mail. The benchmarks and reliability claims on this site are first-party: measured on commodity hardware, reproducible from the source tree, and validated by the fact that we depend on Pharlux ourselves.
+
+## How it is built
+
+- **Open and inspectable.** The Community edition is free under [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html); the source is there to read.
+- **Reproducible and audited.** All dependencies are pinned exact, with `cargo-deny` and `cargo-audit` gates green; the binary is a genuinely static musl build.
+- **Production-tested.** V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates: 360 of 360 tests pass, with 10 of 10 consecutive crash-recovery runs and zero flakes.
+- **Memory-safe by construction.** Written in Rust, with `rustls` for all TLS and zero OpenSSL in the dependency tree.
+
+## Learn more
+
+<Link to="/compare">Compare Pharlux</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link> · <Link to="https://github.com/Veltara-Works/pharlux">GitHub</Link>
+
+For commercial licensing, email [licensing@pharlux.com](mailto:licensing@pharlux.com).

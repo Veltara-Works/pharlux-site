@@ -1,0 +1,130 @@
+---
+title: "Pharlux vs OpenObserve: scope, not just a single binary"
+description: "Both are Rust single binaries storing Parquet and querying SQL. OpenObserve aims to replace Datadog and Elastic at scale; Pharlux is purpose-built for metrics + logs on one VPS."
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+
+<Head>
+  <meta property="og:title" content="Pharlux vs OpenObserve: scope, not just a single binary" />
+  <meta property="og:description" content="Both are Rust binaries on Parquet with SQL and OTLP. OpenObserve targets Datadog/Elastic-scale; Pharlux is purpose-built for metrics + logs on a single VPS with first-party benchmarks." />
+  <meta name="twitter:title" content="Pharlux vs OpenObserve" />
+  <meta name="twitter:description" content="Two Rust single-binary observability tools compared honestly. Where their scope, query surface, and deployment differ — for small teams on a VPS." />
+  <link rel="canonical" href="https://pharlux.com/compare/openobserve/" />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        '@id': 'https://pharlux.com/compare/openobserve/#article',
+        headline: 'Pharlux vs OpenObserve: scope, not just a single binary',
+        description: 'A first-party comparison of Pharlux and OpenObserve, two Rust-based observability tools: signal coverage, deployment modes, query surface, licensing, and fit.',
+        datePublished: '2026-06-13',
+        dateModified: '2026-06-13',
+        author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        url: 'https://pharlux.com/compare/openobserve/',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'Compare', item: 'https://pharlux.com/compare/'},
+          {'@type': 'ListItem', position: 3, name: 'Pharlux vs OpenObserve', item: 'https://pharlux.com/compare/openobserve/'},
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://pharlux.com/compare/openobserve/#faq',
+        mainEntity: [
+          {'@type': 'Question', name: 'How are Pharlux and OpenObserve similar?', acceptedAnswer: {'@type': 'Answer', text: 'They share a lot: both are written in Rust, both store data as columnar Apache Parquet, both query with SQL, both ingest OpenTelemetry (OTLP), and both offer a single-binary deployment under AGPL-3.0 with a commercial edition. The difference is scope and target deployment, not the core technology choices.'}},
+          {'@type': 'Question', name: 'What is the main difference between Pharlux and OpenObserve?', acceptedAnswer: {'@type': 'Answer', text: 'Scope. OpenObserve aims to replace Datadog, Splunk, and Elasticsearch across logs, metrics, traces, and RUM, and scales out to a clustered HA mode using NATS, PostgreSQL, and OpenFGA. Pharlux is deliberately scoped to metrics and logs for a small team on a single VPS, single-node by design, with no clustering dependencies even at its ceiling.'}},
+          {'@type': 'Question', name: 'Does OpenObserve support SQL and OpenTelemetry like Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'Yes. OpenObserve supports SQL and PromQL for queries and is OTLP-native over HTTP and gRPC, and it uses VRL for pipeline transforms. Pharlux uses SQL via Apache DataFusion with cross-signal JOINs on trace_id, and is OTLP-native on :4317 and :4318.'}},
+          {'@type': 'Question', name: 'Which scales further, Pharlux or OpenObserve?', acceptedAnswer: {'@type': 'Answer', text: 'OpenObserve. Its clustered mode (Router, Ingester, Compactor, Querier, AlertManager, plus NATS, PostgreSQL, and OpenFGA) is built for high-volume, horizontally-scaled deployments. Pharlux is single-node by design and scales vertically on one VPS; the Scale tier lifts licensed limits but does not cluster across machines.'}},
+          {'@type': 'Question', name: 'Why choose Pharlux over OpenObserve for a small team?', acceptedAnswer: {'@type': 'Answer', text: 'If your target is one VPS and a handful of services, Pharlux is scoped exactly for that: no clustering components even at its limit, published first-party benchmarks on commodity hardware, a tamper-evident audit log on every commercial tier, and production dogfooding inside Veltara Works.'}},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# Pharlux vs OpenObserve
+
+**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+
+This is the closest comparison in the set, so it is worth being precise. Pharlux and OpenObserve make many of the same engineering choices: both are written in Rust, both store columnar Apache Parquet, both query with SQL, both are OpenTelemetry-native, and both ship a single binary under AGPL-3.0 with a commercial edition. They differ on **scope.** OpenObserve aims to replace Datadog, Splunk, and Elasticsearch across every signal and to scale out to a clustered platform. Pharlux is deliberately scoped to metrics and logs for a small team on one VPS — and stays single-node, with no clustering machinery, on purpose.
+
+## Where they line up, and where they diverge
+
+| | Pharlux v1.0.0 | OpenObserve |
+|---|---|---|
+| **Written in** | Rust | Rust |
+| **Storage** | Columnar Parquet + WAL, local disk | Columnar Parquet, local disk or object store |
+| **Query** | SQL (DataFusion), cross-signal `JOIN` on `trace_id` | SQL + PromQL; VRL for pipelines |
+| **OpenTelemetry** | Native — OTLP `:4317` / `:4318` | Native — OTLP HTTP / gRPC |
+| **Signals** | Metrics + logs (traces in V1.1) | Logs, metrics, traces, RUM |
+| **Single-binary mode** | The only mode — single-node by design | Yes, for smaller deployments |
+| **Scale-out mode** | None — vertical only | Clustered HA: Router/Ingester/Compactor/Querier + NATS, PostgreSQL, OpenFGA |
+| **License** | AGPL-3.0 + commercial | AGPL-3.0 + commercial (Enterprise) |
+| **First-party benchmark** | [577k pts/sec on 4 vCPU / 8 GB, reproducible](/benchmarks) | vendor performance claims |
+
+## OpenObserve is a good tool — here is the real distinction
+
+Credit where due: OpenObserve is a capable, fast-moving project with a sizeable community (tens of thousands of GitHub stars), low-cost columnar storage, built-in VRL pipelines, and an honest open-standards posture (SQL, PromQL, OTLP, AGPL). If your plan is to consolidate logs, metrics, traces, and RUM at meaningful scale and you are prepared to run its clustered mode, OpenObserve is built for that ambition.
+
+The distinction is not "single binary versus not" — both offer one. It is **how far the design stretches.** OpenObserve's reach to Datadog/Splunk/Elastic scale means its high-availability deployment brings in NATS for coordination, PostgreSQL for metadata, and OpenFGA for authorization. Pharlux made the opposite commitment: single-node by design, with embedded SQLite for metadata and zero clustering dependencies even at the Scale tier. The ceiling is lower and that is deliberate — it is what keeps the operational surface to one binary and one config, forever, for the team that will never run a cluster.
+
+## Why a single-VPS team picks Pharlux
+
+- **Scoped for exactly your deployment.** 1–10 services on one VPS is the design centre, not the small end of a platform that really wants to be a cluster. No NATS, no Postgres, no authz service to stand up — ever.
+- **Proof you can reproduce.** [577,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 17.36 million points, with a load generator that ships in the source tree. First-party numbers on commodity hardware, not headline claims.
+- **Cross-signal SQL by default.** `JOIN` metrics and logs on `trace_id` in one query through Apache DataFusion.
+- **A commercial model built for operators.** Flat tiers (Community free, Team $49, Business $199, Scale $899) with a tamper-evident audit log included on every paid tier and a clear upgrade path — not just an enterprise gate.
+- **Production-validated.** Pharlux is the observability layer under Veltara Works' own ValidonX and Vectis Mail. 360 of 360 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes.
+
+## Migrating between them
+
+Because both are OTLP-native, moving is low-risk:
+
+1. Stand up Pharlux with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+2. Add a Pharlux exporter to your OpenTelemetry Collector on `:4318` alongside the OpenObserve one.
+3. Run both in parallel; rebuild dashboards and alerts as Pharlux SQL.
+4. Keep whichever fits your scale. Many small teams find Pharlux's single-binary ceiling is simply higher than they will ever need.
+
+## Is Pharlux the right fit?
+
+If you are consolidating multiple signals at scale, expect to run a clustered observability backend, or want RUM and traces in production today, OpenObserve's broader scope and HA mode are genuinely the better fit and Pharlux V1 is not pretending to compete there.
+
+If your world is one VPS and a handful of services, Pharlux is built for precisely that — and its refusal to grow a cluster is the feature, not a limitation. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and run it; there is nothing else to deploy.
+
+## Frequently asked questions
+
+### How are Pharlux and OpenObserve similar?
+
+They share a lot: both are written in Rust, both store data as columnar Apache Parquet, both query with SQL, both ingest OpenTelemetry (OTLP), and both offer a single-binary deployment under AGPL-3.0 with a commercial edition. The difference is scope and target deployment, not the core technology choices.
+
+### What is the main difference between Pharlux and OpenObserve?
+
+Scope. OpenObserve aims to replace Datadog, Splunk, and Elasticsearch across logs, metrics, traces, and RUM, and scales out to a clustered HA mode using NATS, PostgreSQL, and OpenFGA. Pharlux is deliberately scoped to metrics and logs for a small team on a single VPS, single-node by design, with no clustering dependencies even at its ceiling.
+
+### Does OpenObserve support SQL and OpenTelemetry like Pharlux?
+
+Yes. OpenObserve supports SQL and PromQL for queries and is OTLP-native over HTTP and gRPC, and it uses VRL for pipeline transforms. Pharlux uses SQL via Apache DataFusion with cross-signal `JOIN`s on `trace_id`, and is OTLP-native on `:4317` and `:4318`.
+
+### Which scales further, Pharlux or OpenObserve?
+
+OpenObserve. Its clustered mode (Router, Ingester, Compactor, Querier, AlertManager, plus NATS, PostgreSQL, and OpenFGA) is built for high-volume, horizontally-scaled deployments. Pharlux is single-node by design and scales vertically on one VPS; the Scale tier lifts licensed limits but does not cluster across machines.
+
+### Why choose Pharlux over OpenObserve for a small team?
+
+If your target is one VPS and a handful of services, Pharlux is scoped exactly for that: no clustering components even at its limit, published first-party benchmarks on commodity hardware, a tamper-evident audit log on every commercial tier, and production dogfooding inside Veltara Works.
+
+## Try Pharlux
+
+<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+
+---
+
+**Compare Pharlux to other tools:** <Link to="/compare/grafana-loki">Grafana Loki</Link> · <Link to="/compare/signoz">SigNoz</Link> · <Link to="/compare/prometheus">Prometheus</Link> · <Link to="/compare/datadog">Datadog</Link> · <Link to="/compare/victoriametrics">VictoriaMetrics</Link>

@@ -105,7 +105,7 @@ Per-crate test counts as of V1.0.0:
 | `pharlux-common` | 14 inline (config, schema, tenant) |
 | `pharlux-alert` | 13 (state machine, payload builders, axum mock) |
 
-The full workspace test count at V1.0.0 was **293 passing**. The number grows with each commit; the rule from [`DOCUMENTATION_POLICY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/DOCUMENTATION_POLICY.md) is *new code without tests does not merge*.
+The full workspace test count at V1.0.0 was **360 passing**. The number grows with each commit; the rule from [`DOCUMENTATION_POLICY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/DOCUMENTATION_POLICY.md) is *new code without tests does not merge*.
 
 ### Integration tests (`<crate>/tests/`)
 

@@ -60,11 +60,11 @@ const SCHEMA_GRAPH = {
       '@id': 'https://pharlux.com/#faq',
       mainEntity: [
         {'@type': 'Question', name: 'Why not just use Grafana?', acceptedAnswer: {'@type': 'Answer', text: 'Grafana is great, and it is the right choice if you have a dedicated SRE who enjoys operating Loki, Mimir, Tempo, and Alertmanager next to it. Pharlux is for the case where you do not — one binary replaces the whole stack. If you have one engineer who also wants to write product code, that is the trade-off Pharlux optimises for.'}},
-        {'@type': 'Question', name: 'How is this different from SigNoz?', acceptedAnswer: {'@type': 'Answer', text: 'SigNoz has the right ambition — unified OpenTelemetry observability — but ships as a multi-container Docker Compose or Kubernetes deployment with ClickHouse, Zookeeper, and Kafka. Pharlux is a single 83 MB binary on your VPS, with embedded SQLite for metadata and Parquet on disk. Both are good projects targeting different operational sweet spots.'}},
+        {'@type': 'Question', name: 'How is this different from SigNoz?', acceptedAnswer: {'@type': 'Answer', text: 'SigNoz has the right ambition — unified OpenTelemetry observability — but is built on ClickHouse, which you run and operate alongside it (plus ZooKeeper and PostgreSQL for a clustered setup), shipped as a multi-container Docker Compose or Kubernetes deployment. Pharlux is a single 83 MB binary on your VPS, with embedded SQLite for metadata and Parquet on disk. Both are good projects targeting different operational sweet spots.'}},
         {'@type': 'Question', name: 'Can I migrate from Prometheus?', acceptedAnswer: {'@type': 'Answer', text: 'Yes, gradually. Point your OpenTelemetry Collector at Pharlux\'s OTLP endpoint and run both stacks in parallel. PromQL support ships in V1.1; until then, queries are SQL via Apache DataFusion. Cross-signal JOINs on trace_id are something a pure-Prometheus stack cannot do.'}},
         {'@type': 'Question', name: 'What about scale beyond a single VPS?', acceptedAnswer: {'@type': 'Answer', text: 'V1\'s design centre is 1 to 10 services on a single VPS. The Scale tier ($899 per month) lifts the licensed limits entirely — unlimited hosts and unlimited retention — and adds air-gapped / binary-redistribution rights; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.'}},
         {'@type': 'Question', name: 'AGPL-3.0 — does that mean I have to open-source my service?', acceptedAnswer: {'@type': 'Answer', text: 'No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when you modify and distribute Pharlux. If that is a concern, the commercial license removes the AGPL terms entirely.'}},
-        {'@type': 'Question', name: 'What happens when V1.1 ships — do I have to migrate data?', acceptedAnswer: {'@type': 'Answer', text: 'No. The WAL format (ADR-0018) and per-signal Parquet schemas (ADR-0003) are frozen. V1.1 is additive — new capabilities, no breaking changes. Upgrade is `systemctl stop pharlux`, swap the binary, `systemctl start pharlux`. The same procedure applies for V1.0.x patches.'}},
+        {'@type': 'Question', name: 'What happens when V1.1 ships — do I have to migrate data?', acceptedAnswer: {'@type': 'Answer', text: 'No. The WAL format and per-signal Parquet schemas are frozen. V1.1 is additive — new capabilities, no breaking changes. Upgrade is `systemctl stop pharlux`, swap the binary, `systemctl start pharlux`. The same procedure applies for V1.0.x patches.'}},
         {'@type': 'Question', name: 'Is there a hosted version?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1. Pharlux is intentionally self-hosted-first — that is core to the value proposition. A hosted offering may follow at some point, but it is not committed for V1.1 and not on the near-term roadmap.'}},
         {'@type': 'Question', name: 'How do I know it is production-ready?', acceptedAnswer: {'@type': 'Answer', text: 'V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 360 of 360 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works\' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX.'}},
       ],
@@ -195,7 +195,7 @@ export default function Home(): ReactNode {
             <tbody>
               <tr><td><strong>Loki</strong> for log aggregation and query</td><td>Logs ingested via OTLP, stored in per-signal Parquet &mdash; same binary</td></tr>
               <tr><td><strong>Mimir</strong> (or Cortex&nbsp;/&nbsp;standalone Prometheus) for metrics</td><td>Metrics ingested via OTLP, same binary, same WAL&nbsp;+&nbsp;Parquet storage path</td></tr>
-              <tr><td><strong>Tempo</strong> for traces</td><td>Traces share the same binary and storage path <em>(V1.1, ADR-0005)</em></td></tr>
+              <tr><td><strong>Tempo</strong> for traces</td><td>Traces share the same binary and storage path <em>(V1.1)</em></td></tr>
               <tr><td><strong>Grafana</strong> for dashboards and querying</td><td>Embedded React&nbsp;+&nbsp;ECharts UI served from the same binary; SQL via Apache DataFusion</td></tr>
               <tr><td><strong>Alertmanager</strong> for alerts and notifications</td><td>Built-in SQL-based alerts, state-machine evaluator, webhook&nbsp;+&nbsp;Slack output</td></tr>
               <tr><td>Choose, deploy, and operate <strong>object storage</strong> (S3&nbsp;/&nbsp;MinIO) for log retention</td><td>Local Parquet on disk; optional S3 cold tier in the Scale tier</td></tr>
@@ -210,7 +210,7 @@ export default function Home(): ReactNode {
             design centre is a single VPS &mdash; the Scale tier lifts the host and
             retention limits entirely, but Pharlux still runs on a single node and does
             not cluster across regions. If you need traces or PromQL{' '}
-            <em>today</em>, both ship in V1.1 (per ADR-0005); until then the Grafana stack
+            <em>today</em>, both ship in V1.1; until then the Grafana stack
             covers what Pharlux does not. And if you have a dedicated SRE who enjoys
             operating the stack, Grafana&apos;s decade-deep plugin ecosystem is a real
             asset.
@@ -276,7 +276,7 @@ export default function Home(): ReactNode {
           <p>Grafana is great, and it is the right choice if you have a dedicated SRE who enjoys operating Loki, Mimir, Tempo, and Alertmanager next to it. Pharlux is for the case where you don&apos;t — one binary replaces the whole stack. If you have one engineer who also wants to write product code, that&apos;s the trade-off Pharlux optimises for.</p>
 
           <Heading as="h3" className={styles.faqQ}>How is this different from SigNoz?</Heading>
-          <p>SigNoz has the right ambition — unified OpenTelemetry observability — but ships as a multi-container Docker Compose or Kubernetes deployment with ClickHouse, Zookeeper, and Kafka. Pharlux is a single 83&nbsp;MB binary on your VPS, with embedded SQLite for metadata and Parquet on disk. Both are good projects targeting different operational sweet spots.</p>
+          <p>SigNoz has the right ambition — unified OpenTelemetry observability — but is built on ClickHouse, which you run and operate alongside it (plus ZooKeeper and PostgreSQL for a clustered setup), shipped as a multi-container Docker Compose or Kubernetes deployment. Pharlux is a single 83&nbsp;MB binary on your VPS, with embedded SQLite for metadata and Parquet on disk. Both are good projects targeting different operational sweet spots.</p>
 
           <Heading as="h3" className={styles.faqQ}>Can I migrate from Prometheus?</Heading>
           <p>Yes, gradually. Point your OpenTelemetry Collector at Pharlux&apos;s OTLP endpoint and run both stacks in parallel. PromQL support ships in V1.1; until then, queries are SQL via Apache DataFusion. Cross-signal <code>JOIN</code>s on <code>trace_id</code> are something a pure-Prometheus stack cannot do.</p>
@@ -288,13 +288,13 @@ export default function Home(): ReactNode {
           <p>No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when <em>you</em> modify and distribute Pharlux. If that&apos;s a concern, the commercial license removes the AGPL terms entirely.</p>
 
           <Heading as="h3" className={styles.faqQ}>What happens when V1.1 ships &mdash; do I have to migrate data?</Heading>
-          <p>No. The WAL format (ADR-0018) and per-signal Parquet schemas (ADR-0003) are frozen. V1.1 is additive &mdash; new capabilities, no breaking changes. Upgrade is <code>systemctl stop pharlux</code>, swap the binary, <code>systemctl start pharlux</code>. The same procedure applies for V1.0.x patches.</p>
+          <p>No. The WAL format and per-signal Parquet schemas are frozen. V1.1 is additive &mdash; new capabilities, no breaking changes. Upgrade is <code>systemctl stop pharlux</code>, swap the binary, <code>systemctl start pharlux</code>. The same procedure applies for V1.0.x patches.</p>
 
           <Heading as="h3" className={styles.faqQ}>Is there a hosted version?</Heading>
           <p>Not in V1. Pharlux is intentionally self-hosted-first &mdash; that&apos;s core to the value proposition. A hosted offering may follow at some point, but it&apos;s not committed for V1.1 and not on the near-term roadmap.</p>
 
           <Heading as="h3" className={styles.faqQ}>How do I know it&apos;s production-ready?</Heading>
-          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 293&nbsp;/&nbsp;293 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
+          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 360&nbsp;/&nbsp;360 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
         </section>
 
         <section className={styles.section}>

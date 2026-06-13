@@ -1,0 +1,134 @@
+---
+title: "Pharlux vs Prometheus: metrics and logs in one binary"
+description: "Prometheus is the metrics standard — and metrics only. Logs, dashboards, alert routing and long-term storage are separate components. Pharlux does metrics + logs in one 83 MB binary."
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+
+<Head>
+  <meta property="og:title" content="Pharlux vs Prometheus: metrics and logs in one binary" />
+  <meta property="og:description" content="Prometheus is excellent at metrics — but it's metrics-only. You add Grafana, Loki, Alertmanager and exporters around it. Pharlux does metrics + logs in one binary on a VPS." />
+  <meta name="twitter:title" content="Pharlux vs Prometheus" />
+  <meta name="twitter:description" content="Prometheus is the metrics standard, and only metrics. Pharlux adds logs in the same binary with one SQL surface. The honest comparison for small teams." />
+  <link rel="canonical" href="https://pharlux.com/compare/prometheus/" />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        '@id': 'https://pharlux.com/compare/prometheus/#article',
+        headline: 'Pharlux vs Prometheus: metrics and logs in one binary',
+        description: 'A first-party comparison of Pharlux and Prometheus for small-team self-hosted observability: signal coverage, the surrounding stack, query model, OTLP, and migration.',
+        datePublished: '2026-06-13',
+        dateModified: '2026-06-13',
+        author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        url: 'https://pharlux.com/compare/prometheus/',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'Compare', item: 'https://pharlux.com/compare/'},
+          {'@type': 'ListItem', position: 3, name: 'Pharlux vs Prometheus', item: 'https://pharlux.com/compare/prometheus/'},
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://pharlux.com/compare/prometheus/#faq',
+        mainEntity: [
+          {'@type': 'Question', name: 'Does Prometheus handle logs?', acceptedAnswer: {'@type': 'Answer', text: 'No. Prometheus handles metrics only. For logs you add Loki, for dashboards you add Grafana, for alert routing you add Alertmanager, and for long-term or highly-available metric storage you add Thanos, Mimir, or VictoriaMetrics. Pharlux ingests metrics and logs in one binary and queries both with SQL.'}},
+          {'@type': 'Question', name: 'Can Pharlux ingest Prometheus or OpenTelemetry metrics?', acceptedAnswer: {'@type': 'Answer', text: 'Pharlux is OpenTelemetry-native and ingests OTLP over gRPC (:4317) and HTTP (:4318). Prometheus uses a pull-based scrape model and, since Prometheus 3.0, can also receive OTLP metrics. To migrate, point your OpenTelemetry Collector at Pharlux and run it alongside Prometheus.'}},
+          {'@type': 'Question', name: 'Does Pharlux support PromQL?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1 — Pharlux queries are SQL via Apache DataFusion, which covers metrics and logs in one query surface and supports cross-signal JOINs on trace_id. PromQL support is planned for V1.1.'}},
+          {'@type': 'Question', name: 'Is Prometheus or Pharlux better for a small team?', acceptedAnswer: {'@type': 'Answer', text: 'If you only need metrics and your team already knows PromQL, Prometheus is an excellent, proven choice. If you also need logs without standing up Grafana, Loki, and Alertmanager beside it, Pharlux gives you metrics and logs in one binary with built-in dashboards and alerting.'}},
+          {'@type': 'Question', name: 'What licenses do Prometheus and Pharlux use?', acceptedAnswer: {'@type': 'Answer', text: 'Prometheus and Alertmanager are Apache-2.0; Grafana and Loki are AGPL-3.0, so a typical Prometheus stack mixes licenses. Pharlux Community is AGPL-3.0 with a commercial license available.'}},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# Pharlux vs Prometheus
+
+**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+
+Prometheus is the de-facto standard for metrics, and it earned that place: a CNCF-graduated project, a vast exporter ecosystem, and PromQL. It is also **metrics, and only metrics.** To turn Prometheus into observability you add Grafana for dashboards, Loki for logs, Alertmanager for routing, exporters for collection, and Thanos or Mimir once you need long-term storage. Pharlux does metrics **and** logs in a single 83 MB binary, with dashboards, SQL, and alerting built in — one process instead of a stack you assemble.
+
+## What you actually run
+
+Prometheus alone is one binary. Observability for a small team is not — here is what the metrics-only core sits inside:
+
+| | Pharlux v1.0.0 | Prometheus + the usual stack |
+|---|---|---|
+| **Metrics** | Built in | Prometheus |
+| **Logs** | Built in, same binary | Loki (separate) |
+| **Dashboards** | Embedded React + ECharts UI | Grafana (separate) |
+| **Alert routing** | Built in (SQL rules + evaluator) | Alertmanager (separate) |
+| **Long-term storage** | Local Parquet on disk | Thanos / Mimir / VictoriaMetrics (separate) |
+| **Collection** | OTLP push (`:4317` / `:4318`) | Scrape + exporters (OTLP ingest since Prom 3.0) |
+| **Query language** | SQL across metrics + logs | PromQL (metrics only) + LogQL for Loki |
+| **What you operate** | 1 binary, 1 config, 1 systemd unit | 4–5 components, each its own config + upgrade |
+| **License** | AGPL-3.0 + commercial | Apache-2.0 (Prom) + AGPL-3.0 (Grafana/Loki) |
+
+## Where Prometheus is genuinely strong
+
+This is an honest comparison, so credit where it is due: for pure metrics, Prometheus is hard to beat. The exporter ecosystem covers almost any system you can name, PromQL is a powerful metrics language, the pull model with service discovery fits dynamic Kubernetes infrastructure well, and the project's CNCF pedigree means it is not going anywhere. If metrics are the entire job, Prometheus does that job superbly.
+
+The friction starts when metrics are not the entire job — which, during an incident, they never are. The moment you need to see logs next to a metric spike, you are running Loki and Grafana too, correlating across PromQL and LogQL by hand, routing alerts through a separately-configured Alertmanager, and planning long-term storage with Thanos or Mimir. Four or five components, four or five configs, four or five upgrade cycles, to observe a handful of services.
+
+## Why small teams choose Pharlux
+
+- **Metrics and logs in one query.** Cross-signal `JOIN` on `trace_id` is one line of SQL — no jumping between PromQL and LogQL, no second system to stand up for logs.
+- **One thing to run.** `sudo pharlux install`: one binary, one `pharlux.toml`, one systemd unit. Dashboards, alerting, and storage are inside it, not bolted on.
+- **OpenTelemetry-native ingest.** OTLP on `:4317` and `:4318` is first-class, not a retrofit on a scrape-shaped core. Keep your existing OpenTelemetry Collector and add an exporter.
+- **Numbers with a method.** [577,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 17.36 million points, 7 ms average latency — reproducible with a load generator that ships in the source tree.
+- **One license to track.** Pharlux is AGPL-3.0 (plus commercial). A Prometheus + Grafana + Loki stack mixes Apache-2.0 and AGPL-3.0 across projects.
+
+## Migrating from Prometheus to Pharlux
+
+You do not have to choose on day one:
+
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+2. Point your OpenTelemetry Collector at Pharlux on `:4318` while Prometheus keeps scraping.
+3. Rebuild the dashboards and alerts you rely on as Pharlux SQL, and add your logs to the same system.
+4. Decide per-signal what to keep. Many teams keep Prometheus for a slice of metrics and let Pharlux own logs plus the rest.
+
+PromQL lands in V1.1; until then SQL via DataFusion covers metrics and logs together.
+
+## Is Pharlux the right fit?
+
+If your need is purely metrics and your team has years of PromQL muscle memory and dashboards-as-code, Prometheus is an excellent tool and there is no reason to fight that. Pharlux is not trying to displace Prometheus inside a mature, metrics-only Kubernetes platform.
+
+Pharlux is for the team standing up observability for 1–10 services and realising "metrics" quietly means Prometheus **and** Grafana **and** Loki **and** Alertmanager. That is four things to watch three services. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and get metrics and logs from one binary instead.
+
+## Frequently asked questions
+
+### Does Prometheus handle logs?
+
+No. Prometheus handles metrics only. For logs you add Loki, for dashboards Grafana, for alert routing Alertmanager, and for long-term or highly-available metric storage Thanos, Mimir, or VictoriaMetrics. Pharlux ingests metrics and logs in one binary and queries both with SQL.
+
+### Can Pharlux ingest Prometheus or OpenTelemetry metrics?
+
+Pharlux is OpenTelemetry-native and ingests OTLP over gRPC (`:4317`) and HTTP (`:4318`). Prometheus uses a pull-based scrape model and, since Prometheus 3.0, can also receive OTLP metrics. To migrate, point your OpenTelemetry Collector at Pharlux and run it alongside Prometheus.
+
+### Does Pharlux support PromQL?
+
+Not in V1 — Pharlux queries are SQL via Apache DataFusion, which covers metrics and logs in one surface and supports cross-signal `JOIN`s on `trace_id`. PromQL support is planned for V1.1.
+
+### Is Prometheus or Pharlux better for a small team?
+
+If you only need metrics and your team already knows PromQL, Prometheus is an excellent, proven choice. If you also need logs without standing up Grafana, Loki, and Alertmanager beside it, Pharlux gives you metrics and logs in one binary with built-in dashboards and alerting.
+
+### What licenses do Prometheus and Pharlux use?
+
+Prometheus and Alertmanager are Apache-2.0; Grafana and Loki are AGPL-3.0, so a typical Prometheus stack mixes licenses. Pharlux Community is AGPL-3.0 with a commercial license available.
+
+## Try Pharlux
+
+<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+
+---
+
+**Compare Pharlux to other tools:** <Link to="/compare/grafana-loki">Grafana Loki</Link> · <Link to="/compare/signoz">SigNoz</Link> · <Link to="/compare/datadog">Datadog</Link> · <Link to="/compare/openobserve">OpenObserve</Link> · <Link to="/compare/victoriametrics">VictoriaMetrics</Link>

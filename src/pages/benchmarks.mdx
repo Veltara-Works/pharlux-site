@@ -39,7 +39,7 @@ import Link from '@docusaurus/Link';
         mainEntity: [
           {'@type': 'Question', name: 'What hardware were the Pharlux benchmarks run on?', acceptedAnswer: {'@type': 'Answer', text: 'A 4 vCPU / 8 GB Linux VPS, matching the documented growth-tier sizing. The smaller Community baseline (2 vCPU / 4 GB) sustains roughly 30,000-50,000 points/sec; the 577,000 points/sec figure is the 4 vCPU / 8 GB result.'}},
           {'@type': 'Question', name: 'Can I reproduce the Pharlux benchmark myself?', acceptedAnswer: {'@type': 'Answer', text: 'Yes. The load generator (pharlux-loadtest) ships in the Pharlux source tree under AGPL-3.0. Install Pharlux, then run pharlux-loadtest against its OTLP HTTP endpoint with the documented flags. The harness prints points/sec, average latency, and error count, and reports PASS when sustained throughput is within 5% of the requested rate.'}},
-          {'@type': 'Question', name: 'Does Pharlux scale beyond a single node?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1 — Pharlux is single-node by design (ADR-0005). These numbers are sustained ingest on one VPS. Vertical scaling (more vCPU / RAM on one box) raises throughput; multi-VPS clustering is V1.1+ work.'}},
+          {'@type': 'Question', name: 'Does Pharlux scale beyond a single node?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1 — Pharlux is single-node by design. These numbers are sustained ingest on one VPS. Vertical scaling (more vCPU / RAM on one box) raises throughput; multi-VPS clustering is V1.1+ work.'}},
         ],
       },
     ],
@@ -68,11 +68,11 @@ Pharlux sustains **577,000 OpenTelemetry metric points per second** on a single 
 | Host | 4 vCPU / 8 GB RAM Linux VPS |
 | Pharlux version | v1.0.0 (measured 2026-04-17) |
 | Storage | local disk — custom WAL + per-signal Parquet |
-| Query engine memory pool | 256 MB cap (ADR-0011) |
+| Query engine memory pool | 256 MB cap |
 | Ingest protocol | OTLP over HTTP/protobuf (`:4318/v1/metrics`) |
 | TLS | terminated at the reverse proxy; loopback test traffic |
 
-Pharlux is single-node by design (ADR-0005); these figures are sustained ingest on one VPS, not a clustered total.
+Pharlux is single-node by design; these figures are sustained ingest on one VPS, not a clustered total.
 
 ## The load generator
 
@@ -125,7 +125,7 @@ It reports **PASSED** when sustained throughput is within 5% of the requested ra
 ## What this does and doesn't tell you
 
 - **It measures sustained metric ingest throughput** — the hot path from OTLP request to WAL append — on commodity hardware, not a synthetic micro-benchmark.
-- **It is single-node.** Throughput scales vertically (more vCPU/RAM on one box); multi-VPS clustering is V1.1+ work (ADR-0005).
+- **It is single-node.** Throughput scales vertically (more vCPU/RAM on one box); multi-VPS clustering is V1.1+ work.
 - **Query latency, memory footprint under load, and disk-growth projections** are tracked separately and will be published here as additional first-party benchmarks.
 
 ## Frequently asked questions
@@ -140,7 +140,7 @@ Yes. The load generator (`pharlux-loadtest`) ships in the Pharlux source tree un
 
 ### Does Pharlux scale beyond a single node?
 
-Not in V1 — Pharlux is single-node by design (ADR-0005). These numbers are sustained ingest on one VPS. Vertical scaling raises throughput; multi-VPS clustering is V1.1+ work.
+Not in V1 — Pharlux is single-node by design. These numbers are sustained ingest on one VPS. Vertical scaling raises throughput; multi-VPS clustering is V1.1+ work.
 
 ## Try Pharlux
 

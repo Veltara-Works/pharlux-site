@@ -1,0 +1,138 @@
+---
+title: "Pharlux vs Grafana Loki: one binary, not five components"
+description: "Grafana Loki only stores logs, so you still run Mimir, Grafana, Alertmanager and object storage beside it. Pharlux does metrics + logs in one 83 MB binary on a single VPS."
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+
+<Head>
+  <meta property="og:title" content="Pharlux vs Grafana Loki: one binary, not five components" />
+  <meta property="og:description" content="Loki only stores logs. To match Pharlux you also run Mimir, Grafana, Alertmanager and object storage. Pharlux does metrics + logs in one 83 MB binary on a VPS." />
+  <meta name="twitter:title" content="Pharlux vs Grafana Loki" />
+  <meta name="twitter:description" content="Loki is logs-only — Pharlux replaces the whole LGTM stack with one binary on a single VPS. The honest comparison for small teams." />
+  <link rel="canonical" href="https://pharlux.com/compare/grafana-loki/" />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        '@id': 'https://pharlux.com/compare/grafana-loki/#article',
+        headline: 'Pharlux vs Grafana Loki: one binary, not five components',
+        description: 'A first-party comparison of Pharlux and Grafana Loki for self-hosted observability on a single VPS: what you actually run, operational cost, storage, and migration.',
+        datePublished: '2026-06-13',
+        dateModified: '2026-06-13',
+        author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        url: 'https://pharlux.com/compare/grafana-loki/',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'Compare', item: 'https://pharlux.com/compare/'},
+          {'@type': 'ListItem', position: 3, name: 'Pharlux vs Grafana Loki', item: 'https://pharlux.com/compare/grafana-loki/'},
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://pharlux.com/compare/grafana-loki/#faq',
+        mainEntity: [
+          {'@type': 'Question', name: 'Does Grafana Loki do metrics, or only logs?', acceptedAnswer: {'@type': 'Answer', text: 'Loki stores logs only. In the Grafana stack, metrics come from Prometheus or Grafana Mimir, traces from Tempo, dashboards from Grafana, and alerts from Alertmanager — four more components to run beside Loki. Pharlux ingests metrics and logs in a single binary and queries both with SQL, with traces in V1.1.'}},
+          {'@type': 'Question', name: 'How many moving parts does Pharlux replace?', acceptedAnswer: {'@type': 'Answer', text: 'For a small team, Pharlux replaces Loki plus Mimir (or Prometheus), Grafana, Alertmanager, and the object storage underneath them — five-plus components, five config files, and five upgrade cycles — with one 83 MB binary, one pharlux.toml, and one systemd unit.'}},
+          {'@type': 'Question', name: 'Does Pharlux need object storage like Loki?', acceptedAnswer: {'@type': 'Answer', text: 'No. Loki requires an external object store (S3, GCS, or Azure Blob) for chunk storage. Pharlux writes per-signal Parquet to local disk with a custom write-ahead log, so there is nothing extra to provision, secure, or pay for. An optional S3 cold tier is planned for the Scale tier.'}},
+          {'@type': 'Question', name: 'Can I migrate from Loki to Pharlux gradually?', acceptedAnswer: {'@type': 'Answer', text: 'Yes. Pharlux is OpenTelemetry-native, so you add a second exporter to your existing OpenTelemetry Collector pointing at Pharlux on :4318 and run both in parallel. Rebuild the dashboards and alerts you actually use as Pharlux SQL, then retire the Loki, Mimir, Grafana, and Alertmanager components once you trust the Pharlux view.'}},
+          {'@type': 'Question', name: 'Are Pharlux and Grafana Loki under the same license?', acceptedAnswer: {'@type': 'Answer', text: 'Yes — both are AGPL-3.0. Grafana Labs relicensed Loki, Grafana, and Tempo from Apache-2.0 to AGPL-3.0 in 2021. Pharlux Community is AGPL-3.0 and offers a commercial license that removes the AGPL terms; Grafana offers Grafana Enterprise Logs under a commercial license.'}},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# Pharlux vs Grafana Loki
+
+**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+
+Grafana Loki stores logs, and only logs. To get what Pharlux gives you out of one binary, you run Loki **plus** Mimir for metrics, Grafana for dashboards, Alertmanager for alerts, and an object store underneath all of it. Pharlux does that whole job as a single 83 MB binary on one VPS: metrics and logs ingested over OpenTelemetry, queried with SQL, dashboards and alerting built in. If you are a small team running 1–10 services and tired of operating five things to watch three, that is the difference that matters.
+
+## What you actually compare
+
+A "Pharlux vs Loki" table flatters Loki, because Loki is one piece of a five-part stack. Here is the honest version — Pharlux against the components you really run to match it:
+
+| | Pharlux v1.0.0 | Grafana Loki + the LGTM stack |
+|---|---|---|
+| **Logs** | Built in | Loki |
+| **Metrics** | Built in, same binary | Prometheus or Grafana Mimir (separate) |
+| **Dashboards** | Embedded React + ECharts UI | Grafana (separate) |
+| **Alerting** | SQL rules, state-machine evaluator, webhook + Slack | Alertmanager (separate) |
+| **Storage** | Local per-signal Parquet + WAL | External object store required (S3 / GCS / Azure) |
+| **Query language** | SQL — cross-signal `JOIN` on `trace_id` | LogQL for logs, PromQL for metrics |
+| **What you operate** | 1 binary, 1 config, 1 systemd unit | 5+ components, 5+ configs, 5+ upgrade cycles |
+| **Throughput (first-party)** | [577k points/sec on a 4 vCPU / 8 GB VPS](/benchmarks) | varies with cluster size |
+| **License** | AGPL-3.0 + commercial | AGPL-3.0 |
+
+## Why teams leave the LGTM stack for Pharlux
+
+The Grafana stack is powerful, and operating it is a job. Loki alone runs in monolithic, simple-scalable, or microservices mode, each backed by object storage you provision and secure yourself. Add Mimir, Grafana, and Alertmanager, and a three-service deployment now has more observability infrastructure than application. The failure modes are five-headed: a Loki upgrade that silently returns empty log queries, a Grafana that cannot reach Mimir because of a YAML indent, an object-store bill that creeps.
+
+Pharlux collapses that into one process you can fully reason about:
+
+- **One binary, one config, one systemd unit.** `sudo pharlux install` and you are ingesting. No Helm chart, no read/write/backend split, no object store to stand up.
+- **Metrics and logs in the same query.** Cross-signal `JOIN` on `trace_id` is one line of SQL — something a logs-only store cannot do without bolting on a separate metrics system. You query with SQL you already know, not LogQL plus PromQL.
+- **Storage that stays on the box.** Per-signal Parquet on local disk with a write-ahead log. No S3 to configure or pay for; the whole system runs on an 8 GB VPS.
+- **Numbers, not adjectives.** 577,000 metric points/sec sustained, 0 errors over 17.36 million points, 7 ms average request latency, measured on a 4 vCPU / 8 GB VPS with a [reproducible load generator that ships in the source tree](/benchmarks).
+- **Read the source, run it free.** Pharlux Community is AGPL-3.0, like Loki. The commercial license adds host and retention ceilings, a tamper-evident audit log, and support — not access to the core.
+
+## How the architecture differs
+
+Loki is built to scale **out**. Even its single-binary monolithic mode is a starting point — Grafana's own guidance moves you to multi-component deployments past roughly 20 GB of logs per day, and every mode needs an external object store for chunk storage. (The simple-scalable mode is being deprecated ahead of Loki 4.0, and the bundled MinIO subchart is scheduled for removal in late 2026, so production deployments bring their own S3.)
+
+Pharlux is built to scale **up**, on purpose. It is a statically-linked Rust binary that writes a custom WAL and per-signal Parquet to local disk, ingests OTLP on `:4317` (gRPC) and `:4318` (HTTP), and serves the dashboard UI, SQL editor, and alert evaluator from the same process. It is single-node by design: more vCPU and RAM on one box lifts throughput, and the Scale tier lifts the licensed ceilings to unlimited. That constraint is the point — it is what removes the object store, the component sprawl, and four of the five upgrade cycles.
+
+## Migrating from Loki to Pharlux
+
+Pharlux is OpenTelemetry-native, so you migrate gradually instead of ripping anything out:
+
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+2. Add a second exporter to your OpenTelemetry Collector pointing at Pharlux on `:4318`, alongside your existing Loki exporter.
+3. Run both in parallel. Rebuild the dashboards and alerts you actually use as Pharlux SQL queries and SQL alert rules.
+4. Once you trust the Pharlux view, retire Loki, Mimir, Grafana, and Alertmanager — and the object storage underneath them.
+
+Queries move from LogQL (and PromQL) to one SQL surface over both signals. PromQL support arrives in V1.1; until then SQL via Apache DataFusion covers metrics and logs together.
+
+## Is Pharlux the right fit?
+
+Pharlux is built for one job and does it better than a five-component stack: observability for a small team running 1–10 services on a single VPS. It is deliberately not a planet-scale platform, and it does not pretend to be.
+
+So if you are ingesting multiple terabytes of logs a day across a Kubernetes fleet, the Grafana stack's distributed architecture is built for that and Pharlux is not the tool. But if you are one of the teams running five components to watch three services — paying in upgrade-Tuesday outages, object-store bills, and a part-time ops job you never wanted — that is exactly the weight Pharlux is built to remove. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and point your Collector at it this afternoon.
+
+## Frequently asked questions
+
+### Does Grafana Loki do metrics, or only logs?
+
+Loki stores logs only. In the Grafana stack, metrics come from Prometheus or Grafana Mimir, traces from Tempo, dashboards from Grafana, and alerts from Alertmanager — four more components beside Loki. Pharlux ingests metrics and logs in a single binary and queries both with SQL, with traces in V1.1.
+
+### How many moving parts does Pharlux replace?
+
+For a small team, Pharlux replaces Loki plus Mimir (or Prometheus), Grafana, Alertmanager, and the object storage underneath them — five-plus components, five config files, five upgrade cycles — with one 83 MB binary, one `pharlux.toml`, and one systemd unit.
+
+### Does Pharlux need object storage like Loki?
+
+No. Loki requires an external object store (S3, GCS, or Azure Blob) for chunk storage. Pharlux writes per-signal Parquet to local disk with a custom write-ahead log, so there is nothing extra to provision, secure, or pay for. An optional S3 cold tier is planned for the Scale tier.
+
+### Can I migrate from Loki to Pharlux gradually?
+
+Yes. Pharlux is OpenTelemetry-native, so you add a second exporter to your existing OpenTelemetry Collector pointing at Pharlux on `:4318` and run both in parallel. Rebuild the dashboards and alerts you actually use as Pharlux SQL, then retire the Loki, Mimir, Grafana, and Alertmanager components once you trust the Pharlux view.
+
+### Are Pharlux and Grafana Loki under the same license?
+
+Yes, both are AGPL-3.0. Grafana Labs relicensed Loki, Grafana, and Tempo from Apache-2.0 to AGPL-3.0 in 2021. Pharlux Community is AGPL-3.0 and offers a commercial license that removes the AGPL terms; Grafana offers Grafana Enterprise Logs under a commercial license.
+
+## Try Pharlux
+
+<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+
+---
+
+**Compare Pharlux to other tools:** <Link to="/compare/signoz">SigNoz</Link> · <Link to="/compare/prometheus">Prometheus</Link> · <Link to="/compare/datadog">Datadog</Link> · <Link to="/compare/openobserve">OpenObserve</Link> · <Link to="/compare/victoriametrics">VictoriaMetrics</Link>

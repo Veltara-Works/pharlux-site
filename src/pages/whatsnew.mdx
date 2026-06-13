@@ -30,7 +30,7 @@ Version 1.0.0 signals a commitment to semver on the public API surface: the REST
 
 #### Storage
 
-- Production WAL (prost + CRC32 + length prefix, ADR-0018) with segment rotation and tenant-aware replay
+- Production WAL (prost + CRC32 + length prefix) with segment rotation and tenant-aware replay
 - Parquet writer with per-signal, per-tenant, hourly partitioning
 - Per-tenant retention, manual compaction with crash-safe marker protocol
 - WAL + Parquet union TableProvider for DataFusion (RwLock snapshot design)
@@ -46,7 +46,7 @@ Version 1.0.0 signals a commitment to semver on the public API surface: the REST
 #### Query
 
 - DataFusion QueryEngine with logical-plan tenant filter on every TableScan
-- Per-request SessionContext, 256 MB MemoryPool cap (ADR-0011)
+- Per-request SessionContext, 256 MB MemoryPool cap
 
 #### Auth
 
@@ -71,7 +71,7 @@ Version 1.0.0 signals a commitment to semver on the public API surface: the REST
 #### CLI
 
 - Subcommands: `compact`, `backup`, `install`, `migrate`, `version`
-- Single-binary deployment (Axum + Tonic on shared Tokio runtime, ADR-0004)
+- Single-binary deployment (Axum + Tonic on shared Tokio runtime)
 
 #### Documentation
 

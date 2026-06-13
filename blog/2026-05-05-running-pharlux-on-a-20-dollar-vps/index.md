@@ -9,7 +9,7 @@ description: A practical setup guide for running Pharlux on a single sub-$25/mon
 
 # Running Pharlux on a $20/month VPS
 
-*Last updated: 2026-05-05 · Pharlux v1.0.0 · By Ian Holt*
+*Last updated: 2026-06-13 · Pharlux v1.0.0 · By Ian Holt*
 
 If your Datadog bill is creeping past the comfort line — or if your Loki + Mimir + Tempo + Grafana + Alertmanager stack has become a part-time job you didn't sign up for — there *is* a third option.
 
@@ -35,16 +35,16 @@ The cost gap is real. The operational gap is harder to prove — and that one co
 
 Pharlux's design centre is 1–10 services on a single VPS. The architecture pays for that:
 
-- A single statically-linked Rust binary, ~85 MB on disk. No Docker daemon, no init system inside a container, no orchestrator. systemd starts it.
+- A single statically-linked Rust binary, 83 MB on disk. No Docker daemon, no init system inside a container, no orchestrator. systemd starts it.
 - Embedded SQLite for metadata. No Postgres, no Kafka, no ClickHouse.
-- A custom write-ahead log (WAL) followed by per-signal Apache Parquet files on local disk. Frozen formats: WAL framing per ADR-0018, Parquet schemas per ADR-0003.
-- Apache DataFusion as the in-process query engine, capped at a 256 MB MemoryPool in V1 (ADR-0011) so a runaway query cannot OOM the box.
-- A custom DataFusion `TableProvider` that unions the live WAL with on-disk Parquet (ADR-0002) — freshly-ingested data is queryable without delay.
+- A custom write-ahead log (WAL) followed by per-signal Apache Parquet files on local disk. Both the WAL framing and the per-signal Parquet schemas are frozen formats.
+- Apache DataFusion as the in-process query engine, capped at a 256 MB MemoryPool in V1 so a runaway query cannot OOM the box.
+- A custom DataFusion `TableProvider` that unions the live WAL with on-disk Parquet — freshly-ingested data is queryable without delay.
 - Memory-safe TLS via rustls. Zero OpenSSL in the dependency tree. The binary is genuinely static musl — no glibc surprise on the target VPS.
 
 Sustained load testing on a 4 vCPU / 8 GB VPS produced 577,000 metric points/sec over 17.36 million points with zero errors and 7 ms average request latency. The 4 GB / 2 vCPU tier handles considerably less than that — call it the working envelope for a small team's actual production traffic, with headroom — but the architectural ceiling sits well above the small-team workload.
 
-What you would outgrow this for: 250+ hosts, multi-region deployments, dedicated SaaS-grade isolation with regulatory attestations. Pharlux is not pretending to be those things in V1.
+What you would outgrow this for: large fleets, multi-region deployments, dedicated SaaS-grade isolation with regulatory attestations. Pharlux is not pretending to be those things in V1.
 
 ## Picking a provider
 
@@ -84,7 +84,7 @@ sudo curl -fSL -o /usr/local/bin/pharlux \
 sudo chmod +x /usr/local/bin/pharlux
 ```
 
-The download is one file, ~85 MB. Verify the checksum from the release page:
+The download is one file, 83 MB. Verify the checksum from the release page:
 
 ```bash
 curl -fSL https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64.sha256 \
@@ -198,9 +198,9 @@ The point of citing ranges rather than a single Datadog number is that those num
 
 What you give up at this scale, in V1:
 
-- **No traces yet.** Traces ship in V1.1 (ADR-0005). If you need distributed tracing today, run Pharlux for metrics + logs and a separate trace store in parallel.
-- **No PromQL yet.** Queries are SQL via DataFusion in V1; PromQL ships in V1.1 (ADR-0005). If your team has months of PromQL muscle memory, that is real switching cost.
-- **Single-VPS architecture.** Multi-VPS clustering and S3 cold tier are V1.1+ features at the commercial-tier level. The Scale tier ceiling is 250 hosts. If you require more hosts, [send us a message](mailto:licensing@pharlux.com?subject=Pharlux%20enquiry%20%E2%80%94%20more%20than%20250%20hosts).
+- **No traces yet.** Traces ship in V1.1. If you need distributed tracing today, run Pharlux for metrics + logs and a separate trace store in parallel.
+- **No PromQL yet.** Queries are SQL via DataFusion in V1; PromQL ships in V1.1. If your team has months of PromQL muscle memory, that is real switching cost.
+- **Single-VPS architecture.** Pharlux is single-node by design; it scales up on one box, not out across a cluster. The Scale tier lifts host and retention limits to unlimited and adds air-gapped / binary-redistribution rights, but Pharlux still runs on a single high-capacity VPS. Multi-VPS clustering and an S3 cold tier are V1.1+ work. If you need a distributed, multi-node deployment, [tell us what you're running](mailto:licensing@pharlux.com?subject=Pharlux%20enquiry).
 - **No managed cloud option.** Pharlux is self-hosted-first. If you need a fully-managed SaaS with credit-card sign-up, that is not the V1 product.
 - **No SAML / OIDC / LDAP in Community.** Those are commercial-tier features. JWT and admin/read-only auth are in V1 Community.
 
@@ -214,7 +214,7 @@ For 1–10 services with typical metric and log volume, yes. The 4 GB / 2 vCPU t
 
 ### Can I run other things on the same VPS?
 
-Yes. Pharlux's memory budget is bounded — DataFusion is capped at a 256 MB MemoryPool in V1 (ADR-0011), and the rest of the binary's working set is small. The original design target was deliberately co-tenancy-friendly. If the VPS already runs a small web service or two, Pharlux fits alongside them.
+Yes. Pharlux's memory budget is bounded — DataFusion is capped at a 256 MB MemoryPool in V1, and the rest of the binary's working set is small. The original design target was deliberately co-tenancy-friendly. If the VPS already runs a small web service or two, Pharlux fits alongside them.
 
 ### What is the backup story?
 
@@ -222,11 +222,11 @@ Pharlux's state lives in two places: the Parquet directory on disk, and the embe
 
 ### How do I upgrade Pharlux?
 
-`systemctl stop pharlux`, replace the binary, `systemctl start pharlux`. The WAL format is frozen (ADR-0018) and Parquet schemas are frozen (ADR-0003), so V1.x patch upgrades and the V1.0 → V1.1 transition are binary swaps, not data migrations.
+`systemctl stop pharlux`, replace the binary, `systemctl start pharlux`. The WAL format is frozen and Parquet schemas are frozen, so V1.x patch upgrades and the V1.0 → V1.1 transition are binary swaps, not data migrations.
 
 ### What if I outgrow the $20/month tier?
 
-Move to the 8 GB / 4 vCPU tier on the same provider. The systemd unit and config carry over; the data directory is rsync-able. If you outgrow that, the commercial tiers — Team ($49/month, 10 hosts), Business ($199/month, 50 hosts), Scale ($899/month, 250 hosts) — extend retention, add SAML / OIDC / LDAP, audit log, white-label, and S3 cold tier as you grow.
+Move to the 8 GB / 4 vCPU tier on the same provider. The systemd unit and config carry over; the data directory is rsync-able. If you outgrow that, the commercial tiers — Team ($49/month, 25 hosts), Business ($199/month, 250 hosts), Scale ($899/month, unlimited hosts) — extend retention, add SAML / OIDC / LDAP, the tamper-evident audit log, white-label, and S3 cold tier as you grow. Host figures are generous fair-use ceilings, not a per-host meter.
 
 ### Can I migrate from Grafana + Loki gradually?
 
@@ -234,7 +234,7 @@ Yes. Point your OpenTelemetry Collector at both Pharlux and your existing stack 
 
 ### Is the Community tier really free forever?
 
-Yes. The Community edition is AGPL-3.0 and unmetered — run it at any scale. The commercial tiers exist for organisations that want SAML, audit log, white-label, S3 cold tier, or support; they are dual-licensed (ADR-0022) and remove the AGPL terms for organisations that need that.
+Yes. The Community edition is AGPL-3.0 and unmetered — run it at any scale. The commercial tiers exist for organisations that want SAML, audit log, white-label, S3 cold tier, or support; they are dual-licensed and remove the AGPL terms for organisations that need that.
 
 ## Get Pharlux
 

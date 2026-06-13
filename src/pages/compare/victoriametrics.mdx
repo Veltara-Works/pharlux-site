@@ -1,0 +1,127 @@
+---
+title: "Pharlux vs VictoriaMetrics: unified signals, one SQL surface"
+description: "VictoriaMetrics is a fast metrics TSDB — logs and traces are separate products with separate query languages. Pharlux unifies metrics + logs in one binary, queried with SQL."
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+
+<Head>
+  <meta property="og:title" content="Pharlux vs VictoriaMetrics: unified signals, one SQL surface" />
+  <meta property="og:description" content="VictoriaMetrics is an excellent metrics TSDB — but logs (VictoriaLogs) and traces are separate products with separate query languages. Pharlux unifies metrics + logs in one binary." />
+  <meta name="twitter:title" content="Pharlux vs VictoriaMetrics" />
+  <meta name="twitter:description" content="A fast dedicated metrics store vs unified metrics + logs in one binary with one SQL surface. The honest comparison for small teams." />
+  <link rel="canonical" href="https://pharlux.com/compare/victoriametrics/" />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        '@id': 'https://pharlux.com/compare/victoriametrics/#article',
+        headline: 'Pharlux vs VictoriaMetrics: unified signals, one SQL surface',
+        description: 'A first-party comparison of Pharlux and VictoriaMetrics: signal coverage, query languages, single-node vs cluster, OTLP, and fit for a small team.',
+        datePublished: '2026-06-13',
+        dateModified: '2026-06-13',
+        author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        url: 'https://pharlux.com/compare/victoriametrics/',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'Compare', item: 'https://pharlux.com/compare/'},
+          {'@type': 'ListItem', position: 3, name: 'Pharlux vs VictoriaMetrics', item: 'https://pharlux.com/compare/victoriametrics/'},
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://pharlux.com/compare/victoriametrics/#faq',
+        mainEntity: [
+          {'@type': 'Question', name: 'Does VictoriaMetrics handle logs and traces?', acceptedAnswer: {'@type': 'Answer', text: 'Not in the core product. VictoriaMetrics is a metrics time-series database. Logs are handled by VictoriaLogs and traces by VictoriaTraces — separate products with their own query languages (LogsQL for logs; Jaeger/Tempo-style APIs for traces). Pharlux ingests metrics and logs in one binary and queries both with SQL.'}},
+          {'@type': 'Question', name: 'What query language does VictoriaMetrics use vs Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'VictoriaMetrics uses MetricsQL, a backward-compatible superset of PromQL; it does not offer SQL, and VictoriaLogs uses a separate language, LogsQL. Pharlux uses one SQL surface (Apache DataFusion) across metrics and logs, with cross-signal JOINs on trace_id.'}},
+          {'@type': 'Question', name: 'Is VictoriaMetrics a single binary like Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'In single-node mode, yes — one binary handling ingest, storage, and query. At scale, VictoriaMetrics cluster mode splits into vminsert, vmselect, and vmstorage components, and logs/traces are separate deployments. Pharlux is single-node by design and stays one binary.'}},
+          {'@type': 'Question', name: 'What licenses do VictoriaMetrics and Pharlux use?', acceptedAnswer: {'@type': 'Answer', text: 'VictoriaMetrics open-source editions (single-node and cluster) are Apache-2.0, with a separate proprietary Enterprise edition. Pharlux Community is AGPL-3.0 with a commercial license available.'}},
+          {'@type': 'Question', name: 'Should I use VictoriaMetrics or Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'If you need a dedicated, highly-efficient metrics store for large cardinality and you handle logs separately, VictoriaMetrics is purpose-built for that. If you want metrics and logs unified in one binary with one query language on a single VPS, Pharlux is built for that.'}},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# Pharlux vs VictoriaMetrics
+
+**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+
+VictoriaMetrics is a genuinely excellent metrics database — fast, efficient, and a near-drop-in for Prometheus. The word that matters is **metrics.** Logs live in a separate product (VictoriaLogs, with its own LogsQL), traces in another (VictoriaTraces), and at scale the metrics store itself splits into three components. Pharlux takes the other path: metrics **and** logs in a single 83 MB binary, queried through one SQL surface, on a single VPS. If you want unified observability rather than a best-in-class metrics silo plus separate stores around it, that is the difference.
+
+## At a glance
+
+| | Pharlux v1.0.0 | VictoriaMetrics |
+|---|---|---|
+| **Primary signal** | Metrics + logs in one binary | Metrics (TSDB) |
+| **Logs** | Built in, same binary | VictoriaLogs (separate product) |
+| **Traces** | V1.1 | VictoriaTraces (separate, newer) |
+| **Query language** | SQL across metrics + logs | MetricsQL (PromQL superset); LogsQL for logs; **no SQL** |
+| **Deployment** | Single binary, single-node by design | Single-node binary, or `vminsert`/`vmselect`/`vmstorage` cluster |
+| **OpenTelemetry** | Native — OTLP `:4317` / `:4318` | OTLP supported among many protocols |
+| **Storage** | Local Parquet + WAL | Own storage, local disk (no object store needed) |
+| **License** | AGPL-3.0 + commercial | Apache-2.0 OSS + proprietary Enterprise |
+
+## Where VictoriaMetrics is genuinely strong
+
+A fair comparison says it straight: for metrics at scale, VictoriaMetrics is a standout. Its compression and resource efficiency are excellent, it ingests Prometheus remote-write as a drop-in, MetricsQL is a clean PromQL superset, and cluster mode scales horizontally to very large cardinality. If your problem is "store a firehose of metrics efficiently," VictoriaMetrics is purpose-built and hard to beat.
+
+Pharlux is solving a different problem. Most small teams don't have a metrics-cardinality problem that needs a dedicated TSDB — they have an *everything* problem: metrics, logs, dashboards, and alerting for a handful of services, and they would rather not assemble and operate a separate product for each signal. VictoriaMetrics answers metrics beautifully and then leaves logs (VictoriaLogs), traces (VictoriaTraces), and visualization (Grafana) as separate things to run and to query in separate languages.
+
+## Why small teams choose Pharlux
+
+- **One signal model, one query language.** Metrics and logs in the same binary, queried with the same SQL, joined on `trace_id` in a single statement — not MetricsQL here and LogsQL there.
+- **One thing to operate at any size.** Pharlux is single-node by design; it never becomes a `vminsert`/`vmselect`/`vmstorage` cluster, and it does not need separate Logs and Traces deployments alongside it.
+- **OpenTelemetry-native ingest.** OTLP on `:4317` and `:4318` is first-class. Bring your existing OpenTelemetry Collector.
+- **Benchmarked where you'll run it.** [577,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 17.36 million points, reproducible from the source tree.
+- **Dual-licensed, audit-log included.** Community is AGPL-3.0; commercial tiers (Team $49, Business $199, Scale $899) add a tamper-evident audit log and support, with flat pricing rather than a contact-sales Enterprise gate.
+
+## Migrating from VictoriaMetrics to Pharlux
+
+1. Stand up Pharlux with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+2. Point your OpenTelemetry Collector at Pharlux on `:4318`; keep VictoriaMetrics ingesting in parallel.
+3. Rebuild the metric dashboards and alerts you rely on as Pharlux SQL, and bring your logs into the same system instead of a separate VictoriaLogs.
+4. Keep what fits. Some teams keep VictoriaMetrics for a heavy metrics workload and let Pharlux own logs plus unified querying.
+
+## Is Pharlux the right fit?
+
+If you have a serious metrics-scale problem — very high cardinality, a metrics firehose, a need for a dedicated TSDB you tune independently — VictoriaMetrics is built for that and Pharlux is not the right tool. Pharlux is single-node and unified, not a specialised metrics engine.
+
+If, instead, you want metrics and logs for a small fleet without operating one product per signal and learning a query language per signal, Pharlux gives you all of it in one binary. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and query metrics and logs together this afternoon.
+
+## Frequently asked questions
+
+### Does VictoriaMetrics handle logs and traces?
+
+Not in the core product. VictoriaMetrics is a metrics time-series database. Logs are handled by VictoriaLogs and traces by VictoriaTraces — separate products with their own query languages (LogsQL for logs; Jaeger/Tempo-style APIs for traces). Pharlux ingests metrics and logs in one binary and queries both with SQL.
+
+### What query language does VictoriaMetrics use vs Pharlux?
+
+VictoriaMetrics uses MetricsQL, a backward-compatible superset of PromQL; it does not offer SQL, and VictoriaLogs uses a separate language, LogsQL. Pharlux uses one SQL surface (Apache DataFusion) across metrics and logs, with cross-signal `JOIN`s on `trace_id`.
+
+### Is VictoriaMetrics a single binary like Pharlux?
+
+In single-node mode, yes — one binary handling ingest, storage, and query. At scale, VictoriaMetrics cluster mode splits into `vminsert`, `vmselect`, and `vmstorage` components, and logs/traces are separate deployments. Pharlux is single-node by design and stays one binary.
+
+### What licenses do VictoriaMetrics and Pharlux use?
+
+VictoriaMetrics open-source editions (single-node and cluster) are Apache-2.0, with a separate proprietary Enterprise edition. Pharlux Community is AGPL-3.0 with a commercial license available.
+
+### Should I use VictoriaMetrics or Pharlux?
+
+If you need a dedicated, highly-efficient metrics store for large cardinality and you handle logs separately, VictoriaMetrics is purpose-built for that. If you want metrics and logs unified in one binary with one query language on a single VPS, Pharlux is built for that.
+
+## Try Pharlux
+
+<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+
+---
+
+**Compare Pharlux to other tools:** <Link to="/compare/grafana-loki">Grafana Loki</Link> · <Link to="/compare/signoz">SigNoz</Link> · <Link to="/compare/prometheus">Prometheus</Link> · <Link to="/compare/datadog">Datadog</Link> · <Link to="/compare/openobserve">OpenObserve</Link>

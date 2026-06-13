@@ -76,10 +76,26 @@ const config: Config = {
     navbar: {
       title: 'Pharlux',
       items: [
-        {to: '/pricing', label: 'Pricing', position: 'left'},
         {to: '/docs', label: 'Docs', position: 'left'},
+        {to: '/pricing', label: 'Pricing', position: 'left'},
+        {
+          type: 'dropdown',
+          label: 'Compare',
+          position: 'left',
+          items: [
+            {to: '/compare', label: 'All comparisons'},
+            {to: '/compare/grafana-loki', label: 'vs Grafana Loki'},
+            {to: '/compare/signoz', label: 'vs SigNoz'},
+            {to: '/compare/prometheus', label: 'vs Prometheus'},
+            {to: '/compare/datadog', label: 'vs Datadog'},
+            {to: '/compare/openobserve', label: 'vs OpenObserve'},
+            {to: '/compare/victoriametrics', label: 'vs VictoriaMetrics'},
+          ],
+        },
+        {to: '/benchmarks', label: 'Benchmarks', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {to: '/whatsnew', label: "What's New", position: 'left'},
+        {to: '/about', label: 'About', position: 'left'},
         {
           href: 'https://github.com/Veltara-Works/pharlux',
           label: 'GitHub',
@@ -95,8 +111,21 @@ const config: Config = {
           items: [
             {label: 'Pricing', to: '/pricing'},
             {label: 'Docs', to: '/docs'},
+            {label: 'Benchmarks', to: '/benchmarks'},
             {label: 'Blog', to: '/blog'},
             {label: "What's New", to: '/whatsnew'},
+          ],
+        },
+        {
+          title: 'Compare',
+          items: [
+            {label: 'All comparisons', to: '/compare'},
+            {label: 'vs Grafana Loki', to: '/compare/grafana-loki'},
+            {label: 'vs SigNoz', to: '/compare/signoz'},
+            {label: 'vs Prometheus', to: '/compare/prometheus'},
+            {label: 'vs Datadog', to: '/compare/datadog'},
+            {label: 'vs OpenObserve', to: '/compare/openobserve'},
+            {label: 'vs VictoriaMetrics', to: '/compare/victoriametrics'},
           ],
         },
         {
@@ -110,6 +139,7 @@ const config: Config = {
         {
           title: 'Veltara Works',
           items: [
+            {label: 'About Pharlux', to: '/about'},
             {label: 'Veltara Works', href: 'https://veltaraworks.com/'},
           ],
         },
