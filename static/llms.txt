@@ -54,6 +54,10 @@ Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average late
 
 ## Contact
 
+- [Contact page](https://pharlux.com/contact): contact form plus direct addresses for sales, support, licensing, and general enquiries.
+- General enquiries: hello@pharlux.com
+- Sales and pricing: sales@pharlux.com
+- Technical support: support@pharlux.com
 - Commercial licensing: licensing@pharlux.com
+- Security disclosures: security@pharlux.com (see also https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md)
 - Community support: https://github.com/Veltara-Works/pharlux/issues and https://github.com/Veltara-Works/pharlux/discussions
-- Security disclosures: see https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md

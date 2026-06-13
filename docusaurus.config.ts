@@ -17,6 +17,13 @@ const config: Config = {
   organizationName: 'Veltara-Works',
   projectName: 'pharlux-site',
 
+  customFields: {
+    // Public Cloudflare Turnstile sitekey for the /contact form. Safe to embed
+    // (sitekeys are public by design); the matching secret lives only in the
+    // Pages env (TURNSTILE_SECRET_KEY). Overridable at build via env.
+    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '0x4AAAAAADkD9sRq9f49GNA3',
+  },
+
   onBrokenLinks: 'throw',
   markdown: {
     // .md = plain CommonMark, .mdx = full MDX. Lets us mirror upstream
@@ -96,6 +103,7 @@ const config: Config = {
         {to: '/blog', label: 'Blog', position: 'left'},
         {to: '/whatsnew', label: "What's New", position: 'left'},
         {to: '/about', label: 'About', position: 'left'},
+        {to: '/contact', label: 'Contact', position: 'right'},
         {
           href: 'https://github.com/Veltara-Works/pharlux',
           label: 'GitHub',
@@ -140,6 +148,7 @@ const config: Config = {
           title: 'Veltara Works',
           items: [
             {label: 'About Pharlux', to: '/about'},
+            {label: 'Contact', to: '/contact'},
             {label: 'Veltara Works', href: 'https://veltaraworks.com/'},
           ],
         },
