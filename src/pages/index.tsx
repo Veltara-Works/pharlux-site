@@ -45,9 +45,11 @@ const SCHEMA_GRAPH = {
       downloadUrl: 'https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0',
       offers: [
         {'@type': 'Offer', name: 'Community', price: '0', priceCurrency: 'USD', category: 'AGPL-3.0 self-hosted, full community feature set'},
-        {'@type': 'Offer', name: 'Team', price: '49', priceCurrency: 'USD', category: '10 hosts, 30-day retention, basic SAML — commercial license'},
-        {'@type': 'Offer', name: 'Business', price: '199', priceCurrency: 'USD', category: '50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log — commercial license'},
-        {'@type': 'Offer', name: 'Scale', price: '899', priceCurrency: 'USD', category: '250 hosts, 1-year retention, white-label, S3 cold tier — commercial license'},
+        {'@type': 'Offer', name: 'Team', price: '49', priceCurrency: 'USD', category: '25 hosts, 30-day retention, tamper-evident audit log — commercial license'},
+        {'@type': 'Offer', name: 'Business', price: '199', priceCurrency: 'USD', category: '250 hosts, 90-day retention, tamper-evident audit log; SSO — SAML/OIDC/LDAP (roadmap) — commercial license'},
+        {'@type': 'Offer', name: 'Scale', price: '899', priceCurrency: 'USD', category: 'Unlimited hosts and retention, air-gapped / binary-redistribution rights, sized for a single high-capacity VPS — commercial license'},
+        {'@type': 'Offer', name: 'Custom / Air-gapped', priceCurrency: 'USD', priceSpecification: {'@type': 'PriceSpecification', minPrice: '12000', priceCurrency: 'USD'}, category: 'Unlimited hosts and retention, air-gapped deployment, white-glove SLA, source escrow — quote-based, from $12,000/mo'},
+        {'@type': 'Offer', name: 'Commercial-License-Only', price: '2400', priceCurrency: 'USD', category: 'AGPL-to-commercial relicense without hosting — billed yearly'},
       ],
       publisher: {'@id': 'https://pharlux.com/#veltara-works'},
       license: 'https://www.gnu.org/licenses/agpl-3.0.html',
@@ -60,11 +62,11 @@ const SCHEMA_GRAPH = {
         {'@type': 'Question', name: 'Why not just use Grafana?', acceptedAnswer: {'@type': 'Answer', text: 'Grafana is great, and it is the right choice if you have a dedicated SRE who enjoys operating Loki, Mimir, Tempo, and Alertmanager next to it. Pharlux is for the case where you do not — one binary replaces the whole stack. If you have one engineer who also wants to write product code, that is the trade-off Pharlux optimises for.'}},
         {'@type': 'Question', name: 'How is this different from SigNoz?', acceptedAnswer: {'@type': 'Answer', text: 'SigNoz has the right ambition — unified OpenTelemetry observability — but ships as a multi-container Docker Compose or Kubernetes deployment with ClickHouse, Zookeeper, and Kafka. Pharlux is a single 83 MB binary on your VPS, with embedded SQLite for metadata and Parquet on disk. Both are good projects targeting different operational sweet spots.'}},
         {'@type': 'Question', name: 'Can I migrate from Prometheus?', acceptedAnswer: {'@type': 'Answer', text: 'Yes, gradually. Point your OpenTelemetry Collector at Pharlux\'s OTLP endpoint and run both stacks in parallel. PromQL support ships in V1.1; until then, queries are SQL via Apache DataFusion. Cross-signal JOINs on trace_id are something a pure-Prometheus stack cannot do.'}},
-        {'@type': 'Question', name: 'What about scale beyond a single VPS?', acceptedAnswer: {'@type': 'Answer', text: 'V1\'s design centre is 1 to 10 services on a single VPS. The Scale tier ($899 per month) covers up to 250 hosts, which suits most growth paths without architectural change. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.'}},
+        {'@type': 'Question', name: 'What about scale beyond a single VPS?', acceptedAnswer: {'@type': 'Answer', text: 'V1\'s design centre is 1 to 10 services on a single VPS. The Scale tier ($899 per month) lifts the licensed limits entirely — unlimited hosts and unlimited retention — and adds air-gapped / binary-redistribution rights; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.'}},
         {'@type': 'Question', name: 'AGPL-3.0 — does that mean I have to open-source my service?', acceptedAnswer: {'@type': 'Answer', text: 'No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when you modify and distribute Pharlux. If that is a concern, the commercial license removes the AGPL terms entirely.'}},
         {'@type': 'Question', name: 'What happens when V1.1 ships — do I have to migrate data?', acceptedAnswer: {'@type': 'Answer', text: 'No. The WAL format (ADR-0018) and per-signal Parquet schemas (ADR-0003) are frozen. V1.1 is additive — new capabilities, no breaking changes. Upgrade is `systemctl stop pharlux`, swap the binary, `systemctl start pharlux`. The same procedure applies for V1.0.x patches.'}},
         {'@type': 'Question', name: 'Is there a hosted version?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1. Pharlux is intentionally self-hosted-first — that is core to the value proposition. A hosted offering may follow at some point, but it is not committed for V1.1 and not on the near-term roadmap.'}},
-        {'@type': 'Question', name: 'How do I know it is production-ready?', acceptedAnswer: {'@type': 'Answer', text: 'V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 293 of 293 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works\' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX.'}},
+        {'@type': 'Question', name: 'How do I know it is production-ready?', acceptedAnswer: {'@type': 'Answer', text: 'V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 360 of 360 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works\' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX.'}},
       ],
     },
     {
@@ -86,17 +88,17 @@ const SCHEMA_GRAPH = {
 export default function Home(): ReactNode {
   return (
     <Layout
-      title="Pharlux — Replace your LGTM stack with a single binary"
-      description="Pharlux is a single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs) for small teams running 1-10 services on a single VPS. One binary, one config file, one systemd unit — no external databases, no Docker, no multi-component stack. V1.0.0 now shipping under AGPL-3.0 + commercial dual license.">
+      title="Pharlux — self-hosted observability in a single binary"
+      description="Pharlux is a single Rust binary for self-hosted, OpenTelemetry-native observability — metrics and logs on one VPS, no Docker, no ClickHouse. Free under AGPL-3.0 + commercial.">
       <Head>
-        {/* Override Docusaurus auto-injected meta to match the legacy site exactly:
-            <title> drops the redundant " | Pharlux" suffix; og/twitter description uses
-            the social-card-short form rather than the SERP-long-form description prop. */}
-        <title>Pharlux — Replace your LGTM stack with a single binary</title>
-        <meta property="og:title" content="Pharlux — Replace your LGTM stack with a single binary" />
-        <meta property="og:description" content="Unified OpenTelemetry-native observability as a single Rust binary. V1.0.0 shipping now. Dual-license AGPL-3.0 + commercial." />
-        <meta name="twitter:title" content="Pharlux — Replace your LGTM stack with a single binary" />
-        <meta name="twitter:description" content="Unified OpenTelemetry-native observability as a single Rust binary. V1.0.0 shipping now. Dual-license AGPL-3.0 + commercial." />
+        {/* Override Docusaurus auto-injected meta: title leads with the category
+            term ("observability") for AI/search citation; og/twitter use the
+            social-card-short form. */}
+        <title>Pharlux — self-hosted observability in a single binary</title>
+        <meta property="og:title" content="Pharlux — self-hosted observability in a single binary" />
+        <meta property="og:description" content="Self-hosted, OpenTelemetry-native observability as a single Rust binary. Metrics + logs on one VPS. Free under AGPL-3.0 + commercial." />
+        <meta name="twitter:title" content="Pharlux — self-hosted observability in a single binary" />
+        <meta name="twitter:description" content="Self-hosted, OpenTelemetry-native observability as a single Rust binary. Metrics + logs on one VPS. Free under AGPL-3.0 + commercial." />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
@@ -116,12 +118,12 @@ export default function Home(): ReactNode {
             </Link>
           </p>
           <span className={styles.badge}>v1.0.0 released &middot; 2026-04-17</span>
-          <p className={styles.lastUpdated}>Last updated 2026-05-04</p>
+          <p className={styles.lastUpdated}>Last updated 2026-06-13</p>
           <Heading as="h1" className={styles.heroTitle}>
-            Replace your LGTM stack with a single binary.
+            Replace Grafana + Prometheus + Loki with a single binary.
           </Heading>
           <p className={styles.tagline}>
-            Unified OpenTelemetry-native observability for small teams. One binary. One
+            Self-hosted, OpenTelemetry-native observability for small teams. One binary. One
             config file. One systemd unit. No Docker, no Kafka, no Postgres, no ClickHouse.
           </p>
           <div className={styles.ctaRow}>
@@ -205,8 +207,9 @@ export default function Home(): ReactNode {
             run dashboards-as-code with Grafana provisioning and have years of PromQL
             alert rules, the migration cost may not be worth the operational saving. If
             you need horizontal scale-out across multiple data centres, Pharlux V1&apos;s
-            design centre is a single VPS &mdash; the Scale tier covers up to 250 hosts
-            but does not cluster across regions. If you need traces or PromQL{' '}
+            design centre is a single VPS &mdash; the Scale tier lifts the host and
+            retention limits entirely, but Pharlux still runs on a single node and does
+            not cluster across regions. If you need traces or PromQL{' '}
             <em>today</em>, both ship in V1.1 (per ADR-0005); until then the Grafana stack
             covers what Pharlux does not. And if you have a dedicated SRE who enjoys
             operating the stack, Grafana&apos;s decade-deep plugin ecosystem is a real
@@ -237,7 +240,7 @@ export default function Home(): ReactNode {
             <div className={styles.perfStat}><span className={styles.perfNum}>7 ms</span><span className={styles.perfLabel}>avg request latency</span></div>
             <div className={styles.perfStat}><span className={styles.perfNum}>83 MB</span><span className={styles.perfLabel}>static binary</span></div>
           </div>
-          <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 293 / 293 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes.</p>
+          <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 360 / 360 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes. See the <Link to="/benchmarks">full benchmark methodology</Link>.</p>
         </section>
 
         <section id="pricing" className={styles.section}>
@@ -248,18 +251,21 @@ export default function Home(): ReactNode {
             </thead>
             <tbody>
               <tr><td>Community</td><td><span className={styles.mono}>Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td><td className={styles.ctaCol}><Link href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download</Link></td></tr>
-              <tr><td>Team</td><td><span className={styles.mono}>$49/mo</span></td><td>10 hosts, 30-day retention, basic SAML</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</Link></td></tr>
-              <tr><td>Business</td><td><span className={styles.mono}>$199/mo</span></td><td>50 hosts, 90-day retention, full SAML/OIDC/LDAP, audit log</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</Link></td></tr>
-              <tr><td>Scale</td><td><span className={styles.mono}>$899/mo</span></td><td>250 hosts, 1-year retention, white-label, S3 cold tier</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</Link></td></tr>
+              <tr><td>Team</td><td><span className={styles.mono}>$49/mo</span></td><td>25 hosts, 30-day retention, tamper-evident audit log</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</Link></td></tr>
+              <tr><td>Business</td><td><span className={styles.mono}>$199/mo</span></td><td>250 hosts, 90-day retention, audit log; SSO <em>(roadmap)</em></td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</Link></td></tr>
+              <tr><td>Scale</td><td><span className={styles.mono}>$899/mo</span></td><td>Unlimited hosts &amp; retention, air-gapped / redistribution rights</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</Link></td></tr>
+              <tr><td>Custom / Air-gapped</td><td><span className={styles.mono}>from $12k/mo</span></td><td>Unlimited, air-gapped, white-glove SLA + source escrow</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">Talk to us</Link></td></tr>
             </tbody>
           </table>
           <p>
-            Commercial tiers include the Pharlux Enterprise binary. For deployments beyond
-            250 hosts or custom requirements,{' '}
-            <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">
+            Host and retention figures are <strong>generous fair-use ceilings, not a
+            per-host meter</strong> &mdash; tiers ladder on features, support, and
+            redistribution rights. The tamper-evident audit log is shipped and included on
+            every commercial tier; SSO, white-label, and the S3 cold tier are V1.1+ roadmap.
+            See the <Link to="/pricing">full feature comparison and pricing</Link>, or{' '}
+            <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">
               talk to us
-            </Link>
-            . See <Link to="/pricing">full feature comparison</Link>.
+            </Link>{' '}about air-gapped or custom requirements.
           </p>
         </section>
 
@@ -276,7 +282,7 @@ export default function Home(): ReactNode {
           <p>Yes, gradually. Point your OpenTelemetry Collector at Pharlux&apos;s OTLP endpoint and run both stacks in parallel. PromQL support ships in V1.1; until then, queries are SQL via Apache DataFusion. Cross-signal <code>JOIN</code>s on <code>trace_id</code> are something a pure-Prometheus stack cannot do.</p>
 
           <Heading as="h3" className={styles.faqQ}>What about scale beyond a single VPS?</Heading>
-          <p>V1&apos;s design centre is 1&ndash;10 services on a single VPS. The Scale tier (<span className={styles.mono}>$899/mo</span>) covers up to 250 hosts, which suits most growth paths without architectural change. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.</p>
+          <p>V1&apos;s design centre is 1&ndash;10 services on a single VPS. The Scale tier (<span className={styles.mono}>$899/mo</span>) lifts the licensed limits entirely &mdash; unlimited hosts and unlimited retention &mdash; and adds air-gapped / binary-redistribution rights; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.</p>
 
           <Heading as="h3" className={styles.faqQ}>AGPL-3.0 &mdash; does that mean I have to open-source my service?</Heading>
           <p>No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when <em>you</em> modify and distribute Pharlux. If that&apos;s a concern, the commercial license removes the AGPL terms entirely.</p>

@@ -1,0 +1,147 @@
+---
+title: Pharlux benchmarks — sustained OTLP ingest on a single VPS
+description: First-party Pharlux performance numbers — 577k metric points/sec sustained, 0 errors over 17.36M points, 7ms avg latency on a 4 vCPU / 8 GB VPS — with full reproduction methodology.
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+
+<Head>
+  <meta property="og:title" content="Pharlux benchmarks — sustained OTLP ingest on a single VPS" />
+  <meta property="og:description" content="577k metric points/sec sustained, 0 errors over 17.36M points, 7ms avg latency on a 4 vCPU / 8 GB VPS — first-party numbers, full reproduction methodology." />
+  <meta name="twitter:title" content="Pharlux benchmarks — sustained OTLP ingest" />
+  <meta name="twitter:description" content="577k points/sec sustained on a 4 vCPU / 8 GB VPS. First-party numbers, reproducible methodology." />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        '@id': 'https://pharlux.com/benchmarks/#article',
+        headline: 'Pharlux benchmarks — sustained OTLP ingest on a single VPS',
+        description: 'First-party sustained-ingest benchmark for Pharlux v1.0.0 with full reproduction methodology.',
+        datePublished: '2026-04-17',
+        dateModified: '2026-06-13',
+        author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        url: 'https://pharlux.com/benchmarks/',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'Benchmarks', item: 'https://pharlux.com/benchmarks/'},
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://pharlux.com/benchmarks/#faq',
+        mainEntity: [
+          {'@type': 'Question', name: 'What hardware were the Pharlux benchmarks run on?', acceptedAnswer: {'@type': 'Answer', text: 'A 4 vCPU / 8 GB Linux VPS, matching the documented growth-tier sizing. The smaller Community baseline (2 vCPU / 4 GB) sustains roughly 30,000-50,000 points/sec; the 577,000 points/sec figure is the 4 vCPU / 8 GB result.'}},
+          {'@type': 'Question', name: 'Can I reproduce the Pharlux benchmark myself?', acceptedAnswer: {'@type': 'Answer', text: 'Yes. The load generator (pharlux-loadtest) ships in the Pharlux source tree under AGPL-3.0. Install Pharlux, then run pharlux-loadtest against its OTLP HTTP endpoint with the documented flags. The harness prints points/sec, average latency, and error count, and reports PASS when sustained throughput is within 5% of the requested rate.'}},
+          {'@type': 'Question', name: 'Does Pharlux scale beyond a single node?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1 — Pharlux is single-node by design (ADR-0005). These numbers are sustained ingest on one VPS. Vertical scaling (more vCPU / RAM on one box) raises throughput; multi-VPS clustering is V1.1+ work.'}},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# Pharlux benchmarks
+
+**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+
+Pharlux sustains **577,000 OpenTelemetry metric points per second** on a single 4 vCPU / 8 GB VPS, with **zero errors over 17.36 million points** and **7 ms average request latency**. These are first-party numbers, measured with a load generator that ships in the Pharlux source tree, and they are reproducible with the steps below.
+
+## Headline results
+
+| Metric | Result | Notes |
+|---|---|---|
+| Sustained ingest | **577,000 points/sec** | 15% over the 500k points/sec V1 target |
+| Errors | **0** | over 17.36 M points in a 30-second run |
+| Average request latency | **7 ms** | OTLP HTTP/protobuf, end to end |
+| Static binary size | **83 MB** | statically-linked musl, OpenSSL-free |
+
+## Test environment
+
+| Component | Value |
+|---|---|
+| Host | 4 vCPU / 8 GB RAM Linux VPS |
+| Pharlux version | v1.0.0 (measured 2026-04-17) |
+| Storage | local disk — custom WAL + per-signal Parquet |
+| Query engine memory pool | 256 MB cap (ADR-0011) |
+| Ingest protocol | OTLP over HTTP/protobuf (`:4318/v1/metrics`) |
+| TLS | terminated at the reverse proxy; loopback test traffic |
+
+Pharlux is single-node by design (ADR-0005); these figures are sustained ingest on one VPS, not a clustered total.
+
+## The load generator
+
+The benchmark uses **`pharlux-loadtest`**, a small harness that ships in the Pharlux source tree (`pharlux-loadtest/`, AGPL-3.0). It sends OTLP metric points over HTTP/protobuf at a configurable rate and reports throughput, average latency, and error count.
+
+Each request carries a batch of points spread across eight realistic gauge metrics — `http.request.duration`, `http.request.count`, `cpu.usage`, `memory.used`, `disk.io.read`, `network.bytes.sent`, `gc.pause.duration`, and `thread.count` — each tagged with `host` and `service` attributes, so the payload shape matches a real OpenTelemetry Collector export rather than a single trivial counter.
+
+| Flag | Default | Meaning |
+|---|---|---|
+| `--target` | `http://127.0.0.1:4318` | OTLP HTTP endpoint |
+| `--rate` | `30000` | target points per second |
+| `--duration` | `30` | test duration (seconds) |
+| `--batch-size` | `1000` | points per OTLP request |
+| `--workers` | `16` | concurrent sender tasks |
+
+The default `--rate 30000` is the safe sustained ceiling for the Community 2 vCPU / 4 GB baseline. The 577k figure was measured on the 4 vCPU / 8 GB tier with the rate driven up until throughput plateaued.
+
+## Reproduce it
+
+```bash
+# 1. Install Pharlux on a 4 vCPU / 8 GB Linux VPS (see the getting-started guide)
+curl -L https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64 \
+  -o /usr/local/bin/pharlux && chmod +x /usr/local/bin/pharlux
+sudo pharlux install && sudo systemctl enable --now pharlux
+
+# 2. Build and run the load generator from the source tree
+git clone https://github.com/Veltara-Works/pharlux && cd pharlux
+cargo run --release -p pharlux-loadtest -- \
+  --target http://127.0.0.1:4318 \
+  --rate 600000 --duration 30 --workers 16 --batch-size 1000
+```
+
+The harness prints a running points/sec figure every five seconds and a final report:
+
+```text
+Load Test Results
+=================
+Duration:      30.0s
+Points sent:   17360000
+Requests:      17360
+Errors:        0 (0.00%)
+Throughput:    577000 pts/sec
+Avg latency:   7.00 ms
+
+PASSED: 577000 pts/sec (96.2% of --rate 600000)
+```
+
+It reports **PASSED** when sustained throughput is within 5% of the requested rate. On the Community 2 vCPU / 4 GB baseline, expect roughly 30,000–50,000 points/sec; raise `--rate` past the ceiling and the harness prints a hardware-tier reminder rather than silently falling behind.
+
+## What this does and doesn't tell you
+
+- **It measures sustained metric ingest throughput** — the hot path from OTLP request to WAL append — on commodity hardware, not a synthetic micro-benchmark.
+- **It is single-node.** Throughput scales vertically (more vCPU/RAM on one box); multi-VPS clustering is V1.1+ work (ADR-0005).
+- **Query latency, memory footprint under load, and disk-growth projections** are tracked separately and will be published here as additional first-party benchmarks.
+
+## Frequently asked questions
+
+### What hardware were the Pharlux benchmarks run on?
+
+A 4 vCPU / 8 GB Linux VPS, matching the documented growth-tier sizing. The smaller Community baseline (2 vCPU / 4 GB) sustains roughly 30,000–50,000 points/sec; the 577,000 points/sec figure is the 4 vCPU / 8 GB result.
+
+### Can I reproduce the Pharlux benchmark myself?
+
+Yes. The load generator (`pharlux-loadtest`) ships in the Pharlux source tree under AGPL-3.0. Install Pharlux, then run `pharlux-loadtest` against its OTLP HTTP endpoint with the flags above. The harness prints points/sec, average latency, and error count, and reports PASS when sustained throughput is within 5% of the requested rate.
+
+### Does Pharlux scale beyond a single node?
+
+Not in V1 — Pharlux is single-node by design (ADR-0005). These numbers are sustained ingest on one VPS. Vertical scaling raises throughput; multi-VPS clustering is V1.1+ work.
+
+## Try Pharlux
+
+<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>

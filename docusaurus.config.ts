@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Pharlux',
-  tagline: 'Replace your LGTM stack with a single binary.',
+  tagline: 'Self-hosted observability in a single binary.',
   favicon: 'favicon.svg',
 
   future: {
