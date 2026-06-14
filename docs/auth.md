@@ -2,7 +2,7 @@
 
 Pharlux V1 ships a built-in JWT-based authentication system with a two-role model — `admin` and `reader` — backed by Argon2id password hashing in an embedded SQLite database. There is no external identity provider in V1; OIDC/SAML/LDAP are deferred to later versions.
 
-This page is the operator's guide to setting it up, creating users, rotating secrets, and using the resulting tokens against the REST API. The threat model and trust boundaries are in [`../../SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md), and the design rationale is in [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0010-auth-jwt-argon2id.md).
+This page is the operator's guide to setting it up, creating users, rotating secrets, and using the resulting tokens against the REST API. The threat model and trust boundaries are in [`../../SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/SECURITY.md), and the design rationale is in [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/adr/0010-auth-jwt-argon2id.md).
 
 ## The two-role model
 
@@ -172,7 +172,7 @@ Pharlux signs and verifies tokens with a single shared secret stored in a file r
 
 ### Install-time layout
 
-`pharlux install` creates the secret as 64 random bytes with mode `0640`, owned by `root`. The systemd unit it generates uses `DynamicUser=yes` and `ConfigurationDirectory=pharlux`, so systemd allocates a transient service-only UID at start time and grants it group-read access to the file. There is no static `pharlux` host user — `useradd`/`groupadd` are not needed.
+`pharlux install` creates the secret as 64 random bytes at mode `0640`, owned by `root:nogroup`. The generated systemd unit uses `DynamicUser=yes` plus `SupplementaryGroups=nogroup`, which puts the transient service UID in group `nogroup` at runtime — that's what grants it group-read access to the secret. (systemd does not chown files inside `ConfigurationDirectory=` under `DynamicUser=yes`; the `nogroup` membership is the supported way to bridge the dynamic UID to a root-owned secret.) `/etc/pharlux/` itself is mode `0755` — the only file inside that needs protection is `jwt.secret`, and that one is locked at `0640 root:nogroup`. `pharlux.toml` is mode `0644` (the default config has no secrets — operators who put secrets directly in `pharlux.toml` should `chmod 0640` and `chown root:nogroup` it themselves). There is no static `pharlux` host user — `useradd`/`groupadd` are not needed.
 
 ### Dev-mode auto-generation
 
@@ -201,7 +201,7 @@ sudo systemctl stop pharlux
 #    install-time layout.
 sudo head -c 64 /dev/urandom | sudo tee /etc/pharlux/jwt.secret > /dev/null
 sudo chmod 0640 /etc/pharlux/jwt.secret
-sudo chown root:root /etc/pharlux/jwt.secret
+sudo chown root:nogroup /etc/pharlux/jwt.secret
 
 # 3. Restart. Existing tokens become invalid; users must log in again.
 sudo systemctl start pharlux
@@ -235,7 +235,7 @@ These parameters apply to every code path that hashes a new password — `pharlu
 
 A login takes roughly 100 ms on commodity x86_64 hardware with the defaults. If your hardware is much slower, raise `argon2_time_cost` rather than lowering `argon2_memory_kb` — memory hardness is the property that makes Argon2id resistant to GPU attacks.
 
-Changing the defaults requires an ADR-level decision (see [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0010-auth-jwt-argon2id.md)).
+Changing the defaults requires an ADR-level decision (see [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/adr/0010-auth-jwt-argon2id.md)).
 
 ## Read-only enforcement
 
@@ -274,8 +274,8 @@ The two-role model, user CRUD, and CLI surface described above are the entirety 
 
 ## See also
 
-- [`../../SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md) — trust boundaries, secret handling rules, the broader threat model.
-- [`../../adr/0010-auth-jwt-argon2id.md`](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0010-auth-jwt-argon2id.md) — the original decision record, including the alternatives considered.
+- [`../../SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/SECURITY.md) — trust boundaries, secret handling rules, the broader threat model.
+- [`../../adr/0010-auth-jwt-argon2id.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/adr/0010-auth-jwt-argon2id.md) — the original decision record, including the alternatives considered.
 - [`otlp-configuration.md`](otlp-configuration.md) — the full `[auth]` section of `pharlux.toml`.
 - [`reverse-proxy.md`](reverse-proxy.md) — Caddy and nginx configurations, including rate limiting in front of `/api/v1/auth/login`.
 - [`backup-restore.md`](backup-restore.md) — what `pharlux backup` does and does not include.

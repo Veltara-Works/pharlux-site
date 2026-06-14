@@ -84,12 +84,17 @@ The upstream OTel Collector's built-in retry/buffering handles the brief ingest 
 
 ## Data retention
 
-Pharlux automatically deletes Parquet partitions older than `retention_days` (default 30 days). To change:
+Pharlux automatically deletes Parquet partitions older than `retention_days` (default 30 days). The sweep runs once at startup and then every `retention_sweep_interval_hours` (default 24). To change either:
 
 ```toml
 [storage]
 retention_days = 14
+retention_sweep_interval_hours = 24
 ```
+
+On a commercial licence, the effective retention is **clamped to your plan's maximum**: if `retention_days` is set higher than your plan allows, the lower of the two applies. The community build and unlimited plans use `retention_days` as written.
+
+> **Upgrading from a build before retention was enforced?** See the [one-time retention note in `upgrade.md`](upgrade.md#retention-now-enforced) — the first sweep deletes data older than `retention_days`.
 
 Manual compaction reduces the number of small Parquet files:
 

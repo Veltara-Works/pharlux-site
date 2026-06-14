@@ -5,6 +5,7 @@ const sidebars: SidebarsConfig = {
     'index',
     'getting-started',
     'sizing-guide',
+    'host-limits',
     'otlp-configuration',
     'sql-query-reference',
     'logs-query-performance',
@@ -20,8 +21,6 @@ const sidebars: SidebarsConfig = {
       label: 'Developer reference',
       items: [
         'dev/architecture',
-        'dev/crate-map',
-        'dev/testing',
       ],
     },
   ],

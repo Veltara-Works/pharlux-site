@@ -98,6 +98,19 @@ The pre-upgrade backup includes the SQLite databases (users, alerts, dashboards)
 
 > **Recommendation:** keep the previous release binary at `/usr/local/bin/pharlux.prev` before step 4 of the upgrade. Rollback then becomes `mv /usr/local/bin/pharlux.prev /usr/local/bin/pharlux && systemctl start pharlux`, no curl required.
 
+## Retention now enforced
+
+Builds before this release shipped the `[storage].retention_days` setting but did **not** run a background sweep — so data accumulated indefinitely regardless of the configured window. This release wires the sweep up: it runs once at startup and then every `[storage].retention_sweep_interval_hours` (default 24), deleting Parquet partitions older than `retention_days`.
+
+**One-time effect on upgrade:** if your deployment has been accumulating data for longer than `retention_days`, the first sweep after you start the new binary will delete everything older than that window. This is the documented behaviour finally taking effect, not a regression.
+
+If you need to keep the older data:
+
+- **Take the pre-upgrade backup** (step 2 of the standard procedure) — it captures the full data directory before any sweep runs.
+- **Raise `retention_days`** to cover the span you want to keep *before* starting the new binary, e.g. `retention_days = 365`.
+
+On a commercial licence the effective window is clamped to your plan's maximum (the lower of `retention_days` and the licensed cap), so raising `retention_days` above your plan's limit has no effect.
+
 ## Special considerations
 
 **OTLP ingest gap.** The 30-second window between `systemctl stop` and `systemctl start` is buffered by the upstream OTel Collector. If you are sending OTLP directly from application SDKs without an intermediate Collector, those SDKs' own retry/buffer behaviour determines whether points are lost; OpenTelemetry's spec-compliant SDKs all retry, but the buffer depth varies. In practice, run a Collector in front of Pharlux for any production deployment — it's the right operational layer for this concern.

@@ -23,6 +23,19 @@ content source for the IA-2 homepage migration.
 
 `sitemap.xml` is **auto-generated** by the Docusaurus classic preset's sitemap plugin (no longer hand-maintained).
 
+## Syncing docs from the source repo
+
+`docs/` is a **curated mirror** of `pharlux/docs/` in the private source repo — it is *not* a live feed, so it drifts whenever the source advances. **Re-sync it every time a release is cut** (this is a release checklist step, not an ad-hoc task — skipping it is how the docs silently fall behind the shipped product).
+
+```bash
+scripts/sync-docs.sh ../pharlux v1.1.0   # <path-to-pharlux-source> <release-tag>
+npm run build                            # verifies internal links + MDX
+```
+
+The script applies the site's one systematic adaptation (rewriting repo-tree relative links like `../../adr/…` to absolute GitHub blob URLs **pinned to the release tag**) and enforces the publish decisions (all `docs/user/*`; `docs/dev/architecture.md` only — `crate-map`/`testing` are contributor-only and excluded; `docs/enterprise/*` never published). See the header of [`scripts/sync-docs.sh`](scripts/sync-docs.sh) for the full decision list.
+
+If the source added a **new** user doc, the script prints a `⚠ NEW:` warning — add that doc to [`sidebars.ts`](sidebars.ts) and [`docs/index.mdx`](docs/index.mdx) by hand (those two are bespoke and not auto-generated), then rebuild.
+
 ## Local development
 
 Requires Node ≥ 20.

@@ -144,7 +144,7 @@ There is no "update by export" — re-importing a previously-exported dashboard 
 
 V1 RBAC: **admin-only across all seven endpoints**. Read-only users get 403 on every dashboards endpoint, including `GET /api/v1/dashboards`. This is the same posture as `/api/v1/admin/users` and `/api/v1/admin/alerts`.
 
-[ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0010-auth-jwt-argon2id.md) calls out that V1 ships a coarse role model and the SQLite schema supports finer-grained RBAC for V1.2. The dashboards table captures `created_by` on every record so the V1.2 split between owner and non-owner reads needs no migration.
+[ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/adr/0010-auth-jwt-argon2id.md) calls out that V1 ships a coarse role model and the SQLite schema supports finer-grained RBAC for V1.2. The dashboards table captures `created_by` on every record so the V1.2 split between owner and non-owner reads needs no migration.
 
 The web UI does not currently surface dashboards to read-only users. If you need a read-only viewer, log in as admin or wait for the V1.2 RBAC enrichment.
 
@@ -165,7 +165,7 @@ Things the V1 dashboards system does not have yet, with the V1.x or V1.2 line th
 - **Panel type extensibility** — V1 ships bar, pie, and table. Adding line/area/heatmap/sparkline is V1.x.
 - **Auto-refresh** — V1 panels run their SQL once when the dashboard loads (and re-run on layout-JSON changes in the editor preview). A configurable refresh interval is V1.1.
 - **Panel-level options** — colours, axis formatting, legends are V1's defaults. Panel-level overrides via additional layout-JSON fields are V1.x and forward-compatible (unknown fields are preserved on round-trip).
-- **Storage unification** — dashboards live in `dashboards.db`, alongside `auth.db` and `alerts.db`. The unified `meta.sqlite` from [`spec/file-layout.md`](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/spec/file-layout.md) is V1.x cleanup.
+- **Storage unification** — dashboards live in `dashboards.db`, alongside `auth.db` and `alerts.db`. The unified `meta.sqlite` from [`spec/file-layout.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/spec/file-layout.md) is V1.x cleanup.
 
 ## Storage and lifecycle
 
@@ -175,7 +175,7 @@ Deleting a dashboard is permanent — there is no soft-delete or trash in V1. Us
 
 ## Reference
 
-- [API surface §1.5](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/spec/api-surface.md) — the seven endpoints, request/response shapes, and the export format.
+- [API surface §1.5](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/spec/api-surface.md) — the seven endpoints, request/response shapes, and the export format.
 - [`sql-query-reference.md`](sql-query-reference.md) — the SQL surface available to panel queries.
 - [`auth.md`](auth.md) — admin tokens, the V1 two-role model.
-- [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0010-auth-jwt-argon2id.md) — V1 RBAC scope and V1.2 commitments.
+- [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/adr/0010-auth-jwt-argon2id.md) — V1 RBAC scope and V1.2 commitments.

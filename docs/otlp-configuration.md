@@ -19,7 +19,9 @@ Full reference for `pharlux.toml`. All fields have sensible defaults — a zero-
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `data_dir` | path | `/var/lib/pharlux` | Root data directory |
-| `retention_days` | u32 | `30` | Automatic data retention (days) |
+| `retention_days` | u32 | `30` | Automatic data retention (days). On a commercial licence, clamped down to the licensed maximum. See [sizing-guide.md](sizing-guide.md#storageretention_days) |
+| `retention_sweep_interval_hours` | u32 | `24` | How often the retention sweep runs (also once at startup) |
+| `host_inactivity_days` | u32 | `14` | Days of inactivity before a host is evicted from the licensed-host count. See [host-limits.md](host-limits.md) |
 | `wal_max_segment_bytes` | u64 | `67108864` (64 MB) | Max WAL segment size before rotation |
 | `wal_max_total_bytes` | u64 | `536870912` (512 MB) | Max total WAL size |
 | `parquet_row_group_bytes` | u64 | `134217728` (128 MB) | Target Parquet row group size |
