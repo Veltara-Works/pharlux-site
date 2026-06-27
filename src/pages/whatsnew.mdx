@@ -9,16 +9,83 @@ This page mirrors [`CHANGELOG.md`](https://github.com/Veltara-Works/pharlux/blob
 
 ## Unreleased
 
-### Security
+_No unreleased changes._
 
-- Bumped `tar` from `0.4.44` to `0.4.45` to address RUSTSEC-2026-0067 (`unpack_in` symlink chmod escape, medium 5.1) and RUSTSEC-2026-0068 (PAX size header inconsistency, medium 5.1). Used by the `pharlux backup` subcommand. Commit `515fef3`.
-- Bumped `rustls-webpki` (transitive via `rustls 0.23` → `reqwest`) from `0.103.11` to `0.103.13` to address RUSTSEC-2026-0098 (URI-name constraint bypass), RUSTSEC-2026-0099 (wildcard-name constraint bypass), and RUSTSEC-2026-0104 (reachable panic in CRL parsing). Commit `515fef3`.
-- Bumped `rand` from `0.9.1` to `0.9.4` (workspace direct pin) and `0.8.5` to `0.8.6` (transitive via `num-bigint-dig` → `rsa` → `jsonwebtoken`) to address RUSTSEC-2026-0097 (unsoundness with custom logger using `rand::rng()`). Not reachable in Pharlux's build (we use `tracing`, not a custom `log` logger), but the patch is taken on principle. Commit `64162be`.
-- Documented one remaining unfixable advisory with reachability justification: RUSTSEC-2023-0071 (`rsa 0.9.10` Marvin attack). Pharlux uses `jsonwebtoken` with HS256 only, so the RSA decryption code paths the Marvin attack targets are unreachable in our binary. No upstream fix is available. Documented in `deny.toml` `[advisories.ignore]` with re-evaluation steps if RS256/RS384/RS512 support is added in future. Commit `20c0ed5`.
+## 1.1.3 — 2026-06-26
+
+Dashboard variables and a host filter for the bundled web UI (dashboard redesign Slice 4). Ships entirely in the embedded UI — no dependency changes.
 
 ### Added
 
-- New `deny.toml` project policy file for `cargo deny check`. Encodes the SPDX license allow-list (covering every license observed in the resolved dependency tree as of 2026-05-03), the no-OpenSSL family TLS policy as a hard `[bans] deny` rule, the per-advisory ignore list with written justifications, and crates.io as the only allowed source registry. Commit `2de8eb4`.
+- **Dashboard variables / host filter.** Dashboards may declare an optional top-level `variables` array; the bundled UI renders a header filter bar whose selection is substituted into every panel's SQL before it runs. Options come from a tenant-scoped query or a static list. A multi-select host filter is written `WHERE resource['host.name'] IN ($hosts)`; an empty selection substitutes `NULL`. Substitution is client-side and injection-safe by construction (values are allowlisted to the variable's option set and emitted as single-quote-escaped SQL string literals). Dashboards without a `variables` key are unchanged.
+
+## 1.1.2 — 2026-06-26
+
+Read-path memory fix completion: query scans now stream Parquet instead of materialising the full dataset, so peak memory tracks the query working set rather than total data on disk. No dependency changes.
+
+### Changed
+
+- Metrics and logs queries stream WAL + Parquet record batches through a bounded channel instead of building an in-memory table over every batch, bounding read-path memory regardless of whether a query carries a time predicate (prong-2 of the read-path OOM fix; complements the 1.1.1 partition pruning). Parquet file handles are still opened under the read lock, so a concurrent compaction/retention unlink cannot drop a file mid-scan.
+
+### Fixed
+
+- Parquet handle acquisition no longer silently drops a partition on an open failure: a benign compaction/retention unlink race is skipped, while any other error propagates with the failing path — so query results are never silently truncated.
+
+## 1.1.1 — 2026-06-24
+
+Read-path OOM fix plus dashboard redesign Wave 1.
+
+### Added
+
+- Dashboard redesign Wave 1: a design-token system, a shared ECharts theme, self-hosted IBM Plex fonts, new time-series and stat (single-value KPI with sparkline, delta, and ascending thresholds) panel types, and token-themed CodeMirror SQL/JSON editors.
+- Read-only dashboard view mode.
+
+### Fixed
+
+- Read-path memory growth: under sustained fleet load, production RSS climbed toward OOM because the scanner materialised every Parquet file into a single in-memory table before filtering. Scans now prune Parquet partitions by time and tenant up front, bounding read-path memory to the query window instead of the whole dataset (prong-1; the streaming follow-up landed in 1.1.2).
+- Stat and time-series panels no longer coerce `NULL` to `0` (which fabricated datapoints and false zero-drops) — a null now stays a real gap.
+- Multi-series colour and legend order is stable (series sorted by name instead of row order).
+- The login footer version is read live from the public health endpoint rather than a hardcoded string that drifted from the release.
+
+### Changed
+
+- Frontend dependencies: added IBM Plex Sans/Mono and CodeMirror language packages; removed the one-dark theme.
+
+## 1.1.0 — 2026-06-21
+
+The clean-install hardening release: bound the WAL and fail loud. Validated end-to-end on a fresh 4&nbsp;vCPU&nbsp;/&nbsp;8&nbsp;GB box — bounded WAL, plateaued RSS, zero restarts, and graceful backpressure where v1.0.0 OOM-looped.
+
+### Added
+
+- gzip / zstd decompression for OTLP ingest (collectors no longer need `compression: none`).
+- Operator recovery runbook: a health ladder and a wedged-store recovery procedure.
+- Per-tenant retention sweep, wired and clamped to the licensed retention cap.
+- Licensed host-cap enforcement at the OTLP ingest boundary.
+- `[license]` config section and the `pharlux license verify` CLI for the ValidonX licensing verifier, with a revoke webhook and license-provider wiring.
+- CodeQL static-analysis workflow for Rust.
+- `deny.toml` promoted to a blocking CI gate, plus Dependabot.
+- `CODE_OF_CONDUCT.md` and `NOTICE` for go-public readiness.
+- `.cargo/audit.toml` mirroring `deny.toml`'s advisory-ignore list so `cargo audit` and `cargo deny check` agree.
+
+### Fixed
+
+- Unbounded WAL stall: the WAL is now kept bounded under sustained load via reclaim / truncate-on-flush, instead of growing to the hard ceiling and silently rejecting every append while the service still reported `active`.
+- Boot-time OOM: WAL replay now streams with chunked flush, bounding boot-time RSS instead of collecting the whole WAL into memory.
+- Clean-shutdown handshake: truncate plus a sentinel marker so a clean restart skips WAL replay entirely.
+- WAL append atomicity on a write/fsync error — the writer truncates and rolls back the sequence number rather than leaving orphan bytes that replay would silently skip.
+- Durable checkpoint with a degraded-health signal after repeated checkpoint-write failures.
+- Integer-math health thresholds (no floating-point drift in the health ladder).
+- SPA fallback no longer shadows `/api/*`: unmatched API routes return a JSON 404 instead of the dashboard `index.html`.
+- Alerting survives a poisoned store lock so the circuit breaker stays effective.
+
+### Changed
+
+- Server bootstrap extracted into `pharlux-server` with provider injection, separating the community binary shim from the server library.
+
+### Security
+
+- Bumped `tar` to 0.4.46 (GHSA-3pv8-6f4r-ffg2).
+- Bumped frontend dependencies to clear Dependabot alerts.
 
 ## 1.0.0 — 2026-04-17
 
@@ -91,3 +158,9 @@ Version 1.0.0 signals a commitment to semver on the public API surface: the REST
 ### Security
 
 - Outbound HTTP TLS backend is `rustls` (no OpenSSL in the dep tree). Applies to webhook and Slack alert notifications and the load-test client. Enables a genuinely OpenSSL-free musl static-pie binary.
+- Refuse to start when `jwt.secret` is world-readable (the "other read" bit is set). Documented in `SECURITY.md` under "Secret handling".
+- Bumped `tar` from `0.4.44` to `0.4.45` for RUSTSEC-2026-0067 (`unpack_in` symlink chmod escape) and RUSTSEC-2026-0068 (PAX size-header inconsistency). Used by the `pharlux backup` subcommand.
+- Bumped `rustls-webpki` (transitive via `rustls` → `reqwest`) to 0.103.13 for RUSTSEC-2026-0098 / -0099 (name-constraint bypasses) and RUSTSEC-2026-0104 (reachable panic in CRL parsing).
+- Bumped `rand` to 0.9.4 / 0.8.6 for RUSTSEC-2026-0097 (unsoundness with a custom `log` logger). Not reachable in Pharlux's build (we use `tracing`), but the patch is taken on principle.
+- Documented one remaining unfixable advisory with a reachability justification: RUSTSEC-2023-0071 (`rsa` Marvin attack). Pharlux uses `jsonwebtoken` with HS256 only, so the RSA decryption paths the attack targets are unreachable. No upstream fix exists; recorded in `deny.toml` with re-evaluation steps if RS256/384/512 is ever added.
+- New `deny.toml` policy for `cargo deny check`: SPDX license allow-list, a hard no-OpenSSL TLS ban, the justified per-advisory ignore list, and crates.io as the only allowed registry.
