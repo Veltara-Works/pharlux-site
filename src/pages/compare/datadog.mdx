@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Self-hosted Datadog alternative: Pharlux keeps your data',
         description: 'A comparison of Pharlux and Datadog for teams seeking a self-hosted, flat-priced observability tool: deployment, per-host pricing, data residency, and lock-in.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-13',
+        dateModified: '2026-06-30',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -52,13 +52,13 @@ import Link from '@docusaurus/Link';
 
 # Self-hosted Datadog alternative
 
-**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
 Datadog is the most polished observability product money can buy. The operative word is *buy*: it is SaaS-only, priced per host plus per GB plus per million events, and every byte of your telemetry lives on Datadog's cloud. For a small team that wants its data on its own infrastructure and a bill that doesn't scale with every server it adds, Pharlux is the self-hosted alternative — one 83 MB binary that ingests OpenTelemetry metrics and logs on a VPS you control, for a flat monthly license.
 
 ## Pharlux vs Datadog at a glance
 
-| | Pharlux v1.0.0 | Datadog |
+| | Pharlux v1.1.3 | Datadog |
 |---|---|---|
 | **Deployment** | Self-hosted binary on your VPS | SaaS only — no self-hosted edition |
 | **Where data lives** | Your VPS (local Parquet) | Datadog's cloud (region you select) |
@@ -93,7 +93,7 @@ Pharlux makes a narrower promise and keeps it: OpenTelemetry-native metrics and 
 
 Datadog speaks OpenTelemetry, so the exit ramp already exists:
 
-1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
 2. Add a Pharlux exporter to your OpenTelemetry Collector on `:4318`, alongside the Datadog one.
 3. Rebuild the dashboards and alerts you actually use as Pharlux SQL, and watch your host-based bill stop growing.
 4. Wind Datadog down once Pharlux covers what your team relies on.
@@ -102,7 +102,7 @@ Datadog speaks OpenTelemetry, so the exit ramp already exists:
 
 If you depend on Datadog's full breadth — synthetics, RUM, security, hundreds of managed integrations across a large fleet — Pharlux is not that product, and this page won't pretend otherwise. But most teams use a sliver of Datadog and pay for the whole thing, on infrastructure they don't control, with a bill that climbs every time they add a host.
 
-If that is you, the math is simple: a flat $899/mo for unlimited self-hosted hosts versus a five-figure-per-month invoice that grows with your estate. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) free under AGPL-3.0, or [see the pricing](/pricing) for the commercial tiers.
+If that is you, the math is simple: a flat $899/mo for unlimited self-hosted hosts versus a five-figure-per-month invoice that grows with your estate. [Download Pharlux](https://github.com/Veltara-Works/pharlux/releases/latest) free under AGPL-3.0, or [see the pricing](/pricing) for the commercial tiers.
 
 ## Frequently asked questions
 
@@ -128,7 +128,7 @@ Datadog supports OpenTelemetry ingestion, so if you already run an OpenTelemetry
 
 ## Try Pharlux
 
-<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/pricing">See pricing</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/docs/getting-started">Getting started</Link>
+<Link to="https://github.com/Veltara-Works/pharlux/releases/latest">Download Pharlux</Link> · <Link to="/pricing">See pricing</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/docs/getting-started">Getting started</Link>
 
 ---
 

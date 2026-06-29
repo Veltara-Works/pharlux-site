@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs Grafana Loki: one binary, not five components',
         description: 'A first-party comparison of Pharlux and Grafana Loki for self-hosted observability on a single VPS: what you actually run, operational cost, storage, and migration.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-13',
+        dateModified: '2026-06-30',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -52,7 +52,7 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs Grafana Loki
 
-**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
 Grafana Loki stores logs, and only logs. To get what Pharlux gives you out of one binary, you run Loki **plus** Mimir for metrics, Grafana for dashboards, Alertmanager for alerts, and an object store underneath all of it. Pharlux does that whole job as a single 83 MB binary on one VPS: metrics and logs ingested over OpenTelemetry, queried with SQL, dashboards and alerting built in. If you are a small team running 1–10 services and tired of operating five things to watch three, that is the difference that matters.
 
@@ -60,7 +60,7 @@ Grafana Loki stores logs, and only logs. To get what Pharlux gives you out of on
 
 A "Pharlux vs Loki" table flatters Loki, because Loki is one piece of a five-part stack. Here is the honest version — Pharlux against the components you really run to match it:
 
-| | Pharlux v1.0.0 | Grafana Loki + the LGTM stack |
+| | Pharlux v1.1.3 | Grafana Loki + the LGTM stack |
 |---|---|---|
 | **Logs** | Built in | Loki |
 | **Metrics** | Built in, same binary | Prometheus or Grafana Mimir (separate) |
@@ -94,7 +94,7 @@ Pharlux is built to scale **up**, on purpose. It is a statically-linked Rust bin
 
 Pharlux is OpenTelemetry-native, so you migrate gradually instead of ripping anything out:
 
-1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
 2. Add a second exporter to your OpenTelemetry Collector pointing at Pharlux on `:4318`, alongside your existing Loki exporter.
 3. Run both in parallel. Rebuild the dashboards and alerts you actually use as Pharlux SQL queries and SQL alert rules.
 4. Once you trust the Pharlux view, retire Loki, Mimir, Grafana, and Alertmanager — and the object storage underneath them.
@@ -105,7 +105,7 @@ Queries move from LogQL (and PromQL) to one SQL surface over both signals. PromQ
 
 Pharlux is built for one job and does it better than a five-component stack: observability for a small team running 1–10 services on a single VPS. It is deliberately not a planet-scale platform, and it does not pretend to be.
 
-So if you are ingesting multiple terabytes of logs a day across a Kubernetes fleet, the Grafana stack's distributed architecture is built for that and Pharlux is not the tool. But if you are one of the teams running five components to watch three services — paying in upgrade-Tuesday outages, object-store bills, and a part-time ops job you never wanted — that is exactly the weight Pharlux is built to remove. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and point your Collector at it this afternoon.
+So if you are ingesting multiple terabytes of logs a day across a Kubernetes fleet, the Grafana stack's distributed architecture is built for that and Pharlux is not the tool. But if you are one of the teams running five components to watch three services — paying in upgrade-Tuesday outages, object-store bills, and a part-time ops job you never wanted — that is exactly the weight Pharlux is built to remove. [Download Pharlux](https://github.com/Veltara-Works/pharlux/releases/latest) and point your Collector at it this afternoon.
 
 ## Frequently asked questions
 
@@ -131,7 +131,7 @@ Yes, both are AGPL-3.0. Grafana Labs relicensed Loki, Grafana, and Tempo from Ap
 
 ## Try Pharlux
 
-<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+<Link to="https://github.com/Veltara-Works/pharlux/releases/latest">Download Pharlux</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
 
 ---
 

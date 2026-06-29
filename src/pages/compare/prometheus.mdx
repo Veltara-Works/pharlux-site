@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs Prometheus: metrics and logs in one binary',
         description: 'A first-party comparison of Pharlux and Prometheus for small-team self-hosted observability: signal coverage, the surrounding stack, query model, OTLP, and migration.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-13',
+        dateModified: '2026-06-30',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -52,7 +52,7 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs Prometheus
 
-**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
 Prometheus is the de-facto standard for metrics, and it earned that place: a CNCF-graduated project, a vast exporter ecosystem, and PromQL. It is also **metrics, and only metrics.** To turn Prometheus into observability you add Grafana for dashboards, Loki for logs, Alertmanager for routing, exporters for collection, and Thanos or Mimir once you need long-term storage. Pharlux does metrics **and** logs in a single 83 MB binary, with dashboards, SQL, and alerting built in — one process instead of a stack you assemble.
 
@@ -60,7 +60,7 @@ Prometheus is the de-facto standard for metrics, and it earned that place: a CNC
 
 Prometheus alone is one binary. Observability for a small team is not — here is what the metrics-only core sits inside:
 
-| | Pharlux v1.0.0 | Prometheus + the usual stack |
+| | Pharlux v1.1.3 | Prometheus + the usual stack |
 |---|---|---|
 | **Metrics** | Built in | Prometheus |
 | **Logs** | Built in, same binary | Loki (separate) |
@@ -90,7 +90,7 @@ The friction starts when metrics are not the entire job — which, during an inc
 
 You do not have to choose on day one:
 
-1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
 2. Point your OpenTelemetry Collector at Pharlux on `:4318` while Prometheus keeps scraping.
 3. Rebuild the dashboards and alerts you rely on as Pharlux SQL, and add your logs to the same system.
 4. Decide per-signal what to keep. Many teams keep Prometheus for a slice of metrics and let Pharlux own logs plus the rest.
@@ -101,7 +101,7 @@ PromQL lands in V1.1; until then SQL via DataFusion covers metrics and logs toge
 
 If your need is purely metrics and your team has years of PromQL muscle memory and dashboards-as-code, Prometheus is an excellent tool and there is no reason to fight that. Pharlux is not trying to displace Prometheus inside a mature, metrics-only Kubernetes platform.
 
-Pharlux is for the team standing up observability for 1–10 services and realising "metrics" quietly means Prometheus **and** Grafana **and** Loki **and** Alertmanager. That is four things to watch three services. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and get metrics and logs from one binary instead.
+Pharlux is for the team standing up observability for 1–10 services and realising "metrics" quietly means Prometheus **and** Grafana **and** Loki **and** Alertmanager. That is four things to watch three services. [Download Pharlux](https://github.com/Veltara-Works/pharlux/releases/latest) and get metrics and logs from one binary instead.
 
 ## Frequently asked questions
 
@@ -127,7 +127,7 @@ Prometheus and Alertmanager are Apache-2.0; Grafana and Loki are AGPL-3.0, so a 
 
 ## Try Pharlux
 
-<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+<Link to="https://github.com/Veltara-Works/pharlux/releases/latest">Download Pharlux</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
 
 ---
 

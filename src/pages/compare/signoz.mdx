@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs SigNoz: unified observability without ClickHouse',
         description: 'A first-party comparison of Pharlux and SigNoz for self-hosted OpenTelemetry observability: architecture, the ClickHouse dependency, operational footprint, and migration.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-13',
+        dateModified: '2026-06-30',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -52,13 +52,13 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs SigNoz
 
-**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
 Pharlux and SigNoz want the same thing: one tool for OpenTelemetry metrics, logs, and traces instead of a stitched-together stack. The difference is what you operate to get there. SigNoz stores everything in **ClickHouse** — a database you run, tune, and back up yourself, joined by ZooKeeper and PostgreSQL once you need high availability. Pharlux embeds its storage: per-signal Parquet on local disk with SQLite for metadata, inside a single 83 MB binary. Same ambition, far less to operate — which is the whole point for a team running 1–10 services on one VPS.
 
 ## At a glance
 
-| | Pharlux v1.0.0 | SigNoz |
+| | Pharlux v1.1.3 | SigNoz |
 |---|---|---|
 | **Signals** | Metrics + logs (traces in V1.1) | Metrics, logs, traces |
 | **OpenTelemetry** | Native — OTLP `:4317` / `:4318` | Native — OTLP-first |
@@ -82,13 +82,13 @@ Pharlux refused that dependency. Storage is a custom write-ahead log plus per-si
 - **SQL across signals in one query.** Cross-signal `JOIN` on `trace_id` is one line. You query metrics and logs through the same Apache DataFusion SQL surface, not a mix of Query Builder and ClickHouse SQL.
 - **Runs on hardware you already have.** The Community baseline fits a 2 vCPU / 4 GB VPS; the published benchmark sustains [577,000 metric points/sec on 4 vCPU / 8 GB](/benchmarks), 0 errors over 17.36 million points.
 - **A commercial path that isn't "contact sales."** Pharlux lists flat monthly tiers (Community free, Team $49, Business $199, Scale $899) with a tamper-evident audit log included on every paid tier. SigNoz Cloud starts at $49/mo and its Enterprise tier starts around $4,000/mo.
-- **Dogfooded in production.** Pharlux is the observability layer for Veltara Works' own ValidonX and Vectis Mail. 360 of 360 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes.
+- **Dogfooded in production.** Pharlux is the observability layer for Veltara Works' own ValidonX and Vectis Mail. the full test suite passes; 10 of 10 consecutive crash-recovery runs with zero flakes.
 
 ## Migrating from SigNoz to Pharlux
 
 Because both speak OpenTelemetry, you migrate without a rip-and-replace:
 
-1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
 2. Add a second exporter to your OpenTelemetry Collector pointing at Pharlux on `:4318`, alongside the one feeding SigNoz.
 3. Run both in parallel and rebuild the dashboards and alerts you actually use as Pharlux SQL.
 4. Retire SigNoz and its ClickHouse once you trust the Pharlux view.
@@ -97,7 +97,7 @@ Because both speak OpenTelemetry, you migrate without a rip-and-replace:
 
 SigNoz aims to be a full open-source Datadog: metrics, logs, traces, APM, exceptions, and the scale that ClickHouse unlocks. If you need traces today, or you are ingesting at a volume where a tuned ClickHouse cluster earns its keep, SigNoz is built for that and Pharlux V1 is not — traces land in V1.1, and Pharlux stays single-node on purpose.
 
-But if you are a small team that wants unified metrics and logs **without** adopting and operating a database to get them, that is exactly the weight Pharlux removes. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and point your Collector at it this afternoon — there is no ClickHouse to stand up first.
+But if you are a small team that wants unified metrics and logs **without** adopting and operating a database to get them, that is exactly the weight Pharlux removes. [Download Pharlux](https://github.com/Veltara-Works/pharlux/releases/latest) and point your Collector at it this afternoon — there is no ClickHouse to stand up first.
 
 ## Frequently asked questions
 
@@ -123,7 +123,7 @@ Yes, gradually. Both are OpenTelemetry-native, so you add a second exporter to y
 
 ## Try Pharlux
 
-<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+<Link to="https://github.com/Veltara-Works/pharlux/releases/latest">Download Pharlux</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
 
 ---
 

@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs VictoriaMetrics: unified signals, one SQL surface',
         description: 'A first-party comparison of Pharlux and VictoriaMetrics: signal coverage, query languages, single-node vs cluster, OTLP, and fit for a small team.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-13',
+        dateModified: '2026-06-30',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -52,13 +52,13 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs VictoriaMetrics
 
-**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
 VictoriaMetrics is a genuinely excellent metrics database — fast, efficient, and a near-drop-in for Prometheus. The word that matters is **metrics.** Logs live in a separate product (VictoriaLogs, with its own LogsQL), traces in another (VictoriaTraces), and at scale the metrics store itself splits into three components. Pharlux takes the other path: metrics **and** logs in a single 83 MB binary, queried through one SQL surface, on a single VPS. If you want unified observability rather than a best-in-class metrics silo plus separate stores around it, that is the difference.
 
 ## At a glance
 
-| | Pharlux v1.0.0 | VictoriaMetrics |
+| | Pharlux v1.1.3 | VictoriaMetrics |
 |---|---|---|
 | **Primary signal** | Metrics + logs in one binary | Metrics (TSDB) |
 | **Logs** | Built in, same binary | VictoriaLogs (separate product) |
@@ -85,7 +85,7 @@ Pharlux is solving a different problem. Most small teams don't have a metrics-ca
 
 ## Migrating from VictoriaMetrics to Pharlux
 
-1. Stand up Pharlux with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)).
+1. Stand up Pharlux with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
 2. Point your OpenTelemetry Collector at Pharlux on `:4318`; keep VictoriaMetrics ingesting in parallel.
 3. Rebuild the metric dashboards and alerts you rely on as Pharlux SQL, and bring your logs into the same system instead of a separate VictoriaLogs.
 4. Keep what fits. Some teams keep VictoriaMetrics for a heavy metrics workload and let Pharlux own logs plus unified querying.
@@ -94,7 +94,7 @@ Pharlux is solving a different problem. Most small teams don't have a metrics-ca
 
 If you have a serious metrics-scale problem — very high cardinality, a metrics firehose, a need for a dedicated TSDB you tune independently — VictoriaMetrics is built for that and Pharlux is not the right tool. Pharlux is single-node and unified, not a specialised metrics engine.
 
-If, instead, you want metrics and logs for a small fleet without operating one product per signal and learning a query language per signal, Pharlux gives you all of it in one binary. [Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) and query metrics and logs together this afternoon.
+If, instead, you want metrics and logs for a small fleet without operating one product per signal and learning a query language per signal, Pharlux gives you all of it in one binary. [Download Pharlux](https://github.com/Veltara-Works/pharlux/releases/latest) and query metrics and logs together this afternoon.
 
 ## Frequently asked questions
 
@@ -120,7 +120,7 @@ If you need a dedicated, highly-efficient metrics store for large cardinality an
 
 ## Try Pharlux
 
-<Link to="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download v1.0.0</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
+<Link to="https://github.com/Veltara-Works/pharlux/releases/latest">Download Pharlux</Link> · <Link to="/benchmarks">Benchmarks</Link> · <Link to="/pricing">Pricing</Link> · <Link to="/docs/getting-started">Getting started</Link>
 
 ---
 
