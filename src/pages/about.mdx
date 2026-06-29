@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         name: 'About Pharlux',
         description: 'What Pharlux is, why it exists, and who builds it.',
         url: 'https://pharlux.com/about/',
-        dateModified: '2026-06-13',
+        dateModified: '2026-06-29',
         about: {'@id': 'https://pharlux.com/#pharlux'},
         isPartOf: {'@type': 'WebSite', name: 'Pharlux', url: 'https://pharlux.com/'},
       },
@@ -46,9 +46,9 @@ import Link from '@docusaurus/Link';
 
 # About Pharlux
 
-**Last updated: 2026-06-13** · Applies to: Pharlux v1.0.0
+**Last updated: 2026-06-29** · Applies to: Pharlux v1.1.3
 
-Pharlux is a single statically-linked Rust binary for self-hosted, OpenTelemetry-native observability. It ingests metrics and logs (traces in V1.1), stores them as per-signal Apache Parquet on local disk, and serves SQL queries, dashboards, and alerting from one process. It is built for small teams running 1–10 services on a single VPS — the people who need to observe their systems without standing up and operating a five-component stack to do it.
+Pharlux is a single statically-linked Rust binary for self-hosted, OpenTelemetry-native observability. It ingests metrics and logs (traces on the roadmap), stores them as per-signal Apache Parquet on local disk, and serves SQL queries, dashboards, and alerting from one process. It is built for small teams running 1–10 services on a single VPS — the people who need to observe their systems without standing up and operating a five-component stack to do it.
 
 ## Why Pharlux exists
 
@@ -66,7 +66,7 @@ Pharlux is the observability layer Veltara Works runs on its own production stac
 
 - **Open and inspectable.** The Community edition is free under [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html); the source is there to read.
 - **Reproducible and audited.** All dependencies are pinned exact, with `cargo-deny` and `cargo-audit` gates green; the binary is a genuinely static musl build.
-- **Production-tested.** V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates: 360 of 360 tests pass, with 10 of 10 consecutive crash-recovery runs and zero flakes.
+- **Production-tested.** V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates, and has had steady patch releases since (current: v1.1.3). The full test suite passes, with crash-recovery running 10 of 10 consecutive times and zero flakes.
 - **Memory-safe by construction.** Written in Rust, with `rustls` for all TLS and zero OpenSSL in the dependency tree.
 
 ## Learn more
