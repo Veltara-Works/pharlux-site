@@ -1,7 +1,7 @@
 # Pricing — Pharlux
 
 > Machine-readable pricing for Pharlux, a self-hosted observability binary by Veltara Works.
-> Last updated: 2026-06-13. Canonical page: https://pharlux.com/pricing
+> Last updated: 2026-06-29. Canonical page: https://pharlux.com/pricing
 > All prices in USD. Host and retention figures are generous fair-use ceilings, not a per-host meter — tiers ladder on features, support, and redistribution rights, not on counting hosts.
 
 ## Community
@@ -13,7 +13,7 @@
 - Features: full community feature set — OpenTelemetry (OTLP) metrics + logs ingest, SQL via Apache DataFusion, embedded dashboards, SQL-based alerting, single static binary
 - Audit log: not included (commercial feature)
 - Support: community (GitHub Issues and Discussions)
-- CTA: download at https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0
+- CTA: download at https://github.com/Veltara-Works/pharlux/releases/latest
 
 ## Team
 
@@ -65,5 +65,5 @@
 ## Notes
 
 - Pharlux is self-hosted software distributed as a single statically-linked binary, not a SaaS. Your telemetry data stays on your own infrastructure on every tier.
-- Traces and PromQL are planned for V1.1; V1.0.0 (shipped 2026-04-17) covers metrics and logs.
+- The current release is v1.1.3. Metrics and logs are generally available; traces and PromQL remain on the roadmap. (V1.0.0 shipped 2026-04-17.)
 - Commercial licensing contact: licensing@pharlux.com

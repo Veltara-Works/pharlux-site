@@ -1,6 +1,6 @@
 # Pharlux
 
-> Pharlux is a single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs; traces in V1.1) for small teams running 1-10 services on a single VPS. One binary, one `pharlux.toml`, one systemd unit — no external databases, no Docker, no multi-component stack. Dual-licensed: Community edition is free under AGPL-3.0; commercial licenses available for teams that cannot accept AGPL terms or need the Enterprise binary. V1.0.0 shipped 2026-04-17.
+> Pharlux is a single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs; traces on the roadmap) for small teams running 1-10 services on a single VPS. One binary, one `pharlux.toml`, one systemd unit — no external databases, no Docker, no multi-component stack. Dual-licensed: Community edition is free under AGPL-3.0; commercial licenses available for teams that cannot accept AGPL terms or need the Enterprise binary. V1.0.0 shipped 2026-04-17; the current release is v1.1.3.
 
 Pharlux is a product of Veltara Works. It targets teams currently running the Grafana + Prometheus + Loki stack who are frustrated with operating five moving parts to observe three services. The design philosophy is single-binary simplicity: storage is a custom write-ahead log plus per-signal Apache Parquet files queried through embedded Apache DataFusion. HTTP (Axum) and gRPC (Tonic) share one Tokio runtime. TLS uses `rustls` throughout — zero OpenSSL in the dependency tree.
 
@@ -32,16 +32,16 @@ Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average late
 ## Source code and downloads
 
 - [github.com/Veltara-Works/pharlux](https://github.com/Veltara-Works/pharlux): the production source code repository.
-- [v1.0.0 release](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0): download the statically-linked musl binary (83 MB).
+- [Latest release](https://github.com/Veltara-Works/pharlux/releases/latest): download the statically-linked musl binary.
 
 ## Documentation
 
-- [Getting started](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md)
-- [OTLP configuration](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/otlp-configuration.md)
-- [SQL query reference](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/sql-query-reference.md)
-- [Reverse proxy and TLS](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/reverse-proxy.md)
-- [Backup and restore](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/backup-restore.md)
-- [Operator runbook](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md)
+- [Getting started](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)
+- [OTLP configuration](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/otlp-configuration.md)
+- [SQL query reference](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/sql-query-reference.md)
+- [Reverse proxy and TLS](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/reverse-proxy.md)
+- [Backup and restore](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/backup-restore.md)
+- [Operator runbook](https://github.com/Veltara-Works/pharlux/blob/main/RUNBOOK.md)
 
 ## Blog
 
@@ -59,5 +59,5 @@ Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average late
 - Sales and pricing: sales@pharlux.com
 - Technical support: support@pharlux.com
 - Commercial licensing: licensing@pharlux.com
-- Security disclosures: security@pharlux.com (see also https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md)
+- Security disclosures: security@pharlux.com (see also https://github.com/Veltara-Works/pharlux/blob/main/SECURITY.md)
 - Community support: https://github.com/Veltara-Works/pharlux/issues and https://github.com/Veltara-Works/pharlux/discussions
