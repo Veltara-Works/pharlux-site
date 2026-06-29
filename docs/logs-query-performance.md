@@ -58,4 +58,4 @@ Pharlux stores logs in hourly partitions (`data/logs/{tenant_id}/YYYY/MM/DD/HH/`
 
 V1.1 will add an optional tantivy inverted index per log partition, enabling sub-second full-text search at any volume. The storage layer is designed so this can be added without schema changes — the index is a sidecar file alongside each Parquet partition.
 
-tantivy is not yet a Pharlux dependency; the V1.1 work will add it through the standard `VERSIONS.md` review process. See [DESIGN.md](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/DESIGN.md) §"Full-text log search" for the design-in note.
+tantivy is not yet a Pharlux dependency; the V1.1 work will add it through the standard `VERSIONS.md` review process. See [DESIGN.md](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/DESIGN.md) §"Full-text log search" for the design-in note.

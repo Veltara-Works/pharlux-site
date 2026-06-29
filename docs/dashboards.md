@@ -6,7 +6,7 @@ This guide covers the dashboards model, the panel types, the UI editor, the JSON
 
 ## Quick start
 
-The fastest path is the web UI: open Pharlux, log in, and click **Dashboards** in the top nav. Click **New dashboard**, give it a name, and you land in the editor. The starter layout has one bar-chart panel showing top metric counts — change the SQL, click **Save**, and you have a working dashboard.
+The fastest path is the web UI: open Pharlux, log in, and click **Dashboards** in the top nav. Click **New dashboard**, give it a name, and you land in the editor. The starter layout has a time-series panel (metric volume over time) alongside a bar-chart panel of top metric counts and a stat KPI of metric points per 5 minutes, plus a **Host** filter at the top that scopes the panels to selected hosts — change the SQL, click **Save**, and you have a working dashboard. See [Dashboard variables](#dashboard-variables) for how the filter works.
 
 Via the API:
 
@@ -80,13 +80,16 @@ Panel fields:
 | Field   | Type   | Meaning |
 |---------|--------|---------|
 | `id`    | string | Unique within the dashboard. Used by the UI for keying. |
-| `type`  | string | `"bar"`, `"pie"`, or `"table"`. |
+| `type`  | string | `"bar"`, `"pie"`, `"table"`, `"timeseries"`, or `"stat"`. |
 | `title` | string | Header shown above the panel. |
-| `sql`   | string | SQL query. The same SQL surface as `/api/v1/query` — see [`sql-query-reference.md`](sql-query-reference.md). Tenant-scoped automatically. |
+| `sql`   | string | SQL query. The same SQL surface as `/api/v1/query` — see [`sql-query-reference.md`](sql-query-reference.md). Tenant-scoped automatically. May reference dashboard [variables](#dashboard-variables) as `$name`. |
 | `x`     | int    | Column origin on a 12-column grid (0–11). |
 | `y`     | int    | Row origin (any non-negative integer). |
 | `w`     | int    | Column span (1–12). Panels with `w=6` take half the row; `w=12` is full-width. |
 | `h`     | int    | Row span. Each unit is roughly 60 px tall in the V1 UI. |
+| `area`  | bool   | `timeseries` only (optional): render a filled area chart instead of a line. |
+| `unit`  | string | `stat` only (optional): suffix shown after the big number (e.g. `"pts"`, `"ms"`). |
+| `thresholds` | array | `stat` only (optional): ascending `{ "value": n, "color": "green"\|"amber"\|"red" }` entries; the highest one whose `value` is ≤ the current value colours the number. |
 
 `x/y/w/h` match react-grid-layout's default `cols: 12` convention. The V1 UI renders the grid statically (CSS Grid, sorted by `(y, x)`); a future drag-drop editor (V1.x) can read the same payload.
 
@@ -95,10 +98,97 @@ Chart conventions:
 - **`bar`** — column 0 of the result is the category axis, column 1 is the value. Other columns are ignored.
 - **`pie`** — same convention; column 0 is the slice name, column 1 is the slice value.
 - **`table`** — every column is rendered as a column. No truncation; if the table is wider than the panel, it scrolls horizontally inside the panel.
+- **`timeseries`** — column 0 is the time bucket (x-axis), produced with `date_bin()`. For multiple lines, column 1 is the series key and column 2 is the value; for a single line, column 1 is the value. Lines are smooth and share one time axis; a legend appears when there is more than one series. Set `"area": true` for a filled area chart. Example:
+
+  ```sql
+  SELECT date_bin(INTERVAL '1 minute', timestamp) AS bucket,
+         resource['host.name'] AS series, avg(value) AS value
+  FROM metrics GROUP BY bucket, series ORDER BY bucket
+  ```
+
+- **`stat`** — a single-value KPI. Column 1 is the value (column 0 if the query returns only one column). A scalar query (one row) shows just the big number; a time-bucketed query (many rows, same shape as a single-series `timeseries`) shows the **last** value big, a **sparkline** of the whole series, and the **delta** versus the first bucket. Set `"unit"` to suffix the number and `"thresholds"` to colour it. Example:
+
+  ```sql
+  SELECT date_bin(INTERVAL '5 minutes', timestamp) AS bucket,
+         count(*) AS value
+  FROM metrics GROUP BY bucket ORDER BY bucket
+  ```
+
+  ```json
+  { "type": "stat", "title": "Metric points / 5 min", "unit": "pts",
+    "thresholds": [ { "value": 0, "color": "green" },
+                    { "value": 5000, "color": "amber" } ],
+    "sql": "…", "x": 0, "y": 0, "w": 4, "h": 3 }
+  ```
+
+## Dashboard variables
+
+Variables are dashboard-level filters that you set once at the top of the page and have apply to every panel. The canonical use is a **host filter**: pick one or more hosts from a dropdown and every panel re-queries scoped to that selection. They are an optional top-level `variables` array in the layout JSON, alongside `panels`.
+
+```json
+{
+  "version": 1,
+  "variables": [
+    {
+      "name": "hosts",
+      "label": "Host",
+      "type": "query",
+      "query": "SELECT DISTINCT resource['host.name'] AS host FROM metrics WHERE resource['host.name'] IS NOT NULL ORDER BY host LIMIT 100",
+      "multi": true,
+      "includeAll": true
+    }
+  ],
+  "panels": [
+    {
+      "id": "p1",
+      "type": "timeseries",
+      "title": "Metric volume by host",
+      "sql": "SELECT date_bin(INTERVAL '1 minute', timestamp) AS bucket, resource['host.name'] AS series, count(*) AS value FROM metrics WHERE resource['host.name'] IN ($hosts) GROUP BY bucket, series ORDER BY bucket LIMIT 500",
+      "x": 0, "y": 0, "w": 12, "h": 5
+    }
+  ]
+}
+```
+
+Variable fields:
+
+| Field        | Type    | Meaning |
+|--------------|---------|---------|
+| `name`       | string  | Variable name, referenced in panel SQL as `$name` or `${name}`. Must be a SQL-identifier token (`[A-Za-z_][A-Za-z0-9_]*`). A malformed name is ignored. |
+| `label`      | string  | Optional UI label for the control; defaults to `name`. |
+| `type`       | string  | `"query"` — options come from column 0 of a SQL query; `"custom"` — options come from a static `options` list. |
+| `query`      | string  | `type:"query"` only: SQL returning the option values in column 0. Runs against the same tenant-scoped surface as a panel. |
+| `options`    | array   | `type:"custom"` only: a static list of string option values. |
+| `multi`      | bool    | Allow selecting multiple values. Default `true`. A single-select variable substitutes one value. |
+| `includeAll` | bool    | Offer an "All" choice that selects every option. Default `true` when `multi`. |
+
+### How substitution works
+
+Before each panel query runs, the UI replaces `$name` (or `${name}`) with the current selection rendered as a **comma-separated list of quoted SQL string literals, without surrounding parentheses**. You supply the SQL context:
+
+- **Multi-select** (the usual case) — write an `IN (…)` clause and put the variable inside the parentheses:
+
+  ```sql
+  WHERE resource['host.name'] IN ($hosts)      -- becomes  IN ('mx1', 'web2')
+  ```
+
+- **Single-select** (`"multi": false`) — compare directly:
+
+  ```sql
+  WHERE resource['env'] = $env                 -- becomes  = 'prod'
+  ```
+
+A dashboard opens with every option selected for a multi variable (so it shows the whole fleet) and the first option for a single one. Choosing **All** expands to every option. If the selection is empty — because you deselected everything, or the option query returned no rows — the variable substitutes `NULL`, which keeps the SQL valid (`IN (NULL)` / `= NULL`) and correctly matches nothing.
+
+Panels wait for the variables to load before they run, so a panel never executes with an unresolved `$name`. A panel whose SQL doesn't reference any variable is unaffected and runs once.
+
+> **Security.** Substitution is injection-safe by construction: the values you can pick are allowlisted to the variable's own option set, every value is emitted as a single-quote-escaped string literal (`'` → `''`), and the variable name itself is never spliced into the SQL — only its selected values are. Substitution happens in the browser, so the server only ever sees ordinary, fully-formed SQL on `/api/v1/query`.
+
+Variables round-trip through export/import like the rest of the layout, so a host-filtered dashboard is portable across deployments (the option query re-runs against the target's own data).
 
 ## The web UI editor
 
-The editor is at `/dashboards/:id`. It has three editable fields (name, description, layout JSON) and a live preview pane.
+The editor is at `/dashboards/:id`. It has three editable fields (name, description, layout JSON) and a live preview pane. When the layout defines variables, the filter bar appears above the preview too, so you can test a selection while authoring.
 
 The layout JSON box is a CodeMirror editor with line numbers and bracket matching. As you type valid JSON, the preview pane re-runs each panel's SQL and renders the result. If the JSON is invalid, the preview keeps the last valid render and a yellow banner above the editor shows the parse error. Save is disabled while the JSON is invalid, so you can't write a broken dashboard.
 
@@ -144,7 +234,7 @@ There is no "update by export" — re-importing a previously-exported dashboard 
 
 V1 RBAC: **admin-only across all seven endpoints**. Read-only users get 403 on every dashboards endpoint, including `GET /api/v1/dashboards`. This is the same posture as `/api/v1/admin/users` and `/api/v1/admin/alerts`.
 
-[ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/adr/0010-auth-jwt-argon2id.md) calls out that V1 ships a coarse role model and the SQLite schema supports finer-grained RBAC for V1.2. The dashboards table captures `created_by` on every record so the V1.2 split between owner and non-owner reads needs no migration.
+[ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0010-auth-jwt-argon2id.md) calls out that V1 ships a coarse role model and the SQLite schema supports finer-grained RBAC for V1.2. The dashboards table captures `created_by` on every record so the V1.2 split between owner and non-owner reads needs no migration.
 
 The web UI does not currently surface dashboards to read-only users. If you need a read-only viewer, log in as admin or wait for the V1.2 RBAC enrichment.
 
@@ -162,10 +252,10 @@ Things the V1 dashboards system does not have yet, with the V1.x or V1.2 line th
 
 - **Drag-drop layout editing** — V1 renders the grid from `x/y/w/h` statically. Operators edit the JSON directly. The data model already matches react-grid-layout, so a V1.x drag-drop editor can read the same payload.
 - **Read-only access for non-admin users** — V1 is admin-only; V1.2 RBAC enrichment lifts this.
-- **Panel type extensibility** — V1 ships bar, pie, and table. Adding line/area/heatmap/sparkline is V1.x.
+- **Panel type extensibility** — V1 ships bar, pie, and table; V1.1 adds time-series (line/area) and stat (single-value KPI with sparkline). Heatmap and other types remain V1.x.
 - **Auto-refresh** — V1 panels run their SQL once when the dashboard loads (and re-run on layout-JSON changes in the editor preview). A configurable refresh interval is V1.1.
 - **Panel-level options** — colours, axis formatting, legends are V1's defaults. Panel-level overrides via additional layout-JSON fields are V1.x and forward-compatible (unknown fields are preserved on round-trip).
-- **Storage unification** — dashboards live in `dashboards.db`, alongside `auth.db` and `alerts.db`. The unified `meta.sqlite` from [`spec/file-layout.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/spec/file-layout.md) is V1.x cleanup.
+- **Storage unification** — dashboards live in `dashboards.db`, alongside `auth.db` and `alerts.db`. The unified `meta.sqlite` from [`spec/file-layout.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/spec/file-layout.md) is V1.x cleanup.
 
 ## Storage and lifecycle
 
@@ -175,7 +265,7 @@ Deleting a dashboard is permanent — there is no soft-delete or trash in V1. Us
 
 ## Reference
 
-- [API surface §1.5](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/spec/api-surface.md) — the seven endpoints, request/response shapes, and the export format.
+- [API surface §1.5](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/spec/api-surface.md) — the seven endpoints, request/response shapes, and the export format.
 - [`sql-query-reference.md`](sql-query-reference.md) — the SQL surface available to panel queries.
 - [`auth.md`](auth.md) — admin tokens, the V1 two-role model.
-- [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.0/adr/0010-auth-jwt-argon2id.md) — V1 RBAC scope and V1.2 commitments.
+- [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0010-auth-jwt-argon2id.md) — V1 RBAC scope and V1.2 commitments.
