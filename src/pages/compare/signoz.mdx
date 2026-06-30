@@ -82,7 +82,7 @@ Pharlux refused that dependency. Storage is a custom write-ahead log plus per-si
 - **SQL across signals in one query.** Cross-signal `JOIN` on `trace_id` is one line. You query metrics and logs through the same Apache DataFusion SQL surface, not a mix of Query Builder and ClickHouse SQL.
 - **Runs on hardware you already have.** The Community baseline fits a 2 vCPU / 4 GB VPS; the published benchmark sustains [577,000 metric points/sec on 4 vCPU / 8 GB](/benchmarks), 0 errors over 17.36 million points.
 - **A commercial path that isn't "contact sales."** Pharlux lists flat monthly tiers (Community free, Team $49, Business $199, Scale $899) with a tamper-evident audit log included on every paid tier. SigNoz Cloud starts at $49/mo and its Enterprise tier starts around $4,000/mo.
-- **Dogfooded in production.** Pharlux is the observability layer for Veltara Works' own ValidonX and Vectis Mail. the full test suite passes; 10 of 10 consecutive crash-recovery runs with zero flakes.
+- **Dogfooded in production.** Pharlux is the observability layer for Veltara Works' own ValidonX and Vectis Mail. 453 of 453 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes.
 
 ## Migrating from SigNoz to Pharlux
 
