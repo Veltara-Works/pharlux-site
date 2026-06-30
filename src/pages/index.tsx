@@ -7,7 +7,7 @@ import Heading from '@theme/Heading';
 import styles from './index.module.css';
 
 const QUICKSTART_COMMANDS = `# Download the statically-linked binary (83 MB, OpenSSL-free)
-curl -L https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64 \\
+curl -L https://github.com/Veltara-Works/pharlux/releases/latest/download/pharlux-linux-amd64 \\
   -o /usr/local/bin/pharlux
 chmod +x /usr/local/bin/pharlux
 
@@ -38,11 +38,11 @@ const SCHEMA_GRAPH = {
       applicationCategory: 'DeveloperApplication',
       applicationSubCategory: 'Observability',
       operatingSystem: 'Linux',
-      softwareVersion: '1.0.0',
+      softwareVersion: '1.1.3',
       datePublished: '2026-04-17',
       description:
         'A single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs) for small teams running 1-10 services on a single VPS.',
-      downloadUrl: 'https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0',
+      downloadUrl: 'https://github.com/Veltara-Works/pharlux/releases/latest',
       offers: [
         {'@type': 'Offer', name: 'Community', price: '0', priceCurrency: 'USD', category: 'AGPL-3.0 self-hosted, full community feature set'},
         {'@type': 'Offer', name: 'Team', price: '49', priceCurrency: 'USD', category: '25 hosts, 30-day retention, tamper-evident audit log — commercial license'},
@@ -66,7 +66,7 @@ const SCHEMA_GRAPH = {
         {'@type': 'Question', name: 'AGPL-3.0 — does that mean I have to open-source my service?', acceptedAnswer: {'@type': 'Answer', text: 'No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when you modify and distribute Pharlux. If that is a concern, the commercial license removes the AGPL terms entirely.'}},
         {'@type': 'Question', name: 'What happens when V1.1 ships — do I have to migrate data?', acceptedAnswer: {'@type': 'Answer', text: 'No. The WAL format and per-signal Parquet schemas are frozen. V1.1 is additive — new capabilities, no breaking changes. Upgrade is `systemctl stop pharlux`, swap the binary, `systemctl start pharlux`. The same procedure applies for V1.0.x patches.'}},
         {'@type': 'Question', name: 'Is there a hosted version?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1. Pharlux is intentionally self-hosted-first — that is core to the value proposition. A hosted offering may follow at some point, but it is not committed for V1.1 and not on the near-term roadmap.'}},
-        {'@type': 'Question', name: 'How do I know it is production-ready?', acceptedAnswer: {'@type': 'Answer', text: 'V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 360 of 360 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works\' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX.'}},
+        {'@type': 'Question', name: 'How do I know it is production-ready?', acceptedAnswer: {'@type': 'Answer', text: 'V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 453 of 453 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works\' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX.'}},
       ],
     },
     {
@@ -117,7 +117,7 @@ export default function Home(): ReactNode {
               Veltara Works
             </Link>
           </p>
-          <span className={styles.badge}>v1.0.0 released &middot; 2026-04-17</span>
+          <span className={styles.badge}>v1.1.3 released &middot; 2026-06-26</span>
           <p className={styles.lastUpdated}>Last updated 2026-06-13</p>
           <Heading as="h1" className={styles.heroTitle}>
             Replace Grafana + Prometheus + Loki with a single binary.
@@ -127,13 +127,13 @@ export default function Home(): ReactNode {
             config file. One systemd unit. No Docker, no Kafka, no Postgres, no ClickHouse.
           </p>
           <div className={styles.ctaRow}>
-            <Link className={`${styles.btn} ${styles.btnPrimary}`} href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">
-              Download v1.0.0
+            <Link className={`${styles.btn} ${styles.btnPrimary}`} href="https://github.com/Veltara-Works/pharlux/releases/latest">
+              Download Pharlux
             </Link>
             <Link className={`${styles.btn} ${styles.btnSecondary}`} href="https://github.com/Veltara-Works/pharlux">
               View on GitHub
             </Link>
-            <Link className={`${styles.btn} ${styles.btnSecondary}`} href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md">
+            <Link className={`${styles.btn} ${styles.btnSecondary}`} href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md">
               Get started
             </Link>
           </div>
@@ -155,7 +155,7 @@ export default function Home(): ReactNode {
           <p>
             Point your OpenTelemetry Collector at <code>:4317</code> (gRPC) or{' '}
             <code>:4318</code> (HTTP). Full walkthrough in the{' '}
-            <Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md">
+            <Link href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md">
               getting started guide
             </Link>
             .
@@ -226,7 +226,7 @@ export default function Home(): ReactNode {
             <li><strong>Built-in alerting.</strong> SQL rules in SQLite, state-machine evaluator with circuit-breaker self-disable, webhook + Slack notifications.</li>
             <li><strong>Embedded React + ECharts UI.</strong> Login, SQL editor (CodeMirror 6), dashboards (metrics bar, log severity pie, recent logs) — served from the same binary via <code>rust-embed</code>.</li>
             <li><strong>Prometheus-format self-metrics.</strong> <code>GET /metrics</code> exposes live atomic counters for ingestion rate, query duration, active queries, and WAL size.</li>
-            <li><strong>Operator-ready.</strong> CLI subcommands for <code>install</code>, <code>backup</code>, <code>compact</code>, <code>migrate</code>, <code>version</code>. Crash-safe backup/restore. Full operator <Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md">runbook</Link>.</li>
+            <li><strong>Operator-ready.</strong> CLI subcommands for <code>install</code>, <code>backup</code>, <code>compact</code>, <code>migrate</code>, <code>version</code>. Crash-safe backup/restore. Full operator <Link href="https://github.com/Veltara-Works/pharlux/blob/main/RUNBOOK.md">runbook</Link>.</li>
             <li><strong>Memory-safe TLS.</strong> <code>rustls</code> for all outbound connections. Zero OpenSSL in the dependency tree. Genuinely static musl binary.</li>
           </ul>
         </section>
@@ -240,7 +240,7 @@ export default function Home(): ReactNode {
             <div className={styles.perfStat}><span className={styles.perfNum}>7 ms</span><span className={styles.perfLabel}>avg request latency</span></div>
             <div className={styles.perfStat}><span className={styles.perfNum}>83 MB</span><span className={styles.perfLabel}>static binary</span></div>
           </div>
-          <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 360 / 360 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes. See the <Link to="/benchmarks">full benchmark methodology</Link>.</p>
+          <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 453 / 453 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes. See the <Link to="/benchmarks">full benchmark methodology</Link>.</p>
         </section>
 
         <section id="pricing" className={styles.section}>
@@ -250,7 +250,7 @@ export default function Home(): ReactNode {
               <tr><th>Tier</th><th>Price</th><th>Highlights</th><th className={styles.ctaCol}>Action</th></tr>
             </thead>
             <tbody>
-              <tr><td>Community</td><td><span className={styles.mono}>Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td><td className={styles.ctaCol}><Link href="https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0">Download</Link></td></tr>
+              <tr><td>Community</td><td><span className={styles.mono}>Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td><td className={styles.ctaCol}><Link href="https://github.com/Veltara-Works/pharlux/releases/latest">Download</Link></td></tr>
               <tr><td>Team</td><td><span className={styles.mono}>$49/mo</span></td><td>25 hosts, 30-day retention, tamper-evident audit log</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</Link></td></tr>
               <tr><td>Business</td><td><span className={styles.mono}>$199/mo</span></td><td>250 hosts, 90-day retention, audit log; SSO <em>(roadmap)</em></td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</Link></td></tr>
               <tr><td>Scale</td><td><span className={styles.mono}>$899/mo</span></td><td>Unlimited hosts &amp; retention, air-gapped / redistribution rights</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</Link></td></tr>
@@ -294,20 +294,20 @@ export default function Home(): ReactNode {
           <p>Not in V1. Pharlux is intentionally self-hosted-first &mdash; that&apos;s core to the value proposition. A hosted offering may follow at some point, but it&apos;s not committed for V1.1 and not on the near-term roadmap.</p>
 
           <Heading as="h3" className={styles.faqQ}>How do I know it&apos;s production-ready?</Heading>
-          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 360&nbsp;/&nbsp;360 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
+          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 453&nbsp;/&nbsp;453 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
         </section>
 
         <section className={styles.section}>
           <Heading as="h2" className={styles.sectionTitle}>Documentation</Heading>
           <ul>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/getting-started.md">Getting started</Link> — install, configure, ingest, query</li>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/otlp-configuration.md">OTLP configuration reference</Link></li>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/sql-query-reference.md">SQL query reference</Link></li>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/reverse-proxy.md">Reverse proxy and TLS setup (Caddy / nginx)</Link></li>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/backup-restore.md">Backup and restore</Link></li>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/RUNBOOK.md">Operator runbook</Link></li>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/docs/user/troubleshooting.md">Troubleshooting</Link></li>
-            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/CHANGELOG.md">Full v1.0.0 changelog</Link></li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md">Getting started</Link> — install, configure, ingest, query</li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/otlp-configuration.md">OTLP configuration reference</Link></li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/sql-query-reference.md">SQL query reference</Link></li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/reverse-proxy.md">Reverse proxy and TLS setup (Caddy / nginx)</Link></li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/backup-restore.md">Backup and restore</Link></li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/RUNBOOK.md">Operator runbook</Link></li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/docs/user/troubleshooting.md">Troubleshooting</Link></li>
+            <li><Link href="https://github.com/Veltara-Works/pharlux/blob/main/CHANGELOG.md">Full changelog</Link></li>
           </ul>
         </section>
 
@@ -332,7 +332,7 @@ export default function Home(): ReactNode {
           <ul>
             <li><strong>Bug reports:</strong>{' '}<Link href="https://github.com/Veltara-Works/pharlux/issues">GitHub Issues</Link></li>
             <li><strong>Questions and community help:</strong>{' '}<Link href="https://github.com/Veltara-Works/pharlux/discussions">GitHub Discussions</Link></li>
-            <li><strong>Security reports:</strong> see{' '}<Link href="https://github.com/Veltara-Works/pharlux/blob/v1.0.0/SECURITY.md">SECURITY.md</Link>{' '}for the coordinated disclosure process</li>
+            <li><strong>Security reports:</strong> see{' '}<Link href="https://github.com/Veltara-Works/pharlux/blob/main/SECURITY.md">SECURITY.md</Link>{' '}for the coordinated disclosure process</li>
             <li><strong>Commercial support:</strong>{' '}<Link href="mailto:licensing@pharlux.com">licensing@pharlux.com</Link></li>
           </ul>
         </section>

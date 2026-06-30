@@ -32,7 +32,7 @@ const TIERS: readonly Tier[] = [
     license: 'AGPL-3.0',
     summary: 'AGPL-3.0, self-hosted, full community feature set',
     description: 'Self-hosted Pharlux under AGPL-3.0. The whole binary, every feature in the metrics+logs surface, no telemetry, no licence check.',
-    cta: {label: 'Download', href: 'https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0'},
+    cta: {label: 'Download', href: 'https://github.com/Veltara-Works/pharlux/releases/latest'},
   },
   {
     name: 'Team',
