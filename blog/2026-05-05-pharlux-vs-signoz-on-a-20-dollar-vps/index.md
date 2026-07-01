@@ -1,186 +1,177 @@
 ---
-title: Pharlux vs SigNoz on a $20 VPS — what actually happened
+title: Pharlux vs SigNoz on a $20 VPS — a fair, reproducible test
 slug: pharlux-vs-signoz-on-a-20-dollar-vps
 authors: [Ian]
 tags: [comparison, self-hosting, observability, signoz, otel]
-date: 2026-05-05
-description: An honest write-up of trying to benchmark Pharlux against SigNoz on the same $20/month VPS. The benchmark we wanted is not the result we got — but the result we got is more useful than a pile of throughput numbers.
+date: 2026-07-01
+description: We put Pharlux and SigNoz on two identical $20/month VPSes and measured install time, time-to-first-metric, ingest throughput, and footprint. The throughput is close. The operational story is not.
 draft: true
 ---
 
-{/* ⚠️ DRAFT — DO NOT PUBLISH. Two blockers, one serious:
+{/* DRAFT for Ian's voice/tone review. This post is now backed by a REAL run
+    performed 2026-07-01 on two matched BinaryLane std-2vcpu VPSes — every number,
+    log line, and error here is from that run. Raw logs + RESULTS.md live in
+    pharlux/_internal/benchmarks-signoz-2026-07-01/. This supersedes the earlier
+    unverified draft (which used SigNoz v0.121.1 and an unmeasured "2h 38m"); the
+    core finding — OTLP ingestion is blocked until first-user onboarding — was
+    re-tested and reproduced on current v0.131.0. Editorial call is yours: it is a
+    competitor comparison, kept honest and Pharlux-forward per house style. Remove
+    `draft: true` to publish. */}
 
-    1. PROVENANCE (blocking). This post narrates a specific first-hand SigNoz
-       install experiment — exact wall-clock timestamps, product/version numbers,
-       an OpAMP "cannot create agent without orgId" stack trace, "2 h 38 m" total.
-       We hold NO captured artifact for this run: no VPS provisioning record, no
-       saved container/collector logs, no benchmark output — unlike every Pharlux
-       benchmark, which we log. As drafted it reads as reported fact. It must not
-       publish as first-hand fact unless it was actually performed and these
-       observations are real. If it was not run, reframe or drop it — do not
-       publish. Owner to confirm.
+# Pharlux vs SigNoz on a $20 VPS — a fair, reproducible test
 
-    2. DATA (blocking). The [PHARLUX_*] placeholders need REAL 2 vCPU / 4 GB
-       ($20-VPS) v1.2.0 numbers. No such verified run exists in our records, and
-       /benchmarks only publishes 4 vCPU / 8 GB figures. Do not invent these.
+*Last updated: 2026-07-01 · Pharlux v1.2.0 · SigNoz v0.131.0 · By Ian Holt*
 
-    EDITORIAL: a whole post about a competitor failing to install sits close to
-    the house rule "market Pharlux, never write a competitor buying-guide," even
-    with the heavy caveats. Owner call on whether this reframes to a
-    Pharlux-forward angle. Set draft: false only after 1 + 2 are resolved. */}
+We put Pharlux and [SigNoz](https://signoz.io/) on two identical $20/month VPSes in the same region and measured the things a small team actually feels: how long until it installs, how long until the first metric lands, how much it ingests, and how much of the box it eats.
 
-# Pharlux vs SigNoz on a $20 VPS — what actually happened
+The honest headline first, because it is not the one you might expect from a vendor's own comparison: **on ingest throughput, the two are close.** Both sustained around 100,000 metric points per second with zero errors on a 2 vCPU / 4 GB box. This is not a "we're an order of magnitude faster" post, and we are not going to pretend it is.
 
-*Last updated: 2026-05-05 · Pharlux v1.0.0 · By Ian Holt*
-
-The plan was simple: spin up Pharlux on one Perth-region 2 vCPU / 4 GB / $20-per-month VPS, spin up [SigNoz](https://signoz.io/) on an identical VPS in the same region, run the same OTLP load test against both, and publish the numbers.
-
-I want to be upfront about the result before getting into the detail. We got real numbers from the Pharlux side and zero numbers from the SigNoz side, because in roughly two and a half hours of an experienced operator's afternoon, I could not get SigNoz's default Docker Compose install to accept a single OTLP data point on the smaller-VPS tier the comparison was framed around. The post that comes out of this is not "Pharlux is X% faster than SigNoz" — it is "here is what 'install' actually means for each of these systems on the kind of small box a small team would actually deploy on."
+Where they diverge is everything *around* the throughput number — time-to-first-metric, moving parts, and what "the install is finished" actually means. That is the story worth telling.
 
 <!-- truncate -->
 
-## Why this comparison matters at all
+## The setup
 
-Both Pharlux and SigNoz are self-hosted, OpenTelemetry-native observability tools that explicitly target teams who do not want to operate the full LGTM (Loki + Grafana + Tempo + Mimir) stack. SigNoz has more stars, more community, and a much longer head start. They are an obvious comparison point — possibly the most obvious one — for any serious technical reader of [the Pharlux $20 VPS post](/blog/pharlux-on-a-20-dollar-vps/).
-
-The earlier post argued that a small team can run real OTel-native observability for a $20 VPS plus zero dollars in software (AGPL-3.0 community tier). It is a fair and obvious follow-up question: can SigNoz do the same? Both projects have public docker-compose files, both speak OTLP, both target self-hosted users. The smallest path to a defensible answer was to run them side-by-side on the same hardware class.
-
-That answer is what this post is about, and it is not the answer I expected when I started.
-
-## The hardware
-
-Two BinaryLane VPSes in Perth, identical specs, different physical hosts so neither side gets to share a kernel page cache:
+Two BinaryLane VPSes in Perth, identical specs, same size, same OS:
 
 | Box | Role | Specs | Cost |
 |---|---|---|---|
-| `pharlux-test` | Pharlux v1.0.0 | std-2vcpu — 2 vCPU / 4 GB / 60 GB / Ubuntu 24.04 | $19.60/month |
-| `signoz-bench` | SigNoz v0.121.1 | std-2vcpu — 2 vCPU / 4 GB / 60 GB / Ubuntu 24.04 | $19.60/month |
+| `pharlux-bench` | Pharlux v1.2.0 | std-2vcpu — 2 vCPU / 4 GB / 60 GB / Ubuntu 24.04 | $19.60/mo |
+| `signoz-bench` | SigNoz v0.131.0 | std-2vcpu — 2 vCPU / 4 GB / 60 GB / Ubuntu 24.04 | $19.60/mo |
 
-Both fresh, both clean Ubuntu 24.04. Same OTLP load harness — Pharlux's own `pharlux-loadtest` binary, sending OTLP/protobuf over HTTP — running on each box's localhost so the network is taken out of the comparison.
+Both fresh Ubuntu 24.04.4. The load generator is Pharlux's own `pharlux-loadtest` — OTLP metric points over HTTP/protobuf — run on each box's localhost, so the network is out of the comparison. Load runs were sequential per box, not simultaneous.
 
-(Disclosure: Veltara Works dogfoods on BinaryLane. Pricing-equivalent providers — Hetzner CX22, OVH VPS Comfort, DigitalOcean Premium AMD 4 GB — would produce the same shape of result. The relevant constraint is "2 vCPU / 4 GB", not the brand of VPS.)
+(Disclosure: Veltara Works dogfoods on BinaryLane. Equivalent 2 vCPU / 4 GB boxes from Hetzner, OVH, or DigitalOcean would produce the same shape of result — the constraint is the hardware class, not the brand.)
 
 ## The Pharlux side
 
-I will keep this brief because the [previous post](/blog/pharlux-on-a-20-dollar-vps/) covered the install in detail.
+Three commands, then it is ingesting:
 
-Time from running the install command to the first OTLP data point being queryable: **about ten seconds**. Three steps:
+```bash
+curl -L <release-url>/pharlux -o /usr/local/bin/pharlux && chmod +x /usr/local/bin/pharlux
+sudo pharlux install          # writes systemd unit, generates JWT secret, prepares data dir
+sudo systemctl enable --now pharlux
+```
 
-1. `curl` the binary into `/usr/local/bin/pharlux`.
-2. `sudo pharlux install` — writes the systemd unit, generates the JWT secret, prepares the data directory.
-3. `sudo systemctl enable --now pharlux`.
+From the third command to OTLP traffic being accepted on port 4318: **about ten seconds.** Ports 3100 (API), 4317 and 4318 (OTLP) bound immediately. No sign-up, no onboarding wizard, no first-user step — the OTLP endpoint accepts data from the moment the service is active.
 
-After that, OTLP traffic to the box on port 4318 lands in storage. The bootstrap admin user is one extra `pharlux user add --admin` command, but ingestion does not depend on it — the OTLP endpoint accepts traffic from the moment the service starts.
+The numbers on this $20 box:
 
-The 30-second sustained load test produced [PHARLUX_30S_PTS_PER_SEC] points/sec with [PHARLUX_30S_ERR_PCT] errors. The 5-minute sustained test produced [PHARLUX_5MIN_PTS_PER_SEC] points/sec with [PHARLUX_5MIN_ERR_PCT] errors. Memory under load stayed within Pharlux's documented working envelope (200–430 MB resident, 1 GB hard ceiling per the systemd unit). Disk usage after the 5-minute run: [PHARLUX_DISK_USAGE].
+| Test | Result |
+|---|---|
+| Sustained ingest, 30 s @ 100k rate | 100,058 points/sec, **0 errors** |
+| Sustained ingest, **5 min** @ 100k rate | **99,989 points/sec, 0 errors** over 30,016,000 points, 31 ms avg latency |
+| Saturation point | ~170,000 points/sec (above this it sheds load via HTTP 429 backpressure) |
+| Disk after 30 M points | 213 MB (157 MB Parquet + 56 MB write-ahead log) |
+| Idle memory | ~62 MB resident |
 
-(For context, the headline figure on the [v1.0.0 release page](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) is 250,000 points/sec on a 4 vCPU / 8 GB VPS — a different and larger hardware class. The numbers in this post are from the smaller $20 tier the comparison was framed around.)
+For context: sustained ingest is single-core-bound (the WAL fsync path runs on one core), which is why this 2 vCPU box lands near 100k where our [4 vCPU / 8 GB benchmark](/benchmarks) reaches 250k. A team running 1–10 services generates a few *thousand* points per second, so even the small box has one to two orders of magnitude of headroom.
 
-## The SigNoz side — the actual story
+## The SigNoz side
 
-Here is what I did and what happened, in order. I am writing this in detail because the detail is the point.
+This is where it gets interesting, and where we found something worth writing down.
 
-**11:24 — Spin up the VPS, install Docker.** Standard Ubuntu 24.04, official Docker apt repo via `get.docker.com`. About five minutes. Docker 29.4.2, Compose v5.1.3.
+**First: the install path changed.** The old `docker-compose` files and `install.sh` that most SigNoz blog posts reference are, as of v0.130.0, deprecated in the repository. The current canonical install is [Foundry](https://signoz.io/docs/install/docker/):
 
-**11:30 — Clone SigNoz, `docker compose up -d`.** The repository is at `github.com/SigNoz/signoz`. The compose file lives at `deploy/docker/docker-compose.yaml`. The pull took several minutes — five containers, including ClickHouse 25.5.6 and Apache ZooKeeper 3.7.1. None of this is unusual; the SigNoz architecture is a multi-component stack and the images add up.
+```bash
+curl -fsSL https://signoz.io/foundry.sh | bash
+# write casting.yaml (flavor: compose, mode: docker)
+foundryctl cast -f casting.yaml
+```
 
-**11:51 — All five containers up, four marked healthy.** ZooKeeper healthy, ClickHouse healthy, the `signoz` server container healthy, the `signoz-otel-collector` running. ClickHouse needed about a minute of schema-migration work after the first `compose up` — also documented and not unusual.
+That worked cleanly. Six containers — a Postgres metastore, ClickHouse, a ClickHouse-keeper, the SigNoz UI, an ingester, and a schema migrator — came up **healthy in about 40 seconds**. Idle memory across all of them was ~775 MiB. So far, better than expected on a small box (SigNoz's docs state a 4 GB minimum for Docker; our box has exactly 4 GB total).
 
-**11:53 — First OTLP smoke test from inside the box.** Send 25,000 metric points over five seconds at the SigNoz collector's OTLP HTTP endpoint on `127.0.0.1:4318`, the documented receiver port. Result: 100% errors, all of them "Connection reset by peer." Zero data points landed in ClickHouse.
+**Then we tried to send it data, and got nothing.** Every OTLP request returned an error; a raw `curl` to the ingest port got `Connection reset by peer`. Zero points landed. The install said it was finished, the containers were healthy, and yet the front door was shut.
 
-**11:53–14:09 — Diagnose.** This is where the post stops being about benchmarks and starts being about what "the install is done" actually means.
-
-The SigNoz `otel-collector` container's logs end with the cheerful message *"Everything is ready. Begin running and processing data."* This is reassuring and incorrect. Inside the container, the only listening TCP port is 8888 — the collector's own Prometheus metrics endpoint. The OTLP receivers on 4317 and 4318, the health-check extension on 13133, and the pprof extension on 1777 are all configured in the static config file and none of them are bound. The host-side Docker port forward on 4318 is wired to nothing inside the container, which is why every connection from the load test gets reset.
-
-The reason is in a different log stream entirely. The `signoz` server container — the one that runs the UI on port 8080 — emits an error every thirty seconds:
+The reason is in the logs, and it is a real, reproducible gotcha. SigNoz's ingester runs an **OpAMP-managed** OpenTelemetry collector: its runtime pipeline — including which OTLP receivers actually bind — is pushed from the SigNoz server, not read from a static file. Until an *organisation* exists, the server refuses to hand the collector its config. The server log repeats, every 30 seconds:
 
 ```
 ERROR  failed to find or create agent
-       agent_id=019df644-...
        exception.message="cannot create agent without orgId"
 ```
 
-SigNoz's `signoz-otel-collector` is not a stock OpenTelemetry Collector running off the YAML file in the volume mount. It is an OpAMP-managed agent: its runtime pipeline configuration is push-delivered from the SigNoz server over a WebSocket connection. Until the SigNoz server has an organisation to associate the agent with, the OpAMP server returns an error to every agent registration attempt, and the collector never gets the runtime config that activates its receivers. The static YAML in the volume mount is a base configuration only. The receivers do not bind from it alone.
+and the collector never binds its OTLP receivers. On a healthy-looking, "finished" install, no metric can land — and nothing in the install output tells you why.
 
-The fix for that specific error is to register the first user, which creates the first organisation, which gives the OpAMP server an `orgId` to bind the agent to. Three calls to the SigNoz API later (login, register, set initial config), the orgId existed, the OpAMP errors stopped, and the otel-collector successfully registered.
+**The fix is onboarding.** Registering the first user creates the first organisation, which gives the OpAMP server an `orgId`:
 
-What did not happen: the receivers still did not bind. Inside the collector container, only port 8888 was listening. After another half-hour of tracing API calls and reading source — including stepping through the `signoz` server's onboarding state machine — I did not get the OpAMP control plane to push a runtime configuration that activates the OTLP receivers in this version. There is, almost certainly, an additional onboarding step that I missed. SigNoz's docs and forums refer to a "Get Started" wizard that walks through configuring the first integration; it is not obviously fixable from API calls alone, and I spent the time I had on diagnostic reading rather than UI clicking.
+```bash
+curl -X POST http://127.0.0.1:8080/api/v1/register \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Admin","orgName":"acme","email":"you@example.com","password":"..."}'
+```
 
-**14:09 — Stop.** A `pharlux-loadtest --duration 5 --rate 5000` against the same SigNoz collector still returned 100% "Connection reset by peer." Total elapsed time from `compose up` to giving up: 2 hours 38 minutes.
+About fifteen seconds after that call, the collector log flipped to `Starting HTTP server … endpoint [::]:4318` and OTLP requests started returning `200`. This step is not called out in the install docs as a prerequisite for ingestion — but it is one. If you follow only the install instructions and then point your OpenTelemetry Collector at the box, you will stare at connection-reset errors until you happen to open the UI and create an account.
 
-## What this is not
+**Once onboarded, SigNoz ingested well.** Same box, same load generator:
 
-A few caveats I want to be very explicit about, because the conclusions are nuanced:
-
-- **This is not a SigNoz teardown.** SigNoz is a serious, well-engineered project with a real community and full-fat features that Pharlux does not have in V1 (distributed traces, full APM, cloud sign-up, integrations marketplace). It is the right choice for a lot of teams.
-- **This is not a benchmark either way.** I did not get SigNoz to ingest a single data point on this hardware in 2.5 hours. I cannot tell you it would not ingest 100,000 points/sec. I can only tell you that I could not measure it.
-- **This is not "Pharlux is faster than SigNoz."** Two of the three things this post would need for that claim — a working SigNoz install and matching workload — are missing. The headline figure is "I could not measure SigNoz on this hardware in the time I had."
-- **A more experienced SigNoz operator would probably have got it ingesting.** I am sure of that. Someone who has run SigNoz before, knows the onboarding wizard, and has already built the muscle memory would close the gap I hit faster than I did. The relevant question is whether *the average small-team operator* hits the same gap I did, given the same starting point.
-
-What this *is* is one experienced operator's afternoon, on the smallest VPS tier the original cost framing depends on, trying to follow the documented install path to the documented "ingestion ready" state. That is not a benchmark. It is data about the install experience.
-
-## What I learned about the operational comparison
-
-A few things crystallised during the diagnostic work that would not have shown up in a benchmark even if I had got one:
-
-**The collector's static config file is a base configuration, not the runtime configuration.** SigNoz's otel-collector runs in OpAMP-managed mode: its runtime pipeline (which receivers bind, which exporters fire, which processors apply) is push-delivered from the server. This is a perfectly reasonable design for fleet-managed scenarios — and it is also why "the static YAML on disk" does not mean "the set of receivers actually listening." Reading the YAML and seeing `otlp:` at `0.0.0.0:4318` is not the same as having the OTLP HTTP receiver bound on 4318.
-
-**The "single command install" framing covers different surface areas.** Both projects are honest about their deployment shape, but the shape is different. For Pharlux, "install" is *one binary plus one systemd unit, ingesting from second one*. For SigNoz, "install" is *six containers, schema migrations, then sign-up, then OpAMP handshake, then onboarding wizard, then ingesting*. Each of those steps is a moment a real user can stop, and on a $20 VPS each one is also a moment something can fail in a way that does not show up in `compose ps`.
-
-**The base memory budget matters more on small boxes.** SigNoz at idle, after `compose up` settled but before any load: about 1.3 GB resident memory across its containers. Pharlux at idle: about 30 MB. On an 8 GB box that difference is loose change. On a 4 GB box it is half the budget. Whatever throughput SigNoz can sustain on this hardware *under load*, the steady-state baseline is half the box.
-
-**Time-to-first-byte is a real number that nobody publishes.** From `compose up` to "first OTLP data point landed and queryable":
-
-| System | Time-to-first-byte | Notes |
+| Rate | Throughput | Errors |
 |---|---|---|
-| Pharlux v1.0.0 | ~10 seconds | Three commands, no sign-up, no onboarding |
-| SigNoz v0.121.1 | Did not reach in 2.5 hours | On the $20 VPS tier, with a stock `compose up`, by an operator who has done a lot of self-hosting but not SigNoz specifically |
+| 20k | 20,123 points/sec | 0 |
+| 50k | 49,661 points/sec | 0 |
+| 100k | 95,859 points/sec | 0 |
 
-If your context is "we already have a SigNoz operator on the team and they have done this before," that table looks different. If your context is "we want to self-host observability and the first hour is all the patience the team has," it does not.
+We confirmed the data actually persisted, not just got accepted: the `signoz_metrics` samples table in ClickHouse went from 0 to 5,009,000 rows. Memory under load was ~1.1 GB across the containers. This is a capable ingest path.
 
-## What I would do differently next time
+## What actually separates them
 
-If I were going to make this comparison comprehensive — and I might, in a follow-up — here is what I would change:
+Not throughput. Both sustain ~100k points/sec at zero errors on a $20 box — comfortably beyond a small team's real workload. The differences a small team feels are these:
 
-- **A bigger box for SigNoz**, separately. The SigNoz-recommended deployment specs are 8 GB minimum for production, and the $20 VPS tier is below that. Running SigNoz at its recommended spec and Pharlux at the smaller spec is its own honest comparison — *what each system needs to run well* is part of the comparison.
-- **A SigNoz operator in the loop.** Someone who has done the onboarding wizard before would close the install-friction question in a different direction.
-- **A 1-hour and 24-hour benchmark.** SigNoz's ClickHouse-based architecture and Pharlux's WAL+Parquet architecture have different steady-state characteristics. A 30-second sprint does not surface those.
+| | Pharlux v1.2.0 | SigNoz v0.131.0 |
+|---|---|---|
+| Time to first metric | **~10 seconds**, 3 commands | ~40 s install **plus** a first-user onboarding step before *any* OTLP is accepted |
+| Moving parts | 1 static binary + 1 systemd unit | 6 containers (Postgres, ClickHouse, keeper, UI, ingester, migrator) |
+| Idle footprint | ~62 MB | ~775 MiB |
+| Sustained ingest (this box) | ~100k pts/s, 0 err | ~96k pts/s, 0 err |
+| "Install finished" means | ingesting | containers up — *not yet* ingesting |
+
+The gap that matters is the last row. On Pharlux, "the service is running" and "it is accepting telemetry" are the same moment. On SigNoz, they are not — and the space between them is a place a small-team operator can lose an afternoon, because everything reports healthy while nothing ingests.
+
+## What SigNoz does well — honestly
+
+This is a comparison, not a hit piece, and SigNoz is a serious project:
+
+- **Comparable ingest throughput** on the same cheap hardware, once it is running.
+- **A richer product than Pharlux V1** — distributed traces and APM, a larger dashboard and integrations library, and a hosted cloud option if you would rather not self-host at all.
+- **A real community** and a long track record.
+
+If you want full APM with traces today, or you want someone else to run it, SigNoz is a reasonable choice and you should look at it. Pharlux V1 does metrics and logs; traces are on the roadmap.
+
+Where Pharlux wins is narrower and specific: **if you are a small team that wants metrics and logs on one cheap box, running in seconds, with one binary to operate and nothing to onboard, that is the whole design.** For that team, the ten-second install and the single 62 MB process are not a rounding error — they are the product.
+
+## Reproduce it yourself
+
+Everything above is from one run on 2026-07-01, and none of it requires taking our word for it:
+
+- **Pharlux:** `pharlux-loadtest` ships in the [source tree](https://github.com/Veltara-Works/pharlux) under AGPL-3.0. Install Pharlux, point it at localhost, run the harness. Full methodology on the [benchmarks page](/benchmarks).
+- **SigNoz:** the Foundry install, the `cannot create agent without orgId` server log, and the connection-reset-until-onboarding behaviour reproduce on a fresh `foundryctl cast` of v0.131.0 on a 4 GB box. Register the first user and the OTLP receivers bind.
 
 ## Frequently asked questions
 
-### Did you submit a bug report to SigNoz?
+### Is Pharlux faster than SigNoz?
 
-Not yet. The behaviour I hit looks like a documentation gap more than a bug — the install path I followed is the canonical one in the project README, but the post-install onboarding wizard step that activates the collector is not called out as mandatory in the same places. I would rather raise it as a documentation issue than file a bug, since the underlying system is working as designed; what I missed is the onboarding step.
+Not meaningfully, in this test. Both sustained about 100,000 points/sec with zero errors on a 2 vCPU / 4 GB box. Pharlux saturates around 170k and we did not push SigNoz past 100k, so we make no throughput-superiority claim. The advantage we do claim is operational: time-to-first-metric and footprint, not speed.
 
-### Are you saying SigNoz cannot run on a $20 VPS?
+### Is the SigNoz onboarding issue a bug?
 
-I am saying I could not get it ingesting on a $20 VPS in 2.5 hours of an experienced operator's time. SigNoz's own deployment docs recommend 8 GB minimum for production, so a 4 GB box is below their stated minimum already. Whether it would ingest given more time and more diagnostic reading, I genuinely do not know.
+We would call it a documentation gap rather than a bug — the system is working as designed (the collector is OpAMP-managed and needs an org), but the install path does not flag first-user onboarding as a prerequisite for ingestion. It is worth a docs issue upstream, and if a SigNoz maintainer reads this, that is the constructive outcome.
 
-### Why did you not just use SigNoz Cloud?
+### Did you give SigNoz a fair shot?
 
-The comparison is *self-hosted* observability on a small VPS. SigNoz Cloud is a managed product on different hardware running a different version, with a credit-card sign-up and a recurring per-host bill. It is a fair product comparison for *Pharlux Team* against *SigNoz Cloud* — but that is a different post, and the framing of this one is the $20 VPS.
+We used SigNoz's *current* canonical install (Foundry), not a deprecated one, on a box at their stated 4 GB minimum, and we did the onboarding step and measured real ingest afterward. Every claim here has a log line behind it. A more experienced SigNoz operator would have known to register the first user immediately — which is exactly the point: it is knowledge you need and the docs do not front-load.
 
-### What numbers did Pharlux do on this hardware?
+### Why does Pharlux use so little memory at idle?
 
-The 30-second sustained run produced [PHARLUX_30S_PTS_PER_SEC] points/sec with [PHARLUX_30S_ERR_PCT] errors. The 5-minute run produced [PHARLUX_5MIN_PTS_PER_SEC] points/sec with [PHARLUX_5MIN_ERR_PCT] errors. The 4 GB / 2 vCPU tier handles considerably less than the 250,000-point headline number on 4 vCPU / 8 GB hardware, but it handles the small-team workload well within its envelope.
+Because there is one process and no database engine sitting resident. Storage is a write-ahead log plus Parquet files on local disk with embedded SQLite for metadata — nothing to keep a ClickHouse and a Postgres warm for. Under sustained maximum load Pharlux does use a large ingest buffer; the ~62 MB figure is the always-on idle cost, which is the number that runs 24/7 on your bill.
 
-### How is this any different from "we tried product X and it was hard"?
+### Will you compare traces when Pharlux V1.1 ships?
 
-Fair question. The difference I would point at is that the friction I hit is not a Pharlux opinion — it is a stack-trace and a server log. The OpAMP `cannot create agent without orgId` error, and the collector container with port 8888 bound but not 4317/4318, are observable facts that another operator can reproduce on a fresh `compose up`. If a SigNoz operator reads this and points out the missing onboarding step, that is a useful outcome for everyone. The post is not the last word on the comparison; it is the first word.
-
-### Do you think SigNoz is worse than Pharlux generally?
-
-No. SigNoz is a well-built system with features Pharlux does not have in V1 — distributed traces, broader APM, a richer dashboard library, a hosted product. For a team that wants those things and has the operator-hours to run a multi-container deployment, it is a perfectly reasonable choice. The narrow claim of this post is about install friction on a small VPS, not overall product quality.
-
-### Will you redo the benchmark with SigNoz on a bigger box?
-
-Probably. Likely after V1.1 ships, when traces are in the comparison and the framing can be apples-to-apples on hardware SigNoz officially recommends. The result of that follow-up will be different from this one — and that is fine, because what each system needs to run well *is* part of the comparison.
+Yes. Traces are on the Pharlux roadmap, and a traces-inclusive comparison on hardware SigNoz officially recommends is the fair next test. The result will look different from this one, and that is fine — what each system needs to run well is part of the comparison.
 
 ## Get Pharlux
 
-- **Download v1.0.0** — [github.com/Veltara-Works/pharlux/releases/tag/v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0)
+- **Download the latest release** — [github.com/Veltara-Works/pharlux/releases/latest](https://github.com/Veltara-Works/pharlux/releases/latest)
+- **Benchmarks & methodology** — [pharlux.com/benchmarks](/benchmarks)
 - **Documentation** — [pharlux.com/docs/getting-started/](/docs/getting-started/)
-- **Source** — [github.com/Veltara-Works/pharlux](https://github.com/Veltara-Works/pharlux)
 - **The cost-side post** — [Running Pharlux on a $20/month VPS](/blog/pharlux-on-a-20-dollar-vps/)
 
 Pharlux is one of several developer tools built by [Veltara Works](https://veltaraworks.com/) — alongside email hosting, cloud infrastructure, and software license management. See [veltaraworks.com](https://veltaraworks.com/) for the full portfolio.
