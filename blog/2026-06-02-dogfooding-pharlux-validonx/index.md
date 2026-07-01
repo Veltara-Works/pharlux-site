@@ -15,7 +15,7 @@ draft: true
 
 # What dogfooding Pharlux on our own stack taught us
 
-*Last updated: 2026-06-13 · Pharlux v1.0.0 · By Ian Holt*
+*Last updated: 2026-07-01 · Pharlux v1.2.0 · By Ian Holt*
 
 Every observability vendor says their product is production-grade. We can say something more specific: Pharlux is the observability layer for our own production services. When ValidonX or Vectis Mail has a problem, Pharlux is what we look at first — and if Pharlux is down, we find out the hard way, like anyone else running their own monitoring. That is the strongest reason we trust the numbers we publish.
 
@@ -25,22 +25,22 @@ Every observability vendor says their product is production-grade. We can say so
 
 Pharlux runs in production as the metrics-and-logs layer for two of Veltara Works' own products:
 
-- **ValidonX** — [IAN/VALIDONX: one line on what ValidonX is and the shape of its workload, e.g. request volume / number of services Pharlux watches].
-- **Vectis Mail** — [IAN: one line on Vectis Mail's workload as Pharlux sees it].
+- **ValidonX** — our software licensing and entitlement service. [IAN/VALIDONX: the shape of its workload as Pharlux sees it — request volume, and how many services/hosts report into Pharlux.]
+- **Vectis Mail** — our email-hosting platform. [IAN: the shape of Vectis Mail's workload as Pharlux sees it — messages/day, and which SMTP/IMAP hosts report in.]
 
-This is not a staging deployment or a demo. It is the real thing: when we ship a change to ValidonX, the OpenTelemetry Collector in front of it exports to Pharlux, and the on-call view we open is the Pharlux UI.
+This is not a staging deployment or a demo. It is the real thing: an OpenTelemetry Collector runs in front of each service and exports to a single Pharlux instance on its own VPS, and the on-call view we open when something looks off is the Pharlux dashboard.
 
 ## The numbers from our own production
 
 The benchmark on the [benchmarks page](/benchmarks) is a controlled load test. This is the other half — what the same software does in steady-state production on our stack:
 
-[VALIDONX: the real figures. Suggested shape, replace with actual:
+[VALIDONX/IAN: the real figures — replace with what you can stand behind, this section is the whole credibility of the post:
 - sustained ingest rate in production (points/sec or points/day)
 - number of hosts / services reporting
 - retention window currently configured
 - typical query latency on the dashboards the team actually opens
 - resident memory under real load
-Only publish numbers you can stand behind; this section is the whole credibility of the post.]
+One real datapoint we already have from prod that you could use here: a full-table `count(*)` over ~25 million rows streamed in ~13 seconds at ~44 MB peak memory (the streaming-scan path added in v1.1.1), versus the ~1.8 GB the old buffered path would have needed. Confirm before publishing.]
 
 ## What it caught
 
@@ -52,13 +52,13 @@ What made that debuggable was the thing Pharlux is built around: metrics and log
 
 Dogfooding is also how we find what is missing. Running Pharlux on our own stack is why we know, first-hand:
 
-- [IAN: a genuine limitation you hit and how you worked around it — e.g. wanting traces (coming in V1.1), a query pattern that needed tuning, a retention/disk-growth lesson. Naming a real rough edge builds more trust than a flawless story.]
-- It is also why the V1.1 priorities are what they are: [IAN: tie a V1.1 feature — traces, PromQL, auto-compaction — to something you actually wanted while running it in production].
+- [IAN: a genuine limitation you hit and how you worked around it — e.g. wanting distributed traces (on the roadmap), a query pattern that needed tuning, a retention/disk-growth lesson. Naming a real rough edge builds more trust than a flawless story.]
+- It is also why the roadmap priorities are what they are: [IAN: tie a roadmap feature — traces, PromQL, auto-compaction — to something you actually wanted while running it in production.]
 
 ## Why this matters to you
 
 If you are evaluating an observability tool, "the vendor runs it in their own production" is a stronger signal than any benchmark, because it means the people who wrote it are the people getting paged by it. We feel the rough edges before you do, and we fix the ones that hurt. That is the deal.
 
-[Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0), see the [reproducible benchmarks](/benchmarks), or read [why we built Pharlux](/blog/why-we-built-pharlux/).
+[Download the latest release](https://github.com/Veltara-Works/pharlux/releases/latest), see the [reproducible benchmarks](/benchmarks), or read [why we built Pharlux](/blog/why-we-built-pharlux/).
 
 Pharlux is one of several developer tools built by [Veltara Works](https://veltaraworks.com/) — alongside email hosting, cloud infrastructure, and software license management. See [veltaraworks.com](https://veltaraworks.com/) for the full portfolio.

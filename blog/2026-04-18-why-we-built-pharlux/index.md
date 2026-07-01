@@ -14,7 +14,7 @@ draft: true
 
 # Why we built Pharlux
 
-*Last updated: 2026-06-13 · Pharlux v1.0.0 · By Ian Holt*
+*Last updated: 2026-07-01 · Pharlux v1.2.0 · By Ian Holt*
 
 Most observability tools are built for the company you hope to become. Pharlux is built for the one you are running right now: a handful of services on a VPS or two, no platform team, and an on-call rotation that is mostly just you.
 
@@ -24,7 +24,7 @@ Most observability tools are built for the company you hope to become. Pharlux i
 
 Observability for a small team had quietly turned into a second system to operate. To watch three or four services you ended up running Prometheus for metrics, Loki for logs, Grafana for dashboards, Alertmanager for routing, and an object store underneath it — five moving parts, five config files, five upgrade cycles. Each one is reasonable on its own. Together they are a part-time job nobody on a small team has time for.
 
-[IAN: the specific moment that tipped you over — the 2 a.m. page, the silent-broken-Loki-upgrade, the afternoon lost to a Grafana-can't-reach-Mimir YAML error, or whatever the real story was. One concrete, first-hand anecdote here is worth more than any amount of argument. Make it specific and true.]
+[IAN — the tipping point. This is the emotional core of the post; it should be a real, first-hand moment in your voice. SUGGESTED DRAFT (keep only if true, otherwise replace with what actually happened): "The evening I stopped defending the stack, I lost to it. A routine upgrade to one component left another silently unable to reach it — and no alert fired, because the thing that raises alerts was part of what was down. I found out from an empty dashboard, not from anything telling me. I had spent more time that quarter operating the tools that watch our services than watching the services themselves. For a team our size that is the wrong ratio, and no amount of YAML was going to fix it." Make the specifics yours — the more concrete and true, the better.]
 
 The alternative was to pay someone else to operate it. But the SaaS bill scales with every host you add, and every byte of your telemetry leaves your infrastructure for someone else's cloud. For a team watching its costs and its data residency, neither the operate-it-yourself stack nor the hand-it-to-a-vendor option fit.
 
@@ -53,12 +53,12 @@ On a 4 vCPU / 8 GB VPS, Pharlux sustains 250,000 metric points per second with z
 
 ## What we are honest about
 
-Pharlux V1 does metrics and logs. Traces and PromQL are coming in V1.1. It is single-node, so if you are ingesting terabytes a day across a Kubernetes fleet, it is not the tool for you — and we say so on every [comparison page](/compare/). We would rather lose the deal we are wrong for than win it and disappoint you.
+Pharlux does metrics and logs today; distributed traces and PromQL are on the roadmap. It is single-node, so if you are ingesting terabytes a day across a Kubernetes fleet, it is not the tool for you — and we say so on every [comparison page](/compare/). We would rather lose the deal we are wrong for than win it and disappoint you.
 
 ## Who it is for
 
 If you are running a small number of services, you want to observe them without standing up a stack to do it, and you want your data on hardware you control, that is exactly who Pharlux is for. It is the tool we wanted and could not find, so we built it — and we run it ourselves, on our own production stack.
 
-[Download v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0), or read [how to run it on a $20/month VPS](/blog/pharlux-on-a-20-dollar-vps/).
+[Download the latest release](https://github.com/Veltara-Works/pharlux/releases/latest), or read [how to run it on a $20/month VPS](/blog/pharlux-on-a-20-dollar-vps/).
 
 Pharlux is one of several developer tools built by [Veltara Works](https://veltaraworks.com/) — alongside email hosting, cloud infrastructure, and software license management. See [veltaraworks.com](https://veltaraworks.com/) for the full portfolio.

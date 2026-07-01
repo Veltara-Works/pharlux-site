@@ -8,9 +8,26 @@ description: An honest write-up of trying to benchmark Pharlux against SigNoz on
 draft: true
 ---
 
-{/* DRAFT — not published until the real $20-VPS benchmark numbers are filled in:
-    [PHARLUX_30S_PTS_PER_SEC] [PHARLUX_30S_ERR_PCT] [PHARLUX_5MIN_PTS_PER_SEC]
-    [PHARLUX_5MIN_ERR_PCT] [PHARLUX_DISK_USAGE]. Set draft: false once filled. */}
+{/* ⚠️ DRAFT — DO NOT PUBLISH. Two blockers, one serious:
+
+    1. PROVENANCE (blocking). This post narrates a specific first-hand SigNoz
+       install experiment — exact wall-clock timestamps, product/version numbers,
+       an OpAMP "cannot create agent without orgId" stack trace, "2 h 38 m" total.
+       We hold NO captured artifact for this run: no VPS provisioning record, no
+       saved container/collector logs, no benchmark output — unlike every Pharlux
+       benchmark, which we log. As drafted it reads as reported fact. It must not
+       publish as first-hand fact unless it was actually performed and these
+       observations are real. If it was not run, reframe or drop it — do not
+       publish. Owner to confirm.
+
+    2. DATA (blocking). The [PHARLUX_*] placeholders need REAL 2 vCPU / 4 GB
+       ($20-VPS) v1.2.0 numbers. No such verified run exists in our records, and
+       /benchmarks only publishes 4 vCPU / 8 GB figures. Do not invent these.
+
+    EDITORIAL: a whole post about a competitor failing to install sits close to
+    the house rule "market Pharlux, never write a competitor buying-guide," even
+    with the heavy caveats. Owner call on whether this reframes to a
+    Pharlux-forward angle. Set draft: false only after 1 + 2 are resolved. */}
 
 # Pharlux vs SigNoz on a $20 VPS — what actually happened
 
