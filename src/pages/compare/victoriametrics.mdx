@@ -54,7 +54,7 @@ import Link from '@docusaurus/Link';
 
 **Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
-VictoriaMetrics is a genuinely excellent metrics database — fast, efficient, and a near-drop-in for Prometheus. The word that matters is **metrics.** Logs live in a separate product (VictoriaLogs, with its own LogsQL), traces in another (VictoriaTraces), and at scale the metrics store itself splits into three components. Pharlux takes the other path: metrics **and** logs in a single 83 MB binary, queried through one SQL surface, on a single VPS. If you want unified observability rather than a best-in-class metrics silo plus separate stores around it, that is the difference.
+VictoriaMetrics is a genuinely excellent metrics database — fast, efficient, and a near-drop-in for Prometheus. The word that matters is **metrics.** Logs live in a separate product (VictoriaLogs, with its own LogsQL), traces in another (VictoriaTraces), and at scale the metrics store itself splits into three components. Pharlux takes the other path: metrics **and** logs in a single 86 MiB binary, queried through one SQL surface, on a single VPS. If you want unified observability rather than a best-in-class metrics silo plus separate stores around it, that is the difference.
 
 ## At a glance
 
@@ -80,7 +80,7 @@ Pharlux is solving a different problem. Most small teams don't have a metrics-ca
 - **One signal model, one query language.** Metrics and logs in the same binary, queried with the same SQL, joined on `trace_id` in a single statement — not MetricsQL here and LogsQL there.
 - **One thing to operate at any size.** Pharlux is single-node by design; it never becomes a `vminsert`/`vmselect`/`vmstorage` cluster, and it does not need separate Logs and Traces deployments alongside it.
 - **OpenTelemetry-native ingest.** OTLP on `:4317` and `:4318` is first-class. Bring your existing OpenTelemetry Collector.
-- **Benchmarked where you'll run it.** [577,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 17.36 million points, reproducible from the source tree.
+- **Benchmarked where you'll run it.** [250,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 7.5 million points, reproducible from the source tree.
 - **Dual-licensed, audit-log included.** Community is AGPL-3.0; commercial tiers (Team $49, Business $199, Scale $899) add a tamper-evident audit log and support, with flat pricing rather than a contact-sales Enterprise gate.
 
 ## Migrating from VictoriaMetrics to Pharlux

@@ -145,7 +145,7 @@ The design's runtime profile, on a 4 GB / 2 vCPU VPS:
 - **Query path:** `scan()` snapshots state under read lock (microseconds), reads Parquet (column-pruned per the projection, predicate-pushed per the filter), unions with the WAL batch, and streams back through DataFusion. Memory is bounded by an explicit `MemoryPool` cap of 256 MB (per [ADR-0011](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0011-memory-budget-200-430mb.md)) — pathological queries fail with a clear error rather than OOM-killing the box.
 - **Process ceiling:** 1 GB hard `MemoryLimit` enforced by systemd. If the process ever exceeds 1 GB, the kernel kills it; `Restart=always` brings it back; WAL replay rebuilds the in-memory state from disk; no acknowledged data is lost.
 
-Sustained load testing on a 4 vCPU / 8 GB VPS produced 577,000 metric points/sec over 17.36 million points with zero errors and 7 ms average request latency. The 4 GB / 2 vCPU tier handles considerably less than that in absolute throughput — but the architectural ceiling sits well above small-team production traffic.
+Sustained load testing on a 4 vCPU / 8 GB VPS produced 250,000 metric points/sec over 7.5 million points with zero errors and ~11 ms average request latency. The 4 GB / 2 vCPU tier handles considerably less than that in absolute throughput — but the architectural ceiling sits well above small-team production traffic.
 
 ## What we give up
 

@@ -35,14 +35,14 @@ The cost gap is real. The operational gap is harder to prove — and that one co
 
 Pharlux's design centre is 1–10 services on a single VPS. The architecture pays for that:
 
-- A single statically-linked Rust binary, 83 MB on disk. No Docker daemon, no init system inside a container, no orchestrator. systemd starts it.
+- A single statically-linked Rust binary, 86 MiB on disk. No Docker daemon, no init system inside a container, no orchestrator. systemd starts it.
 - Embedded SQLite for metadata. No Postgres, no Kafka, no ClickHouse.
 - A custom write-ahead log (WAL) followed by per-signal Apache Parquet files on local disk. Both the WAL framing and the per-signal Parquet schemas are frozen formats.
 - Apache DataFusion as the in-process query engine, capped at a 256 MB MemoryPool in V1 so a runaway query cannot OOM the box.
 - A custom DataFusion `TableProvider` that unions the live WAL with on-disk Parquet — freshly-ingested data is queryable without delay.
 - Memory-safe TLS via rustls. Zero OpenSSL in the dependency tree. The binary is genuinely static musl — no glibc surprise on the target VPS.
 
-Sustained load testing on a 4 vCPU / 8 GB VPS produced 577,000 metric points/sec over 17.36 million points with zero errors and 7 ms average request latency. The 4 GB / 2 vCPU tier handles considerably less than that — call it the working envelope for a small team's actual production traffic, with headroom — but the architectural ceiling sits well above the small-team workload.
+Sustained load testing on a 4 vCPU / 8 GB VPS produced 250,000 metric points/sec over 7.5 million points with zero errors and ~11 ms average request latency. The 4 GB / 2 vCPU tier handles considerably less than that — call it the working envelope for a small team's actual production traffic, with headroom — but the architectural ceiling sits well above the small-team workload.
 
 What you would outgrow this for: large fleets, multi-region deployments, dedicated SaaS-grade isolation with regulatory attestations. Pharlux is not pretending to be those things in V1.
 
@@ -84,7 +84,7 @@ sudo curl -fSL -o /usr/local/bin/pharlux \
 sudo chmod +x /usr/local/bin/pharlux
 ```
 
-The download is one file, 83 MB. Verify the checksum from the release page:
+The download is one file, 86 MiB. Verify the checksum from the release page:
 
 ```bash
 curl -fSL https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64.sha256 \

@@ -1,6 +1,6 @@
 ---
 title: "Pharlux vs SigNoz: unified observability without ClickHouse"
-description: "SigNoz is unified observability built on ClickHouse — you operate ClickHouse (plus ZooKeeper and Postgres at scale). Pharlux is one 83 MB binary with embedded storage on a single VPS."
+description: "SigNoz is unified observability built on ClickHouse — you operate ClickHouse (plus ZooKeeper and Postgres at scale). Pharlux is one 86 MiB binary with embedded storage on a single VPS."
 ---
 
 import Head from '@docusaurus/Head';
@@ -41,7 +41,7 @@ import Link from '@docusaurus/Link';
         mainEntity: [
           {'@type': 'Question', name: 'What is the main difference between Pharlux and SigNoz?', acceptedAnswer: {'@type': 'Answer', text: 'Both deliver unified OpenTelemetry observability, but SigNoz stores data in ClickHouse, which you run and operate as a separate database (plus ZooKeeper and PostgreSQL for a clustered setup). Pharlux embeds its storage — per-signal Parquet on local disk with SQLite for metadata — so there is no separate datastore to operate. SigNoz adds traces today; Pharlux adds traces in V1.1.'}},
           {'@type': 'Question', name: 'Does SigNoz require ClickHouse?', acceptedAnswer: {'@type': 'Answer', text: 'Yes. ClickHouse is SigNoz\'s required datastore for metrics, logs, and traces. A single-node Docker Compose install bundles ClickHouse alongside the SigNoz services, and a high-availability deployment adds ZooKeeper for ClickHouse clustering and PostgreSQL for metadata. Pharlux has no external database dependency.'}},
-          {'@type': 'Question', name: 'What is the minimum hardware to self-host SigNoz vs Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'SigNoz\'s single-node Docker Compose stack (ClickHouse + collector + the SigNoz binary) has a practical floor around 4 GB of RAM. Pharlux runs comfortably on a 2 vCPU / 4 GB VPS for the Community baseline and is load-tested at 577,000 metric points/sec on 4 vCPU / 8 GB.'}},
+          {'@type': 'Question', name: 'What is the minimum hardware to self-host SigNoz vs Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'SigNoz\'s single-node Docker Compose stack (ClickHouse + collector + the SigNoz binary) has a practical floor around 4 GB of RAM. Pharlux runs comfortably on a 2 vCPU / 4 GB VPS for the Community baseline and is load-tested at 250,000 metric points/sec on 4 vCPU / 8 GB.'}},
           {'@type': 'Question', name: 'Are Pharlux and SigNoz open source?', acceptedAnswer: {'@type': 'Answer', text: 'Both are open source. SigNoz\'s core is MIT-licensed with an Enterprise edition under a separate license. Pharlux Community is AGPL-3.0, with a commercial license that removes the AGPL terms and adds host/retention ceilings, a tamper-evident audit log, and support.'}},
           {'@type': 'Question', name: 'Can I migrate from SigNoz to Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'Yes, gradually. Both are OpenTelemetry-native, so you add a second exporter to your OpenTelemetry Collector pointing at Pharlux on :4318 and run both in parallel, then retire SigNoz and its ClickHouse once you trust the Pharlux view.'}},
         ],
@@ -54,7 +54,7 @@ import Link from '@docusaurus/Link';
 
 **Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
-Pharlux and SigNoz want the same thing: one tool for OpenTelemetry metrics, logs, and traces instead of a stitched-together stack. The difference is what you operate to get there. SigNoz stores everything in **ClickHouse** — a database you run, tune, and back up yourself, joined by ZooKeeper and PostgreSQL once you need high availability. Pharlux embeds its storage: per-signal Parquet on local disk with SQLite for metadata, inside a single 83 MB binary. Same ambition, far less to operate — which is the whole point for a team running 1–10 services on one VPS.
+Pharlux and SigNoz want the same thing: one tool for OpenTelemetry metrics, logs, and traces instead of a stitched-together stack. The difference is what you operate to get there. SigNoz stores everything in **ClickHouse** — a database you run, tune, and back up yourself, joined by ZooKeeper and PostgreSQL once you need high availability. Pharlux embeds its storage: per-signal Parquet on local disk with SQLite for metadata, inside a single 86 MiB binary. Same ambition, far less to operate — which is the whole point for a team running 1–10 services on one VPS.
 
 ## At a glance
 
@@ -66,7 +66,7 @@ Pharlux and SigNoz want the same thing: one tool for OpenTelemetry metrics, logs
 | **What you operate** | 1 binary, 1 config, 1 systemd unit | SigNoz services + ClickHouse (+ ZooKeeper + Postgres at scale) |
 | **Query model** | SQL — cross-signal `JOIN` on `trace_id` | Query Builder, ClickHouse SQL, PromQL |
 | **Min. self-host footprint** | 2 vCPU / 4 GB baseline | ~4 GB RAM floor (ClickHouse stack) |
-| **Throughput (first-party)** | [577k points/sec on 4 vCPU / 8 GB](/benchmarks) | scales with ClickHouse cluster |
+| **Throughput (first-party)** | [250k points/sec on 4 vCPU / 8 GB](/benchmarks) | scales with ClickHouse cluster |
 | **License** | AGPL-3.0 + commercial | Core MIT (+ Enterprise license) |
 | **Self-host cost** | Free (Community) | Free (Community) |
 
@@ -80,7 +80,7 @@ Pharlux refused that dependency. Storage is a custom write-ahead log plus per-si
 
 - **One process, not a database to operate.** `sudo pharlux install` and you are ingesting. No ClickHouse to tune, no ZooKeeper, no Postgres, no Compose file of stateful services.
 - **SQL across signals in one query.** Cross-signal `JOIN` on `trace_id` is one line. You query metrics and logs through the same Apache DataFusion SQL surface, not a mix of Query Builder and ClickHouse SQL.
-- **Runs on hardware you already have.** The Community baseline fits a 2 vCPU / 4 GB VPS; the published benchmark sustains [577,000 metric points/sec on 4 vCPU / 8 GB](/benchmarks), 0 errors over 17.36 million points.
+- **Runs on hardware you already have.** The Community baseline fits a 2 vCPU / 4 GB VPS; the published benchmark sustains [250,000 metric points/sec on 4 vCPU / 8 GB](/benchmarks), 0 errors over 7.5 million points.
 - **A commercial path that isn't "contact sales."** Pharlux lists flat monthly tiers (Community free, Team $49, Business $199, Scale $899) with a tamper-evident audit log included on every paid tier. SigNoz Cloud starts at $49/mo and its Enterprise tier starts around $4,000/mo.
 - **Dogfooded in production.** Pharlux is the observability layer for Veltara Works' own ValidonX and Vectis Mail. 453 of 453 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes.
 
@@ -111,7 +111,7 @@ Yes. ClickHouse is SigNoz's required datastore for metrics, logs, and traces. A 
 
 ### What is the minimum hardware to self-host SigNoz vs Pharlux?
 
-SigNoz's single-node stack (ClickHouse + collector + the SigNoz binary) has a practical floor around 4 GB of RAM. Pharlux runs comfortably on a 2 vCPU / 4 GB VPS for the Community baseline and is load-tested at 577,000 metric points/sec on 4 vCPU / 8 GB.
+SigNoz's single-node stack (ClickHouse + collector + the SigNoz binary) has a practical floor around 4 GB of RAM. Pharlux runs comfortably on a 2 vCPU / 4 GB VPS for the Community baseline and is load-tested at 250,000 metric points/sec on 4 vCPU / 8 GB.
 
 ### Are Pharlux and SigNoz open source?
 

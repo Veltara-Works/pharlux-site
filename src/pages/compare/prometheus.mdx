@@ -1,6 +1,6 @@
 ---
 title: "Pharlux vs Prometheus: metrics and logs in one binary"
-description: "Prometheus is the metrics standard — and metrics only. Logs, dashboards, alert routing and long-term storage are separate components. Pharlux does metrics + logs in one 83 MB binary."
+description: "Prometheus is the metrics standard — and metrics only. Logs, dashboards, alert routing and long-term storage are separate components. Pharlux does metrics + logs in one 86 MiB binary."
 ---
 
 import Head from '@docusaurus/Head';
@@ -54,7 +54,7 @@ import Link from '@docusaurus/Link';
 
 **Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
 
-Prometheus is the de-facto standard for metrics, and it earned that place: a CNCF-graduated project, a vast exporter ecosystem, and PromQL. It is also **metrics, and only metrics.** To turn Prometheus into observability you add Grafana for dashboards, Loki for logs, Alertmanager for routing, exporters for collection, and Thanos or Mimir once you need long-term storage. Pharlux does metrics **and** logs in a single 83 MB binary, with dashboards, SQL, and alerting built in — one process instead of a stack you assemble.
+Prometheus is the de-facto standard for metrics, and it earned that place: a CNCF-graduated project, a vast exporter ecosystem, and PromQL. It is also **metrics, and only metrics.** To turn Prometheus into observability you add Grafana for dashboards, Loki for logs, Alertmanager for routing, exporters for collection, and Thanos or Mimir once you need long-term storage. Pharlux does metrics **and** logs in a single 86 MiB binary, with dashboards, SQL, and alerting built in — one process instead of a stack you assemble.
 
 ## What you actually run
 
@@ -83,7 +83,7 @@ The friction starts when metrics are not the entire job — which, during an inc
 - **Metrics and logs in one query.** Cross-signal `JOIN` on `trace_id` is one line of SQL — no jumping between PromQL and LogQL, no second system to stand up for logs.
 - **One thing to run.** `sudo pharlux install`: one binary, one `pharlux.toml`, one systemd unit. Dashboards, alerting, and storage are inside it, not bolted on.
 - **OpenTelemetry-native ingest.** OTLP on `:4317` and `:4318` is first-class, not a retrofit on a scrape-shaped core. Keep your existing OpenTelemetry Collector and add an exporter.
-- **Numbers with a method.** [577,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 17.36 million points, 7 ms average latency — reproducible with a load generator that ships in the source tree.
+- **Numbers with a method.** [250,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 7.5 million points, ~11 ms average latency — reproducible with a load generator that ships in the source tree.
 - **One license to track.** Pharlux is AGPL-3.0 (plus commercial). A Prometheus + Grafana + Loki stack mixes Apache-2.0 and AGPL-3.0 across projects.
 
 ## Migrating from Prometheus to Pharlux

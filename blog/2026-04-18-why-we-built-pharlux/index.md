@@ -47,7 +47,7 @@ Every "no" on that list is a category of operational work we decided a small tea
 
 ## What that bought
 
-On a 4 vCPU / 8 GB VPS, Pharlux sustains 577,000 metric points per second with zero errors over 17.36 million points and 7 ms average latency — and that number is [reproducible from a load generator that ships in the source tree](/benchmarks), not a figure from a slide. The Community edition is free under AGPL-3.0; you can read the source and run it at any scale.
+On a 4 vCPU / 8 GB VPS, Pharlux sustains 250,000 metric points per second with zero errors over 7.5 million points and ~11 ms average latency — and that number is [reproducible from a load generator that ships in the source tree](/benchmarks), not a figure from a slide. The Community edition is free under AGPL-3.0; you can read the source and run it at any scale.
 
 [IAN: optional — a sentence on what building it in Rust felt like, or the one design decision you are proudest of. Personal, not marketing.]
 

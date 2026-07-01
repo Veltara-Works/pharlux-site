@@ -6,7 +6,7 @@ import Heading from '@theme/Heading';
 
 import styles from './index.module.css';
 
-const QUICKSTART_COMMANDS = `# Download the statically-linked binary (83 MB, OpenSSL-free)
+const QUICKSTART_COMMANDS = `# Download the statically-linked binary (86 MiB, OpenSSL-free)
 curl -L https://github.com/Veltara-Works/pharlux/releases/latest/download/pharlux-linux-amd64 \\
   -o /usr/local/bin/pharlux
 chmod +x /usr/local/bin/pharlux
@@ -60,7 +60,7 @@ const SCHEMA_GRAPH = {
       '@id': 'https://pharlux.com/#faq',
       mainEntity: [
         {'@type': 'Question', name: 'Why not just use Grafana?', acceptedAnswer: {'@type': 'Answer', text: 'Grafana is great, and it is the right choice if you have a dedicated SRE who enjoys operating Loki, Mimir, Tempo, and Alertmanager next to it. Pharlux is for the case where you do not — one binary replaces the whole stack. If you have one engineer who also wants to write product code, that is the trade-off Pharlux optimises for.'}},
-        {'@type': 'Question', name: 'How is this different from SigNoz?', acceptedAnswer: {'@type': 'Answer', text: 'SigNoz has the right ambition — unified OpenTelemetry observability — but is built on ClickHouse, which you run and operate alongside it (plus ZooKeeper and PostgreSQL for a clustered setup), shipped as a multi-container Docker Compose or Kubernetes deployment. Pharlux is a single 83 MB binary on your VPS, with embedded SQLite for metadata and Parquet on disk. Both are good projects targeting different operational sweet spots.'}},
+        {'@type': 'Question', name: 'How is this different from SigNoz?', acceptedAnswer: {'@type': 'Answer', text: 'SigNoz has the right ambition — unified OpenTelemetry observability — but is built on ClickHouse, which you run and operate alongside it (plus ZooKeeper and PostgreSQL for a clustered setup), shipped as a multi-container Docker Compose or Kubernetes deployment. Pharlux is a single 86 MiB binary on your VPS, with embedded SQLite for metadata and Parquet on disk. Both are good projects targeting different operational sweet spots.'}},
         {'@type': 'Question', name: 'Can I migrate from Prometheus?', acceptedAnswer: {'@type': 'Answer', text: 'Yes, gradually. Point your OpenTelemetry Collector at Pharlux\'s OTLP endpoint and run both stacks in parallel. PromQL support ships in V1.1; until then, queries are SQL via Apache DataFusion. Cross-signal JOINs on trace_id are something a pure-Prometheus stack cannot do.'}},
         {'@type': 'Question', name: 'What about scale beyond a single VPS?', acceptedAnswer: {'@type': 'Answer', text: 'V1\'s design centre is 1 to 10 services on a single VPS. The Scale tier ($899 per month) lifts the licensed limits entirely — unlimited hosts and unlimited retention — and adds air-gapped / binary-redistribution rights; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines. Multi-VPS clustering and an S3 cold tier are V1.1+ work. Pharlux is deliberately scoped for the small-team operator and does not pretend to be a planet-scale observability platform.'}},
         {'@type': 'Question', name: 'AGPL-3.0 — does that mean I have to open-source my service?', acceptedAnswer: {'@type': 'Answer', text: 'No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when you modify and distribute Pharlux. If that is a concern, the commercial license removes the AGPL terms entirely.'}},
@@ -76,7 +76,7 @@ const SCHEMA_GRAPH = {
       description: 'Install the Pharlux observability binary on a Linux server with systemd, start it as a service, and configure your OpenTelemetry Collector to ingest into it.',
       totalTime: 'PT2M',
       step: [
-        {'@type': 'HowToStep', position: 1, name: 'Download the Pharlux binary', text: 'Download the statically-linked Pharlux binary (83 MB, OpenSSL-free) to /usr/local/bin/pharlux and make it executable.', url: 'https://pharlux.com/#quickstart'},
+        {'@type': 'HowToStep', position: 1, name: 'Download the Pharlux binary', text: 'Download the statically-linked Pharlux binary (86 MiB, OpenSSL-free) to /usr/local/bin/pharlux and make it executable.', url: 'https://pharlux.com/#quickstart'},
         {'@type': 'HowToStep', position: 2, name: 'Install the systemd unit and start the service', text: 'Run `sudo pharlux install` to install the systemd unit, then `sudo systemctl daemon-reload` and `sudo systemctl enable --now pharlux` to start the service at boot.', url: 'https://pharlux.com/#quickstart'},
         {'@type': 'HowToStep', position: 3, name: 'Verify the install', text: 'Confirm Pharlux is responding by curling its health endpoint at http://localhost:3100/api/v1/health — a successful response means the binary is running and the API is reachable.', url: 'https://pharlux.com/#quickstart'},
         {'@type': 'HowToStep', position: 4, name: 'Configure your OpenTelemetry Collector', text: 'Point your OpenTelemetry Collector at port 4317 (gRPC) or port 4318 (HTTP/protobuf) on the Pharlux host to start sending metrics and logs.', url: 'https://pharlux.com/#quickstart'},
@@ -233,14 +233,14 @@ export default function Home(): ReactNode {
 
         <section className={styles.section}>
           <Heading as="h2" className={styles.sectionTitle}>Performance</Heading>
-          <p>Load-tested on a 4 vCPU / 8&nbsp;GB VPS (v1.0.0 measurement, 2026-04-17):</p>
+          <p>Load-tested on a 4 vCPU / 8&nbsp;GB VPS (v1.2.0, disk fsync&nbsp;~1.9&nbsp;ms):</p>
           <div className={styles.perfGrid}>
-            <div className={styles.perfStat}><span className={styles.perfNum}>577k</span><span className={styles.perfLabel}>points/sec sustained</span></div>
-            <div className={styles.perfStat}><span className={styles.perfNum}>0</span><span className={styles.perfLabel}>errors over 17.36 M points</span></div>
-            <div className={styles.perfStat}><span className={styles.perfNum}>7 ms</span><span className={styles.perfLabel}>avg request latency</span></div>
-            <div className={styles.perfStat}><span className={styles.perfNum}>83 MB</span><span className={styles.perfLabel}>static binary</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>250k</span><span className={styles.perfLabel}>durable points/sec (batch 1000)</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>0</span><span className={styles.perfLabel}>errors at the sustained rate</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>~11 ms</span><span className={styles.perfLabel}>avg request latency</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>86 MiB</span><span className={styles.perfLabel}>static binary</span></div>
           </div>
-          <p>Exceeds the 500k pts/sec V1 target by 15&nbsp;%. 453 / 453 tests pass; 10 / 10 consecutive crash recovery runs with zero flakes. See the <Link to="/benchmarks">full benchmark methodology</Link>.</p>
+          <p>Sustained durable ingest is single-core-bound, so it scales with your host's CPU and disk. 459 / 459 tests pass; 10 / 10 consecutive crash-recovery runs with zero flakes. See the <Link to="/benchmarks">full benchmark methodology</Link>.</p>
         </section>
 
         <section id="pricing" className={styles.section}>

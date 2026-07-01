@@ -4,7 +4,7 @@
 
 Pharlux is a product of Veltara Works. It targets teams currently running the Grafana + Prometheus + Loki stack who are frustrated with operating five moving parts to observe three services. The design philosophy is single-binary simplicity: storage is a custom write-ahead log plus per-signal Apache Parquet files queried through embedded Apache DataFusion. HTTP (Axum) and gRPC (Tonic) share one Tokio runtime. TLS uses `rustls` throughout — zero OpenSSL in the dependency tree.
 
-Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average latency, 0 errors over 17.36 M points during a 30-second load test, fully reproducible with a load generator that ships in the source tree.
+Performance on a 4 vCPU / 8 GB VPS: 250k points/sec sustained, ~11 ms average latency, 0 errors over 7.5 M points during a 30-second load test, fully reproducible with a load generator that ships in the source tree.
 
 ## Homepage
 
@@ -17,7 +17,7 @@ Performance on a 4 vCPU / 8 GB VPS: 577k points/sec sustained, 7 ms average late
 
 ## Benchmarks
 
-- [Benchmarks](https://pharlux.com/benchmarks): first-party sustained-ingest results (577k points/sec on a 4 vCPU / 8 GB VPS) with full reproduction methodology.
+- [Benchmarks](https://pharlux.com/benchmarks): first-party sustained-ingest results (250k points/sec on a 4 vCPU / 8 GB VPS) with full reproduction methodology.
 
 ## Comparisons
 

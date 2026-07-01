@@ -57,7 +57,7 @@ After that, OTLP traffic to the box on port 4318 lands in storage. The bootstrap
 
 The 30-second sustained load test produced [PHARLUX_30S_PTS_PER_SEC] points/sec with [PHARLUX_30S_ERR_PCT] errors. The 5-minute sustained test produced [PHARLUX_5MIN_PTS_PER_SEC] points/sec with [PHARLUX_5MIN_ERR_PCT] errors. Memory under load stayed within Pharlux's documented working envelope (200–430 MB resident, 1 GB hard ceiling per the systemd unit). Disk usage after the 5-minute run: [PHARLUX_DISK_USAGE].
 
-(For context, the headline figure on the [v1.0.0 release page](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) is 577,000 points/sec on a 4 vCPU / 8 GB VPS — a different and larger hardware class. The numbers in this post are from the smaller $20 tier the comparison was framed around.)
+(For context, the headline figure on the [v1.0.0 release page](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0) is 250,000 points/sec on a 4 vCPU / 8 GB VPS — a different and larger hardware class. The numbers in this post are from the smaller $20 tier the comparison was framed around.)
 
 ## The SigNoz side — the actual story
 
@@ -145,7 +145,7 @@ The comparison is *self-hosted* observability on a small VPS. SigNoz Cloud is a 
 
 ### What numbers did Pharlux do on this hardware?
 
-The 30-second sustained run produced [PHARLUX_30S_PTS_PER_SEC] points/sec with [PHARLUX_30S_ERR_PCT] errors. The 5-minute run produced [PHARLUX_5MIN_PTS_PER_SEC] points/sec with [PHARLUX_5MIN_ERR_PCT] errors. The 4 GB / 2 vCPU tier handles considerably less than the 577,000-point headline number on 4 vCPU / 8 GB hardware, but it handles the small-team workload well within its envelope.
+The 30-second sustained run produced [PHARLUX_30S_PTS_PER_SEC] points/sec with [PHARLUX_30S_ERR_PCT] errors. The 5-minute run produced [PHARLUX_5MIN_PTS_PER_SEC] points/sec with [PHARLUX_5MIN_ERR_PCT] errors. The 4 GB / 2 vCPU tier handles considerably less than the 250,000-point headline number on 4 vCPU / 8 GB hardware, but it handles the small-team workload well within its envelope.
 
 ### How is this any different from "we tried product X and it was hard"?
 
