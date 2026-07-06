@@ -59,7 +59,7 @@ Any reputable provider with a 4 GB / 2 vCPU tier will run this fine. Approximate
 | Linode (Akamai) | Shared 4 GB | $24 |
 | Vultr | Cloud Compute 4 GB | $24 |
 
-This is not a recommendation — Pharlux runs the same way on any of them. *(Disclosure: Veltara Works dogfoods on BinaryLane.)* Pick whichever you already trust, in the region closest to whatever you are observing.
+This is not a recommendation — Pharlux runs the same way on any of them. *(Disclosure: our own Pharlux runs on BinaryLane.)* Pick whichever you already trust, in the region closest to whatever you are observing.
 
 What to check when choosing:
 
