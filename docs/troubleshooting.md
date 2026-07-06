@@ -1,6 +1,6 @@
 # Troubleshooting Pharlux
 
-This page is a triage guide. Each problem describes the symptom, the diagnosis, and the fix — and points at the deeper procedure in [`RUNBOOK.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md) when one applies.
+This page is a triage guide. Each problem describes the symptom, the diagnosis, and the fix — and points at the deeper procedure in [`RUNBOOK.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md) when one applies.
 
 If you are not sure where to start, check the service first:
 
@@ -42,12 +42,12 @@ sudo ss -tlnp | grep -E ":3100|:4317|:4318"
 | `toml parse error` | Malformed config. The error names the line. | Fix `pharlux.toml` and restart. |
 | `Address already in use` on `:3100`, `:4317`, or `:4318` | A previous Pharlux process did not exit, or another service is bound. | `sudo pkill -f /usr/local/bin/pharlux` then `sudo systemctl start pharlux`. If a different process owns the port, change the port in `pharlux.toml`. |
 | `Permission denied` on `/var/lib/pharlux` | DynamicUID can no longer write the data directory (often after a manual restore). | See [systemd hardening pitfalls](#systemd-hardening-pitfalls). The fix is `chown` to the dynamic UID, or remove a stale `:pharlux` group reference. |
-| `Disk quota exceeded` / `No space left on device` | Disk full. | `df -h /var/lib/pharlux`, then [RUNBOOK.md §12](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#12-diagnosing-disk-usage-growth). |
-| `schema version mismatch` | Upgrade ran but the new binary cannot read the existing data. | Do not force-start. Run `pharlux migrate` and consult [RUNBOOK.md §6](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#6-rollback-procedure) for rollback. |
-| `WAL` / `CRC` / `RecordTooLarge` / `ChecksumMismatch` | WAL replay hit a corrupt record. Tail-corruption is handled automatically — anything else is rare. | [RUNBOOK.md §13](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#13-recovering-from-a-corrupted-wal). |
+| `Disk quota exceeded` / `No space left on device` | Disk full. | `df -h /var/lib/pharlux`, then [RUNBOOK.md §12](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#12-diagnosing-disk-usage-growth). |
+| `schema version mismatch` | Upgrade ran but the new binary cannot read the existing data. | Do not force-start. Run `pharlux migrate` and consult [RUNBOOK.md §6](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#6-rollback-procedure) for rollback. |
+| `WAL` / `CRC` / `RecordTooLarge` / `ChecksumMismatch` | WAL replay hit a corrupt record. Tail-corruption is handled automatically — anything else is rare. | [RUNBOOK.md §13](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#13-recovering-from-a-corrupted-wal). |
 | Repeated restarts every ~5 seconds | `Restart=always` is looping on a startup error. | Stop the unit (`systemctl stop pharlux`) before investigating, otherwise the journal will be drowned. |
 
-The full procedure for an unrecoverable start is [RUNBOOK.md §14](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#14-recovering-from-a-crashed-process-that-wont-restart).
+The full procedure for an unrecoverable start is [RUNBOOK.md §14](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#14-recovering-from-a-crashed-process-that-wont-restart).
 
 ---
 
@@ -85,7 +85,7 @@ sudo pharlux user reset-password --username alice --password 'new-strong-passwor
 sudo systemctl start pharlux
 ```
 
-This rewrites the password hash in `auth.db` directly using the configured Argon2id parameters from `[auth].argon2_*`. The full procedure with parameter notes is [RUNBOOK.md §8](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#8-resetting-an-admin-password).
+This rewrites the password hash in `auth.db` directly using the configured Argon2id parameters from `[auth].argon2_*`. The full procedure with parameter notes is [RUNBOOK.md §8](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#8-resetting-an-admin-password).
 
 ### Read-only user gets 403 on a query
 
@@ -134,7 +134,7 @@ Quick fixes, ordered by what to try first:
 3. Raise `[ingest].send_timeout_ms` (default 100ms).
 4. If `iostat` shows `%util` near 100%, the disk is the bottleneck — move the data dir to faster storage or upgrade the VPS.
 
-The full procedure with VPS-sizing crossover is [RUNBOOK.md §9](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#9-diagnosing-ingest-backpressure-http-429s).
+The full procedure with VPS-sizing crossover is [RUNBOOK.md §9](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#9-diagnosing-ingest-backpressure-http-429s).
 
 ### OTLP points being silently dropped
 
@@ -197,7 +197,7 @@ curl -s -X POST http://localhost:3100/api/v1/query \
   -d '{"sql":"EXPLAIN SELECT ..."}' | jq
 ```
 
-The full diagnosis is [RUNBOOK.md §10](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#10-diagnosing-query-slowness).
+The full diagnosis is [RUNBOOK.md §10](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#10-diagnosing-query-slowness).
 
 ### Query returns empty results when data should be there
 
@@ -287,7 +287,7 @@ The panel's SQL returned zero rows. Most often:
 
 ### High memory
 
-Expected V1 budget: WAL buffer ~64 MB, DataFusion MemoryPool 256 MB (ADR-0011), Parquet reader 50–100 MB, SQLite ~20 MB. Steady-state under load: 200–430 MB. The `pharlux install` unit sets `MemoryMax=1G`. Full diagnosis flow including how to read `pharlux_active_queries` and `pharlux_wal_bytes` is in [RUNBOOK.md §11](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#11-diagnosing-high-memory-usage).
+Expected V1 budget: WAL buffer ~64 MB, DataFusion MemoryPool 256 MB (ADR-0011), Parquet reader 50–100 MB, SQLite ~20 MB. Steady-state under load: 200–430 MB. The `pharlux install` unit sets `MemoryMax=1G`. Full diagnosis flow including how to read `pharlux_active_queries` and `pharlux_wal_bytes` is in [RUNBOOK.md §11](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#11-diagnosing-high-memory-usage).
 
 ### Disk filling up
 
@@ -298,11 +298,11 @@ sudo du -sh /var/lib/pharlux/*
 sudo find /var/lib/pharlux -type f -size +100M | head -20
 ```
 
-Common causes and fixes are listed in [RUNBOOK.md §12](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#12-diagnosing-disk-usage-growth) — usually it's retention not configured (`[storage].retention_days`), small-file proliferation (`pharlux compact`), or a runaway tenant.
+Common causes and fixes are listed in [RUNBOOK.md §12](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#12-diagnosing-disk-usage-growth) — usually it's retention not configured (`[storage].retention_days`), small-file proliferation (`pharlux compact`), or a runaway tenant.
 
 ### WAL replay errors on startup
 
-WAL framing is prost + length prefix + CRC32 trailer (ADR-0018). Tail-corruption is expected after an unclean shutdown and is handled automatically — Pharlux stops replay at the previous valid record and continues. Anything else is rare and points at storage hardware. Full procedure (including segment quarantine) is [RUNBOOK.md §13](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#13-recovering-from-a-corrupted-wal).
+WAL framing is prost + length prefix + CRC32 trailer (ADR-0018). Tail-corruption is expected after an unclean shutdown and is handled automatically — Pharlux stops replay at the previous valid record and continues. Anything else is rare and points at storage hardware. Full procedure (including segment quarantine) is [RUNBOOK.md §13](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#13-recovering-from-a-corrupted-wal).
 
 ---
 
@@ -394,7 +394,7 @@ sudo ss -tlnp | grep -E ":3100|:4317|:4318"
 sudo systemctl show pharlux --property=DynamicUser,User,UID,MemoryMax,LimitNOFILE,RestrictAddressFamilies
 ```
 
-Self-observability metrics interpretation, including the counter-reset semantics and what each `pharlux_*` metric means, is in [RUNBOOK.md §15](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/RUNBOOK.md#15-checking-self-observability-metrics).
+Self-observability metrics interpretation, including the counter-reset semantics and what each `pharlux_*` metric means, is in [RUNBOOK.md §15](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/RUNBOOK.md#15-checking-self-observability-metrics).
 
 ---
 
@@ -410,7 +410,7 @@ Please include:
 - The minimal reproduction steps.
 - For ingest issues: the OTel Collector version and a sample of the rejected payload (with secrets redacted).
 
-**Do not file security vulnerabilities publicly.** See [`SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/SECURITY.md) for the security contact. Commercial-license and Enterprise-support contact is `licensing@pharlux.com`.
+**Do not file security vulnerabilities publicly.** See [`SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/SECURITY.md) for the security contact. Commercial-license and Enterprise-support contact is `licensing@pharlux.com`.
 
 ---
 

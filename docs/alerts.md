@@ -2,7 +2,7 @@
 
 Pharlux V1 ships a built-in alert evaluator: SQL-backed rules, a four-state machine (`OK` → `PENDING` → `FIRING` → `RESOLVED` → `OK`), and notification dispatch to generic webhooks and Slack incoming-webhooks. Alert state survives restarts; failures of a notification target never stall the evaluator.
 
-This guide covers the rule lifecycle, the state machine semantics, the notification payloads, and the operator surface for managing rules. The architectural rationale for the circuit-breaker design is in [ADR-0016](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0016-background-task-circuit-breaker.md).
+This guide covers the rule lifecycle, the state machine semantics, the notification payloads, and the operator surface for managing rules. The architectural rationale for the circuit-breaker design is in [ADR-0016](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0016-background-task-circuit-breaker.md).
 
 ## Quick start
 
@@ -189,7 +189,7 @@ The `[alerts]` section of `pharlux.toml` controls the evaluator-wide behaviour:
 | Key | Default | Meaning |
 | --- | --- | --- |
 | `evaluation_interval_seconds` | `60` | How often the evaluator runs through every rule. Lowering this trades alert latency for evaluator CPU. |
-| `max_consecutive_panics` | `3` | Circuit-breaker threshold. After this many consecutive panicking evaluation cycles, the evaluator self-disables — the loop keeps running but stops evaluating, and a manual restart is required to re-enable. See [ADR-0016](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0016-background-task-circuit-breaker.md). |
+| `max_consecutive_panics` | `3` | Circuit-breaker threshold. After this many consecutive panicking evaluation cycles, the evaluator self-disables — the loop keeps running but stops evaluating, and a manual restart is required to re-enable. See [ADR-0016](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0016-background-task-circuit-breaker.md). |
 
 The notification HTTP client uses a 10-second per-request timeout. This is a hard-coded constant in V1 (not configurable) — if your webhook receiver is consistently slow, the right fix is to make the receiver fast, not to extend the timeout.
 
@@ -220,7 +220,7 @@ CREATE TABLE alert_rules (
 - **No in-place update.** Delete + recreate is the V1 update path. V1.1 adds `PATCH /api/v1/admin/alerts/{id}`.
 - **No notification retries.** Dispatch is fire-and-forget — a failed POST is logged but not retried. Operators wanting at-least-once delivery should run a queue (e.g. a small webhook receiver that posts to their final destination with retries).
 - **No notification batching.** Two rules transitioning to `FIRING` in the same cycle produce two independent notifications, even if they share a `slack_webhook_url`.
-- **No email channel in V1.** Email via `lettre` is V1.1; the dependency is already pinned in [`VERSIONS.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/VERSIONS.md).
+- **No email channel in V1.** Email via `lettre` is V1.1; the dependency is already pinned in [`VERSIONS.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/VERSIONS.md).
 - **No multi-channel routing per state.** A rule's webhook and Slack URLs apply to every transition; you cannot send `FIRING` to PagerDuty and `RESOLVED` to Slack only.
 - **No alert silencing / muting.** Operators can delete a noisy rule; there is no time-bounded "snooze." V1.2 work.
 - **No alert grouping / deduplication.** Each rule is independent.
@@ -232,4 +232,4 @@ CREATE TABLE alert_rules (
 - [`sql-query-reference.md`](sql-query-reference.md) — the SQL surface available to alert rules (same surface as `/api/v1/query` for admins).
 - [`logs-query-performance.md`](logs-query-performance.md) — guidance on writing efficient log-based alert rules (the `body LIKE` performance characteristics apply).
 - [`backup-restore.md`](backup-restore.md) — what `pharlux backup` includes (alerts.db is included; webhook URLs travel with the backup).
-- [`../../adr/0016-background-task-circuit-breaker.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0016-background-task-circuit-breaker.md) — the original decision record for the circuit-breaker design.
+- [`../../adr/0016-background-task-circuit-breaker.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0016-background-task-circuit-breaker.md) — the original decision record for the circuit-breaker design.

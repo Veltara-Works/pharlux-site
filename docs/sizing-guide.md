@@ -2,7 +2,7 @@
 
 Pharlux is designed for single-VPS observability — one binary, one process, all data on local disk. Right-sizing the VPS is the most important pre-deployment decision: too small and queries fail under load; too large and you're paying for capacity you'll never use.
 
-This guide covers memory accounting, disk accounting, the 10 GB/day full-text-search threshold, and how to tune the `[query]` and `[storage]` knobs in `pharlux.toml` for your workload. The architectural rationale behind the memory budget is in [ADR-0011](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0011-memory-budget-200-430mb.md).
+This guide covers memory accounting, disk accounting, the 10 GB/day full-text-search threshold, and how to tune the `[query]` and `[storage]` knobs in `pharlux.toml` for your workload. The architectural rationale behind the memory budget is in [ADR-0011](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0011-memory-budget-200-430mb.md).
 
 ## Quick reference
 
@@ -18,7 +18,7 @@ These are the tiers Pharlux is tested against. The V1 design target is **1–10 
 
 ## Memory accounting
 
-Pharlux's planning memory figure under load is **200–430 MB** (per [ADR-0011](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0011-memory-budget-200-430mb.md)). The breakdown:
+Pharlux's planning memory figure under load is **200–430 MB** (per [ADR-0011](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0011-memory-budget-200-430mb.md)). The breakdown:
 
 | Component | Typical | Configurable | Notes |
 | --- | --- | --- | --- |
@@ -206,4 +206,4 @@ If your workload genuinely exceeds the documented envelope, you're outside the V
 - [`otlp-configuration.md`](otlp-configuration.md) — full `pharlux.toml` reference for every key cited above.
 - [`logs-query-performance.md`](logs-query-performance.md) — deep dive on the 10 GB/day LIKE threshold and the V1.1 Tantivy plan.
 - [`backup-restore.md`](backup-restore.md) — backup, restore, and disk recovery procedures.
-- [`../../adr/0011-memory-budget-200-430mb.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/0011-memory-budget-200-430mb.md) — original decision record for the memory accounting.
+- [`../../adr/0011-memory-budget-200-430mb.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0011-memory-budget-200-430mb.md) — original decision record for the memory accounting.
