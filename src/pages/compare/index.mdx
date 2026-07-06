@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         name: 'Compare Pharlux: self-hosted observability alternatives',
         description: 'First-party comparisons of Pharlux against the major self-hosted and SaaS observability tools.',
         url: 'https://pharlux.com/compare/',
-        dateModified: '2026-06-30',
+        dateModified: '2026-07-06',
         about: {'@id': 'https://pharlux.com/#pharlux'},
         isPartOf: {'@type': 'WebSite', name: 'Pharlux', url: 'https://pharlux.com/'},
       },
@@ -51,7 +51,7 @@ import Link from '@docusaurus/Link';
         mainEntity: [
           {'@type': 'Question', name: 'What is the best self-hosted observability tool for a small team?', acceptedAnswer: {'@type': 'Answer', text: 'It depends on what you need. Most self-hosted options — Grafana Loki, Prometheus, VictoriaMetrics — cover one signal well and expect you to assemble and operate the rest. Pharlux is built for a small team on a single VPS that wants metrics and logs unified in one binary, with dashboards, SQL, and alerting included, rather than a multi-component stack.'}},
           {'@type': 'Question', name: 'Is Pharlux a self-hosted Datadog alternative?', acceptedAnswer: {'@type': 'Answer', text: 'For metrics and logs on infrastructure you control, yes. Datadog is SaaS-only and priced per host, with telemetry stored on Datadog\'s cloud. Pharlux runs on your own VPS for a flat monthly license and keeps all data local. Pharlux does not match Datadog\'s full breadth of integrations, RUM, and synthetics.'}},
-          {'@type': 'Question', name: 'How is Pharlux different from the Grafana LGTM stack?', acceptedAnswer: {'@type': 'Answer', text: 'The LGTM stack is Loki, Grafana, Tempo, and Mimir — separate components for logs, dashboards, traces, and metrics, plus Alertmanager and object storage. Pharlux replaces that with one 86 MiB binary for metrics and logs (traces in V1.1), with built-in dashboards and alerting and no object store to operate.'}},
+          {'@type': 'Question', name: 'How is Pharlux different from the Grafana LGTM stack?', acceptedAnswer: {'@type': 'Answer', text: 'The LGTM stack is Loki, Grafana, Tempo, and Mimir — separate components for logs, dashboards, traces, and metrics, plus Alertmanager and object storage. Pharlux replaces that with one 86 MiB binary for metrics and logs (traces on the roadmap), with built-in dashboards and alerting and no object store to operate.'}},
         ],
       },
     ],
@@ -60,7 +60,7 @@ import Link from '@docusaurus/Link';
 
 # Compare Pharlux
 
-**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
+**Last updated: 2026-07-06** · Applies to: the Pharlux v1.2 line
 
 Pharlux is a single 86 MiB binary that ingests OpenTelemetry metrics and logs, stores them as local Parquet, and serves SQL queries, dashboards, and alerting from one process on a single VPS. Most alternatives take the opposite shape: a strong tool for one signal, plus the separate components you assemble around it. These comparisons are first-party and honest — they name where each tool is genuinely good, and where Pharlux's one-binary, single-VPS design is the better fit for a small team running 1–10 services.
 
@@ -98,7 +98,7 @@ For metrics and logs on infrastructure you control, yes. Datadog is SaaS-only an
 
 ### How is Pharlux different from the Grafana LGTM stack?
 
-The LGTM stack is Loki, Grafana, Tempo, and Mimir — separate components for logs, dashboards, traces, and metrics, plus Alertmanager and object storage. Pharlux replaces that with one 86 MiB binary for metrics and logs (traces in V1.1), with built-in dashboards and alerting and no object store to operate.
+The LGTM stack is Loki, Grafana, Tempo, and Mimir — separate components for logs, dashboards, traces, and metrics, plus Alertmanager and object storage. Pharlux replaces that with one 86 MiB binary for metrics and logs (traces on the roadmap), with built-in dashboards and alerting and no object store to operate.
 
 ## Try Pharlux
 

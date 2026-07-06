@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs Grafana Loki: one binary, not five components',
         description: 'A first-party comparison of Pharlux and Grafana Loki for self-hosted observability on a single VPS: what you actually run, operational cost, storage, and migration.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-30',
+        dateModified: '2026-07-06',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -39,7 +39,7 @@ import Link from '@docusaurus/Link';
         '@type': 'FAQPage',
         '@id': 'https://pharlux.com/compare/grafana-loki/#faq',
         mainEntity: [
-          {'@type': 'Question', name: 'Does Grafana Loki do metrics, or only logs?', acceptedAnswer: {'@type': 'Answer', text: 'Loki stores logs only. In the Grafana stack, metrics come from Prometheus or Grafana Mimir, traces from Tempo, dashboards from Grafana, and alerts from Alertmanager — four more components to run beside Loki. Pharlux ingests metrics and logs in a single binary and queries both with SQL, with traces in V1.1.'}},
+          {'@type': 'Question', name: 'Does Grafana Loki do metrics, or only logs?', acceptedAnswer: {'@type': 'Answer', text: 'Loki stores logs only. In the Grafana stack, metrics come from Prometheus or Grafana Mimir, traces from Tempo, dashboards from Grafana, and alerts from Alertmanager — four more components to run beside Loki. Pharlux ingests metrics and logs in a single binary and queries both with SQL, with traces on the roadmap.'}},
           {'@type': 'Question', name: 'How many moving parts does Pharlux replace?', acceptedAnswer: {'@type': 'Answer', text: 'For a small team, Pharlux replaces Loki plus Mimir (or Prometheus), Grafana, Alertmanager, and the object storage underneath them — five-plus components, five config files, and five upgrade cycles — with one 86 MiB binary, one pharlux.toml, and one systemd unit.'}},
           {'@type': 'Question', name: 'Does Pharlux need object storage like Loki?', acceptedAnswer: {'@type': 'Answer', text: 'No. Loki requires an external object store (S3, GCS, or Azure Blob) for chunk storage. Pharlux writes per-signal Parquet to local disk with a custom write-ahead log, so there is nothing extra to provision, secure, or pay for. An optional S3 cold tier is planned for the Scale tier.'}},
           {'@type': 'Question', name: 'Can I migrate from Loki to Pharlux gradually?', acceptedAnswer: {'@type': 'Answer', text: 'Yes. Pharlux is OpenTelemetry-native, so you add a second exporter to your existing OpenTelemetry Collector pointing at Pharlux on :4318 and run both in parallel. Rebuild the dashboards and alerts you actually use as Pharlux SQL, then retire the Loki, Mimir, Grafana, and Alertmanager components once you trust the Pharlux view.'}},
@@ -52,7 +52,7 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs Grafana Loki
 
-**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
+**Last updated: 2026-07-06** · Applies to: the Pharlux v1.2 line
 
 Grafana Loki stores logs, and only logs. To get what Pharlux gives you out of one binary, you run Loki **plus** Mimir for metrics, Grafana for dashboards, Alertmanager for alerts, and an object store underneath all of it. Pharlux does that whole job as a single 86 MiB binary on one VPS: metrics and logs ingested over OpenTelemetry, queried with SQL, dashboards and alerting built in. If you are a small team running 1–10 services and tired of operating five things to watch three, that is the difference that matters.
 
@@ -60,7 +60,7 @@ Grafana Loki stores logs, and only logs. To get what Pharlux gives you out of on
 
 A "Pharlux vs Loki" table flatters Loki, because Loki is one piece of a five-part stack. Here is the honest version — Pharlux against the components you really run to match it:
 
-| | Pharlux v1.1.3 | Grafana Loki + the LGTM stack |
+| | Pharlux v1.2 | Grafana Loki + the LGTM stack |
 |---|---|---|
 | **Logs** | Built in | Loki |
 | **Metrics** | Built in, same binary | Prometheus or Grafana Mimir (separate) |
@@ -99,7 +99,7 @@ Pharlux is OpenTelemetry-native, so you migrate gradually instead of ripping any
 3. Run both in parallel. Rebuild the dashboards and alerts you actually use as Pharlux SQL queries and SQL alert rules.
 4. Once you trust the Pharlux view, retire Loki, Mimir, Grafana, and Alertmanager — and the object storage underneath them.
 
-Queries move from LogQL (and PromQL) to one SQL surface over both signals. PromQL support arrives in V1.1; until then SQL via Apache DataFusion covers metrics and logs together.
+Queries move from LogQL (and PromQL) to one SQL surface over both signals. PromQL is on the roadmap; today, SQL via Apache DataFusion covers metrics and logs together.
 
 ## Is Pharlux the right fit?
 
@@ -111,7 +111,7 @@ So if you are ingesting multiple terabytes of logs a day across a Kubernetes fle
 
 ### Does Grafana Loki do metrics, or only logs?
 
-Loki stores logs only. In the Grafana stack, metrics come from Prometheus or Grafana Mimir, traces from Tempo, dashboards from Grafana, and alerts from Alertmanager — four more components beside Loki. Pharlux ingests metrics and logs in a single binary and queries both with SQL, with traces in V1.1.
+Loki stores logs only. In the Grafana stack, metrics come from Prometheus or Grafana Mimir, traces from Tempo, dashboards from Grafana, and alerts from Alertmanager — four more components beside Loki. Pharlux ingests metrics and logs in a single binary and queries both with SQL, with traces on the roadmap.
 
 ### How many moving parts does Pharlux replace?
 

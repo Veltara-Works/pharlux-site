@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Self-hosted Datadog alternative: Pharlux keeps your data',
         description: 'A comparison of Pharlux and Datadog for teams seeking a self-hosted, flat-priced observability tool: deployment, per-host pricing, data residency, and lock-in.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-30',
+        dateModified: '2026-07-06',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -42,7 +42,7 @@ import Link from '@docusaurus/Link';
           {'@type': 'Question', name: 'Can you self-host Datadog?', acceptedAnswer: {'@type': 'Answer', text: 'No. Datadog is a SaaS platform — metrics, traces, APM, dashboards, and the UI run on Datadog\'s cloud. The only partial exception is CloudPrem, a preview feature that stores logs in your own cloud account but still requires the Datadog SaaS control plane. Pharlux is fully self-hosted: the binary, the storage, and your data all stay on your VPS.'}},
           {'@type': 'Question', name: 'How much does Datadog cost compared to Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'Datadog bills per host and per usage: Infrastructure is roughly $15-23 per host per month, APM adds about $31-40 per host, and logs are billed per GB ingested plus per million events indexed. At 250 hosts, Infrastructure plus APM alone is on the order of $130,000 per year before logs. Pharlux is a flat monthly license — Community free, Team $49, Business $199, Scale $899 — regardless of host count.'}},
           {'@type': 'Question', name: 'Where does my data live with Datadog vs Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'With Datadog, your telemetry lives in Datadog\'s cloud in the region you select; it cannot move between regions and you do not hold the raw store. With Pharlux, all telemetry is written to local Parquet on your own VPS — nothing leaves your infrastructure.'}},
-          {'@type': 'Question', name: 'Is Pharlux a full replacement for Datadog?', acceptedAnswer: {'@type': 'Answer', text: 'For metrics and logs on a single VPS, yes. Pharlux does not replace Datadog\'s full breadth — 900+ integrations, RUM, synthetics, security monitoring, and fully-managed APM. Pharlux is OpenTelemetry-native metrics and logs (traces in V1.1) that you run and own.'}},
+          {'@type': 'Question', name: 'Is Pharlux a full replacement for Datadog?', acceptedAnswer: {'@type': 'Answer', text: 'For metrics and logs on a single VPS, yes. Pharlux does not replace Datadog\'s full breadth — 900+ integrations, RUM, synthetics, security monitoring, and fully-managed APM. Pharlux is OpenTelemetry-native metrics and logs (traces on the roadmap) that you run and own.'}},
           {'@type': 'Question', name: 'How do I move from Datadog to Pharlux?', acceptedAnswer: {'@type': 'Answer', text: 'Datadog supports OpenTelemetry ingestion, so if you already run an OpenTelemetry Collector you add an exporter pointing at Pharlux on :4318 and run both in parallel, then wind down Datadog once Pharlux covers what you need.'}},
         ],
       },
@@ -52,19 +52,19 @@ import Link from '@docusaurus/Link';
 
 # Self-hosted Datadog alternative
 
-**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
+**Last updated: 2026-07-06** · Applies to: the Pharlux v1.2 line
 
 Datadog is the most polished observability product money can buy. The operative word is *buy*: it is SaaS-only, priced per host plus per GB plus per million events, and every byte of your telemetry lives on Datadog's cloud. For a small team that wants its data on its own infrastructure and a bill that doesn't scale with every server it adds, Pharlux is the self-hosted alternative — one 86 MiB binary that ingests OpenTelemetry metrics and logs on a VPS you control, for a flat monthly license.
 
 ## Pharlux vs Datadog at a glance
 
-| | Pharlux v1.1.3 | Datadog |
+| | Pharlux v1.2 | Datadog |
 |---|---|---|
 | **Deployment** | Self-hosted binary on your VPS | SaaS only — no self-hosted edition |
 | **Where data lives** | Your VPS (local Parquet) | Datadog's cloud (region you select) |
 | **Pricing model** | Flat monthly license | Per host + per GB + per million events |
 | **Indicative cost at 250 hosts** | $899/mo (Scale, unlimited hosts) | ~$130k/yr (Infra + APM, before logs)* |
-| **Signals** | Metrics + logs (traces in V1.1) | Metrics, logs, traces, APM, RUM, synthetics, security |
+| **Signals** | Metrics + logs (traces on the roadmap) | Metrics, logs, traces, APM, RUM, synthetics, security |
 | **Integrations** | OpenTelemetry-native | 900+ turnkey integrations |
 | **Query language** | SQL across metrics + logs | Proprietary query + dashboards |
 | **Lock-in** | AGPL-3.0 source, open formats | Proprietary agent, query, dashboards; no bulk export |
@@ -87,7 +87,7 @@ Pharlux writes everything to local Parquet on your own VPS. Nothing egresses. Th
 
 A fair comparison names this plainly: Datadog's breadth is real and Pharlux does not match it. 900+ integrations, real-user monitoring, synthetics, security monitoring, FedRAMP, and a fully-managed control plane you never operate — that is a category of product Pharlux is not trying to be. If you need that surface area and the budget supports it, Datadog earns its price.
 
-Pharlux makes a narrower promise and keeps it: OpenTelemetry-native metrics and logs (traces in V1.1), queried with SQL, on hardware you own, dogfooded in Veltara Works' own production stack. For the team that is using a fraction of Datadog's features and paying for all of them, that narrower promise is the upgrade.
+Pharlux makes a narrower promise and keeps it: OpenTelemetry-native metrics and logs (traces on the roadmap), queried with SQL, on hardware you own, dogfooded in Veltara Works' own production stack. For the team that is using a fraction of Datadog's features and paying for all of them, that narrower promise is the upgrade.
 
 ## Moving from Datadog to Pharlux
 
@@ -120,7 +120,7 @@ With Datadog, your telemetry lives in Datadog's cloud in the region you select; 
 
 ### Is Pharlux a full replacement for Datadog?
 
-For metrics and logs on a single VPS, yes. Pharlux does not replace Datadog's full breadth — 900+ integrations, RUM, synthetics, security monitoring, and fully-managed APM. Pharlux is OpenTelemetry-native metrics and logs (traces in V1.1) that you run and own.
+For metrics and logs on a single VPS, yes. Pharlux does not replace Datadog's full breadth — 900+ integrations, RUM, synthetics, security monitoring, and fully-managed APM. Pharlux is OpenTelemetry-native metrics and logs (traces on the roadmap) that you run and own.
 
 ### How do I move from Datadog to Pharlux?
 

@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs OpenObserve: scope, not just a single binary',
         description: 'A first-party comparison of Pharlux and OpenObserve, two Rust-based observability tools: signal coverage, deployment modes, query surface, licensing, and fit.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-30',
+        dateModified: '2026-07-06',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -52,19 +52,19 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs OpenObserve
 
-**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
+**Last updated: 2026-07-06** · Applies to: the Pharlux v1.2 line
 
 This is the closest comparison in the set, so it is worth being precise. Pharlux and OpenObserve make many of the same engineering choices: both are written in Rust, both store columnar Apache Parquet, both query with SQL, both are OpenTelemetry-native, and both ship a single binary under AGPL-3.0 with a commercial edition. They differ on **scope.** OpenObserve aims to replace Datadog, Splunk, and Elasticsearch across every signal and to scale out to a clustered platform. Pharlux is deliberately scoped to metrics and logs for a small team on one VPS — and stays single-node, with no clustering machinery, on purpose.
 
 ## Where they line up, and where they diverge
 
-| | Pharlux v1.1.3 | OpenObserve |
+| | Pharlux v1.2 | OpenObserve |
 |---|---|---|
 | **Written in** | Rust | Rust |
 | **Storage** | Columnar Parquet + WAL, local disk | Columnar Parquet, local disk or object store |
 | **Query** | SQL (DataFusion), cross-signal `JOIN` on `trace_id` | SQL + PromQL; VRL for pipelines |
 | **OpenTelemetry** | Native — OTLP `:4317` / `:4318` | Native — OTLP HTTP / gRPC |
-| **Signals** | Metrics + logs (traces in V1.1) | Logs, metrics, traces, RUM |
+| **Signals** | Metrics + logs (traces on the roadmap) | Logs, metrics, traces, RUM |
 | **Single-binary mode** | The only mode — single-node by design | Yes, for smaller deployments |
 | **Scale-out mode** | None — vertical only | Clustered HA: Router/Ingester/Compactor/Querier + NATS, PostgreSQL, OpenFGA |
 | **License** | AGPL-3.0 + commercial | AGPL-3.0 + commercial (Enterprise) |
@@ -72,7 +72,7 @@ This is the closest comparison in the set, so it is worth being precise. Pharlux
 
 ## OpenObserve is a good tool — here is the real distinction
 
-Credit where due: OpenObserve is a capable, fast-moving project with a sizeable community (tens of thousands of GitHub stars), low-cost columnar storage, built-in VRL pipelines, and an honest open-standards posture (SQL, PromQL, OTLP, AGPL). If your plan is to consolidate logs, metrics, traces, and RUM at meaningful scale and you are prepared to run its clustered mode, OpenObserve is built for that ambition.
+Credit where due: OpenObserve is a capable, fast-moving project with a sizeable community (18,000+ GitHub stars), low-cost columnar storage, built-in VRL pipelines, and an honest open-standards posture (SQL, PromQL, OTLP, AGPL). If your plan is to consolidate logs, metrics, traces, and RUM at meaningful scale and you are prepared to run its clustered mode, OpenObserve is built for that ambition.
 
 The distinction is not "single binary versus not" — both offer one. It is **how far the design stretches.** OpenObserve's reach to Datadog/Splunk/Elastic scale means its high-availability deployment brings in NATS for coordination, PostgreSQL for metadata, and OpenFGA for authorization. Pharlux made the opposite commitment: single-node by design, with embedded SQLite for metadata and zero clustering dependencies even at the Scale tier. The ceiling is lower and that is deliberate — it is what keeps the operational surface to one binary and one config, forever, for the team that will never run a cluster.
 
@@ -82,7 +82,7 @@ The distinction is not "single binary versus not" — both offer one. It is **ho
 - **Proof you can reproduce.** [250,000 metric points/sec sustained on a 4 vCPU / 8 GB VPS](/benchmarks), 0 errors over 7.5 million points, with a load generator that ships in the source tree. First-party numbers on commodity hardware, not headline claims.
 - **Cross-signal SQL by default.** `JOIN` metrics and logs on `trace_id` in one query through Apache DataFusion.
 - **A commercial model built for operators.** Flat tiers (Community free, Team $49, Business $199, Scale $899) with a tamper-evident audit log included on every paid tier and a clear upgrade path — not just an enterprise gate.
-- **Production-validated.** Pharlux is the observability layer under Veltara Works' own ValidonX and Vectis Mail. 453 of 453 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes.
+- **Production-validated.** Pharlux is the observability layer under Veltara Works' own ValidonX and Vectis Mail. 459 of 459 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes.
 
 ## Migrating between them
 

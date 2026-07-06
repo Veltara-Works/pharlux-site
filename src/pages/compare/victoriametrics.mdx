@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs VictoriaMetrics: unified signals, one SQL surface',
         description: 'A first-party comparison of Pharlux and VictoriaMetrics: signal coverage, query languages, single-node vs cluster, OTLP, and fit for a small team.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-30',
+        dateModified: '2026-07-06',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -52,17 +52,17 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs VictoriaMetrics
 
-**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
+**Last updated: 2026-07-06** · Applies to: the Pharlux v1.2 line
 
 VictoriaMetrics is a genuinely excellent metrics database — fast, efficient, and a near-drop-in for Prometheus. The word that matters is **metrics.** Logs live in a separate product (VictoriaLogs, with its own LogsQL), traces in another (VictoriaTraces), and at scale the metrics store itself splits into three components. Pharlux takes the other path: metrics **and** logs in a single 86 MiB binary, queried through one SQL surface, on a single VPS. If you want unified observability rather than a best-in-class metrics silo plus separate stores around it, that is the difference.
 
 ## At a glance
 
-| | Pharlux v1.1.3 | VictoriaMetrics |
+| | Pharlux v1.2 | VictoriaMetrics |
 |---|---|---|
 | **Primary signal** | Metrics + logs in one binary | Metrics (TSDB) |
 | **Logs** | Built in, same binary | VictoriaLogs (separate product) |
-| **Traces** | V1.1 | VictoriaTraces (separate, newer) |
+| **Traces** | On the roadmap | VictoriaTraces (separate, newer) |
 | **Query language** | SQL across metrics + logs | MetricsQL (PromQL superset); LogsQL for logs; **no SQL** |
 | **Deployment** | Single binary, single-node by design | Single-node binary, or `vminsert`/`vmselect`/`vmstorage` cluster |
 | **OpenTelemetry** | Native — OTLP `:4317` / `:4318` | OTLP supported among many protocols |

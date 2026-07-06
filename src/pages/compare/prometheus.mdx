@@ -21,7 +21,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux vs Prometheus: metrics and logs in one binary',
         description: 'A first-party comparison of Pharlux and Prometheus for small-team self-hosted observability: signal coverage, the surrounding stack, query model, OTLP, and migration.',
         datePublished: '2026-06-13',
-        dateModified: '2026-06-30',
+        dateModified: '2026-07-06',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -41,7 +41,7 @@ import Link from '@docusaurus/Link';
         mainEntity: [
           {'@type': 'Question', name: 'Does Prometheus handle logs?', acceptedAnswer: {'@type': 'Answer', text: 'No. Prometheus handles metrics only. For logs you add Loki, for dashboards you add Grafana, for alert routing you add Alertmanager, and for long-term or highly-available metric storage you add Thanos, Mimir, or VictoriaMetrics. Pharlux ingests metrics and logs in one binary and queries both with SQL.'}},
           {'@type': 'Question', name: 'Can Pharlux ingest Prometheus or OpenTelemetry metrics?', acceptedAnswer: {'@type': 'Answer', text: 'Pharlux is OpenTelemetry-native and ingests OTLP over gRPC (:4317) and HTTP (:4318). Prometheus uses a pull-based scrape model and, since Prometheus 3.0, can also receive OTLP metrics. To migrate, point your OpenTelemetry Collector at Pharlux and run it alongside Prometheus.'}},
-          {'@type': 'Question', name: 'Does Pharlux support PromQL?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1 — Pharlux queries are SQL via Apache DataFusion, which covers metrics and logs in one query surface and supports cross-signal JOINs on trace_id. PromQL support is planned for V1.1.'}},
+          {'@type': 'Question', name: 'Does Pharlux support PromQL?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1 — Pharlux queries are SQL via Apache DataFusion, which covers metrics and logs in one query surface and supports cross-signal JOINs on trace_id. PromQL support is on the roadmap.'}},
           {'@type': 'Question', name: 'Is Prometheus or Pharlux better for a small team?', acceptedAnswer: {'@type': 'Answer', text: 'If you only need metrics and your team already knows PromQL, Prometheus is an excellent, proven choice. If you also need logs without standing up Grafana, Loki, and Alertmanager beside it, Pharlux gives you metrics and logs in one binary with built-in dashboards and alerting.'}},
           {'@type': 'Question', name: 'What licenses do Prometheus and Pharlux use?', acceptedAnswer: {'@type': 'Answer', text: 'Prometheus and Alertmanager are Apache-2.0; Grafana and Loki are AGPL-3.0, so a typical Prometheus stack mixes licenses. Pharlux Community is AGPL-3.0 with a commercial license available.'}},
         ],
@@ -52,7 +52,7 @@ import Link from '@docusaurus/Link';
 
 # Pharlux vs Prometheus
 
-**Last updated: 2026-06-30** · Applies to: Pharlux v1.1.3
+**Last updated: 2026-07-06** · Applies to: the Pharlux v1.2 line
 
 Prometheus is the de-facto standard for metrics, and it earned that place: a CNCF-graduated project, a vast exporter ecosystem, and PromQL. It is also **metrics, and only metrics.** To turn Prometheus into observability you add Grafana for dashboards, Loki for logs, Alertmanager for routing, exporters for collection, and Thanos or Mimir once you need long-term storage. Pharlux does metrics **and** logs in a single 86 MiB binary, with dashboards, SQL, and alerting built in — one process instead of a stack you assemble.
 
@@ -60,7 +60,7 @@ Prometheus is the de-facto standard for metrics, and it earned that place: a CNC
 
 Prometheus alone is one binary. Observability for a small team is not — here is what the metrics-only core sits inside:
 
-| | Pharlux v1.1.3 | Prometheus + the usual stack |
+| | Pharlux v1.2 | Prometheus + the usual stack |
 |---|---|---|
 | **Metrics** | Built in | Prometheus |
 | **Logs** | Built in, same binary | Loki (separate) |
@@ -95,7 +95,7 @@ You do not have to choose on day one:
 3. Rebuild the dashboards and alerts you rely on as Pharlux SQL, and add your logs to the same system.
 4. Decide per-signal what to keep. Many teams keep Prometheus for a slice of metrics and let Pharlux own logs plus the rest.
 
-PromQL lands in V1.1; until then SQL via DataFusion covers metrics and logs together.
+PromQL is on the roadmap; today, SQL via DataFusion covers metrics and logs together.
 
 ## Is Pharlux the right fit?
 
@@ -115,7 +115,7 @@ Pharlux is OpenTelemetry-native and ingests OTLP over gRPC (`:4317`) and HTTP (`
 
 ### Does Pharlux support PromQL?
 
-Not in V1 — Pharlux queries are SQL via Apache DataFusion, which covers metrics and logs in one surface and supports cross-signal `JOIN`s on `trace_id`. PromQL support is planned for V1.1.
+Not in V1 — Pharlux queries are SQL via Apache DataFusion, which covers metrics and logs in one surface and supports cross-signal `JOIN`s on `trace_id`. PromQL support is on the roadmap.
 
 ### Is Prometheus or Pharlux better for a small team?
 
