@@ -38,7 +38,7 @@ const SCHEMA_GRAPH = {
       applicationCategory: 'DeveloperApplication',
       applicationSubCategory: 'Observability',
       operatingSystem: 'Linux',
-      softwareVersion: '1.1.3',
+      softwareVersion: '1.2.0',
       datePublished: '2026-04-17',
       description:
         'A single statically-linked Rust binary delivering unified OpenTelemetry-native observability (metrics and logs) for small teams running 1-10 services on a single VPS.',
@@ -66,7 +66,7 @@ const SCHEMA_GRAPH = {
         {'@type': 'Question', name: 'AGPL-3.0 — does that mean I have to open-source my service?', acceptedAnswer: {'@type': 'Answer', text: 'No. AGPL applies to Pharlux itself, not to the services Pharlux observes. Running Pharlux against your closed-source application does not make your application AGPL. The AGPL trigger is when you modify and distribute Pharlux. If that is a concern, the commercial license removes the AGPL terms entirely.'}},
         {'@type': 'Question', name: 'What happens when V1.1 ships — do I have to migrate data?', acceptedAnswer: {'@type': 'Answer', text: 'No. The WAL format and per-signal Parquet schemas are frozen. V1.1 is additive — new capabilities, no breaking changes. Upgrade is `systemctl stop pharlux`, swap the binary, `systemctl start pharlux`. The same procedure applies for V1.0.x patches.'}},
         {'@type': 'Question', name: 'Is there a hosted version?', acceptedAnswer: {'@type': 'Answer', text: 'Not in V1. Pharlux is intentionally self-hosted-first — that is core to the value proposition. A hosted offering may follow at some point, but it is not committed for V1.1 and not on the near-term roadmap.'}},
-        {'@type': 'Question', name: 'How do I know it is production-ready?', acceptedAnswer: {'@type': 'Answer', text: 'V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 453 of 453 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works\' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX.'}},
+        {'@type': 'Question', name: 'How do I know it is production-ready?', acceptedAnswer: {'@type': 'Answer', text: 'V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 459 of 459 tests pass; 10 of 10 consecutive crash-recovery runs with zero flakes; cargo-deny and cargo-audit gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works\' own production stack, including Vectis Mail, Vectis Cloud, and ValidonX.'}},
       ],
     },
     {
@@ -117,8 +117,8 @@ export default function Home(): ReactNode {
               Veltara Works
             </Link>
           </p>
-          <span className={styles.badge}>v1.1.3 released &middot; 2026-06-26</span>
-          <p className={styles.lastUpdated}>Last updated 2026-06-13</p>
+          <span className={styles.badge}>v1.2.0 released &middot; 2026-06-30</span>
+          <p className={styles.lastUpdated}>Last updated 2026-07-06</p>
           <Heading as="h1" className={styles.heroTitle}>
             Replace Grafana + Prometheus + Loki with a single binary.
           </Heading>
@@ -294,7 +294,7 @@ export default function Home(): ReactNode {
           <p>Not in V1. Pharlux is intentionally self-hosted-first &mdash; that&apos;s core to the value proposition. A hosted offering may follow at some point, but it&apos;s not committed for V1.1 and not on the near-term roadmap.</p>
 
           <Heading as="h3" className={styles.faqQ}>How do I know it&apos;s production-ready?</Heading>
-          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 453&nbsp;/&nbsp;453 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
+          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 459&nbsp;/&nbsp;459 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; Vectis&nbsp;Mail, Vectis&nbsp;Cloud, and ValidonX.</p>
         </section>
 
         <section className={styles.section}>
