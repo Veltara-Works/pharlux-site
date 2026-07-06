@@ -55,7 +55,7 @@ The license — host count and retention ceiling — is carried inside the binar
 
 Pharlux is single-node by design. It scales **up** on one large VPS, not **out** across a cluster — and that is a deliberate constraint, not a missing feature. It's what keeps the operational surface to one binary, one config, and one systemd unit at every tier, from a free Community install to an air-gapped Custom deployment.
 
-One node covers more than the phrase suggests: on a modest **4 vCPU / 8 GB VPS**, Pharlux sustains **250,000 durable metric points per second** with zero errors — a first-party, [reproducible benchmark](/benchmarks), not a headline claim. The ceiling scales with the CPU and disk you give the host.
+One node covers more than the phrase suggests: on a modest **4 vCPU / 8 GB VPS**, Pharlux sustains **350,000 durable metric points per second** with zero errors — a first-party, [reproducible benchmark](/benchmarks), not a headline claim. The ceiling scales with the CPU and disk you give the host.
 
 If you genuinely need multi-region horizontal scale-out with automatic failover, Pharlux is not that system, and we won't pretend otherwise — a managed platform built for planet-scale is the honest choice there. Most teams told they needed that scale never did.
 

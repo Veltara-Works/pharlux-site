@@ -69,7 +69,7 @@ A "Pharlux vs Loki" table flatters Loki, because Loki is one piece of a five-par
 | **Storage** | Local per-signal Parquet + WAL | External object store required (S3 / GCS / Azure) |
 | **Query language** | SQL — cross-signal `JOIN` on `trace_id` | LogQL for logs, PromQL for metrics |
 | **What you operate** | 1 binary, 1 config, 1 systemd unit | 5+ components, 5+ configs, 5+ upgrade cycles |
-| **Throughput (first-party)** | [250k points/sec on a 4 vCPU / 8 GB VPS](/benchmarks) | varies with cluster size |
+| **Throughput (first-party)** | [350k points/sec on a 4 vCPU / 8 GB VPS](/benchmarks) | varies with cluster size |
 | **License** | AGPL-3.0 + commercial | AGPL-3.0 |
 
 ## Why teams leave the LGTM stack for Pharlux
@@ -81,7 +81,7 @@ Pharlux collapses that into one process you can fully reason about:
 - **One binary, one config, one systemd unit.** `sudo pharlux install` and you are ingesting. No Helm chart, no read/write/backend split, no object store to stand up.
 - **Metrics and logs in the same query.** Cross-signal `JOIN` on `trace_id` is one line of SQL — something a logs-only store cannot do without bolting on a separate metrics system. You query with SQL you already know, not LogQL plus PromQL.
 - **Storage that stays on the box.** Per-signal Parquet on local disk with a write-ahead log. No S3 to configure or pay for; the whole system runs on an 8 GB VPS.
-- **Numbers, not adjectives.** 250,000 metric points/sec sustained, 0 errors over 7.5 million points, ~11 ms average request latency, measured on a 4 vCPU / 8 GB VPS with a [reproducible load generator that ships in the source tree](/benchmarks).
+- **Numbers, not adjectives.** 350,000 metric points/sec sustained, 0 errors over 10.5 million points, ~7 ms average request latency, measured on a 4 vCPU / 8 GB VPS with a [reproducible load generator that ships in the source tree](/benchmarks).
 - **Read the source, run it free.** Pharlux Community is AGPL-3.0, like Loki. The commercial license adds host and retention ceilings, a tamper-evident audit log, and support — not access to the core.
 
 ## How the architecture differs

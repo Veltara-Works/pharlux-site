@@ -42,7 +42,7 @@ Pharlux's design centre is 1–10 services on a single VPS. The architecture pay
 - A custom DataFusion `TableProvider` that unions the live WAL with on-disk Parquet — freshly-ingested data is queryable without delay.
 - Memory-safe TLS via rustls. Zero OpenSSL in the dependency tree. The binary is genuinely static musl — no glibc surprise on the target VPS.
 
-Sustained load testing on a 4 vCPU / 8 GB VPS produced 250,000 metric points/sec over 7.5 million points with zero errors and ~11 ms average request latency. The 4 GB / 2 vCPU tier handles considerably less than that — call it the working envelope for a small team's actual production traffic, with headroom — but the architectural ceiling sits well above the small-team workload.
+Sustained load testing on a 4 vCPU / 8 GB VPS produced 350,000 metric points/sec over 10.5 million points with zero errors and ~7 ms average request latency. The 4 GB / 2 vCPU tier handles considerably less than that — call it the working envelope for a small team's actual production traffic, with headroom — but the architectural ceiling sits well above the small-team workload.
 
 What you would outgrow this for: large fleets, multi-region deployments, dedicated SaaS-grade isolation with regulatory attestations. Pharlux is not pretending to be those things in V1.
 

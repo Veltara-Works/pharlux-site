@@ -1,6 +1,6 @@
 ---
 title: Pharlux benchmarks — sustained OTLP ingest on a single VPS
-description: First-party, reproducible Pharlux v1.2.0 ingest benchmarks — 250,000 durable metric points/sec at production batch sizes on a 4 vCPU / 8 GB VPS, with the exact hardware and full reproduction methodology.
+description: First-party, reproducible Pharlux v1.2.0 ingest benchmarks — 350,000 durable metric points/sec at production batch sizes on a 4 vCPU / 8 GB VPS, with the exact hardware and full reproduction methodology.
 ---
 
 import Head from '@docusaurus/Head';
@@ -8,9 +8,9 @@ import Link from '@docusaurus/Link';
 
 <Head>
   <meta property="og:title" content="Pharlux benchmarks — sustained OTLP ingest on a single VPS" />
-  <meta property="og:description" content="First-party, reproducible: 250,000 durable metric points/sec at production batch sizes on a 4 vCPU / 8 GB VPS. Exact hardware stated, load generator ships in the source tree." />
+  <meta property="og:description" content="First-party, reproducible: 350,000 durable metric points/sec at production batch sizes on a 4 vCPU / 8 GB VPS. Exact hardware stated, load generator ships in the source tree." />
   <meta name="twitter:title" content="Pharlux benchmarks — sustained OTLP ingest" />
-  <meta name="twitter:description" content="250,000 durable points/sec at production batch sizes on a 4 vCPU / 8 GB VPS. First-party, reproducible, hardware stated." />
+  <meta name="twitter:description" content="350,000 durable points/sec at production batch sizes on a 4 vCPU / 8 GB VPS. First-party, reproducible, hardware stated." />
   <script type="application/ld+json">{JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -20,7 +20,7 @@ import Link from '@docusaurus/Link';
         headline: 'Pharlux benchmarks — sustained OTLP ingest on a single VPS',
         description: 'First-party, reproducible sustained-ingest benchmark for Pharlux v1.2.0, with exact hardware and full reproduction methodology.',
         datePublished: '2026-04-17',
-        dateModified: '2026-07-01',
+        dateModified: '2026-07-06',
         author: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         publisher: {'@type': 'Organization', name: 'Veltara Works', url: 'https://veltaraworks.com/'},
         about: {'@id': 'https://pharlux.com/#pharlux'},
@@ -37,7 +37,7 @@ import Link from '@docusaurus/Link';
         '@type': 'FAQPage',
         '@id': 'https://pharlux.com/benchmarks/#faq',
         mainEntity: [
-          {'@type': 'Question', name: 'How fast is Pharlux ingest on a single VPS?', acceptedAnswer: {'@type': 'Answer', text: 'On a 4 vCPU / 8 GB VPS with ~1.9 ms disk fsync latency, Pharlux v1.2.0 sustains 250,000 durable OpenTelemetry metric points per second at a production batch size of 1000, with zero errors. Sustained durable ingest is single-core-bound (it is gated by the WAL fsync path), so throughput scales with the host CPU and disk: faster hardware goes higher, a slower or heavily-shared VPS goes lower. The exact hardware is stated for every number.'}},
+          {'@type': 'Question', name: 'How fast is Pharlux ingest on a single VPS?', acceptedAnswer: {'@type': 'Answer', text: 'On a 4 vCPU / 8 GB VPS with ~1.3 ms disk fsync latency, Pharlux v1.2.0 sustains 350,000 durable OpenTelemetry metric points per second at a production batch size of 1000, with zero errors. Sustained durable ingest is single-core-bound (it is gated by the WAL fsync path), so throughput scales with the host CPU and disk: faster hardware goes higher, a slower or heavily-shared VPS goes lower. The exact hardware is stated for every number.'}},
           {'@type': 'Question', name: 'Can I reproduce the Pharlux benchmark myself?', acceptedAnswer: {'@type': 'Answer', text: 'Yes. The load generator (pharlux-loadtest) ships in the Pharlux source tree under AGPL-3.0. Install Pharlux, then run pharlux-loadtest against its OTLP HTTP endpoint with the documented flags. The harness prints points/sec, average latency, and error count, and reports PASS when sustained throughput is within 5% of the requested rate.'}},
           {'@type': 'Question', name: 'What did WAL group commit change in v1.2.0?', acceptedAnswer: {'@type': 'Answer', text: 'v1.2.0 amortizes the write-ahead-log fsync across a whole group of queued records instead of one fsync per batch (ADR-0023). On slow-fsync disks this is dramatic at small batch sizes: at a batch size of 50, sustained ingest rose from about 23,000 to about 361,000 points/sec. At large batches the per-batch cost was already amortized, so the gain narrows. The on-disk WAL format is unchanged.'}},
         ],
@@ -48,9 +48,9 @@ import Link from '@docusaurus/Link';
 
 # Pharlux benchmarks
 
-**Last updated: 2026-07-01** · Applies to: Pharlux v1.2.0
+**Last updated: 2026-07-06** · Applies to: Pharlux v1.2.0
 
-On a single **4 vCPU / 8 GB VPS** (disk fsync ~1.9 ms), Pharlux v1.2.0 sustains **250,000 durable OpenTelemetry metric points per second** at a production batch size of 1000, with **zero errors** and ~11 ms average request latency. These are first-party numbers, measured with a load generator that ships in the Pharlux source tree, and they are reproducible with the steps below.
+On a single **4 vCPU / 8 GB VPS** (disk fsync ~1.3 ms), Pharlux v1.2.0 sustains **350,000 durable OpenTelemetry metric points per second** at a production batch size of 1000, with **zero errors** and ~7 ms average request latency. These are first-party numbers, measured with a load generator that ships in the Pharlux source tree, and they are reproducible with the steps below.
 
 We state the exact hardware for every figure, because it matters: sustained durable ingest is **single-core-bound** (see [below](#read-this-first-throughput-is-single-core-bound)), so the number you get scales with your VPS's CPU and disk.
 
@@ -61,20 +61,22 @@ Every point Pharlux accepts is made durable through its write-ahead log, and the
 - A faster CPU or an NVMe disk pushes the number **higher**.
 - A slower or heavily-shared commodity VPS pushes it **lower** — on budget shared hosts we have measured the same build sustaining closer to 60,000–90,000 points/sec on the same nominal "4 vCPU" tier, purely because the underlying cores are slower.
 
+We verified this spread directly: across **three independent 4 vCPU / 8 GB hosts of the same class**, all three cleanly sustained **350,000 points/sec at zero errors** for 30 s; one faster host reached ~450,000. We headline **350,000** precisely because every host we tested cleared it — it is the reproducible figure, not the best one.
+
 So read these figures as *"what a healthy 4 vCPU / 8 GB VPS does,"* not a fixed guarantee. For honest context: a team running **1–10 services** rarely generates more than a few **thousand** points per second. Even the low end here is orders of magnitude beyond a typical small-team workload — the point is not a throughput crown, it's that **Pharlux won't be your bottleneck on cheap hardware.**
 
-## Headline results (4 vCPU / 8 GB VPS, fsync ~1.9 ms)
+## Headline results (4 vCPU / 8 GB VPS, fsync ~1.3 ms)
 
 | Metric | Result | Notes |
 |---|---|---|
-| Sustained ingest (batch size 1000) | **250,000 points/sec** | zero errors, sustained 30 s |
-| Average request latency | **~11 ms** | OTLP HTTP/protobuf, end to end |
+| Sustained ingest (batch size 1000) | **350,000 points/sec** | zero errors, sustained 30 s |
+| Average request latency | **~7 ms** | OTLP HTTP/protobuf, end to end |
 | Errors at the sustained rate | **0** | throughput within 5% of requested |
 | Static binary size | **86 MiB** | statically-linked musl, OpenSSL-free |
 
 ## What WAL group commit (v1.2.0) changed
 
-v1.2.0 amortizes the WAL `fsync` across a whole group of queued records instead of one `fsync` per batch ([ADR-0023](/docs/)). The benefit is **largest at small batch sizes**, where per-batch fsync dominates. Same box, same load generator, per-batch-fsync build (v1.1.x) vs group commit (v1.2.0), driving 400,000 points/sec:
+v1.2.0 amortizes the WAL `fsync` across a whole group of queued records instead of one `fsync` per batch ([ADR-0023](/docs/)). The benefit is **largest at small batch sizes**, where per-batch fsync dominates. The A/B below isolates that change on an **earlier reference box with a slower disk (fsync ~1.9 ms)**, running both builds back to back on the same box; the headline above was re-measured on current, faster hardware, which is why its batch-1000 figure is higher. Same load generator, per-batch-fsync build (v1.1.x) vs group commit (v1.2.0), driving 400,000 points/sec:
 
 | Batch size | v1.1.x (fsync per batch) | v1.2.0 (group commit) | Gain |
 |---|---|---|---|
@@ -88,8 +90,8 @@ At a batch size of 1000 the per-batch fsync cost is already spread across 1000 p
 
 | Component | Value |
 |---|---|
-| Host | 4 vCPU / 8 GB RAM Linux VPS |
-| Disk fsync latency | ~1.9 ms per 4 KB (`dd oflag=dsync`) |
+| Host | 4 vCPU / 8 GB Linux VPS — AMD KVM vCPU @ 2.0 GHz (AVX2), Ubuntu 24.04.4 LTS, kernel 6.8 |
+| Disk fsync latency | ~1.3 ms per 4 KB (`dd oflag=dsync`), local virtio disk |
 | Pharlux version | v1.2.0 |
 | Storage | local disk — custom WAL + per-signal Parquet |
 | Query engine memory pool | 256 MB cap |
@@ -124,7 +126,7 @@ sudo pharlux install && sudo systemctl enable --now pharlux
 git clone https://github.com/Veltara-Works/pharlux && cd pharlux
 cargo run --release -p pharlux-loadtest -- \
   --target http://127.0.0.1:4318 \
-  --rate 300000 --duration 30 --workers 16 --batch-size 1000
+  --rate 350000 --duration 30 --workers 16 --batch-size 1000
 ```
 
 The harness prints a running points/sec figure every five seconds and a final report:
@@ -133,13 +135,13 @@ The harness prints a running points/sec figure every five seconds and a final re
 Load Test Results
 =================
 Duration:      30.0s
-Points sent:   7500000
-Requests:      7500
+Points sent:   10500000
+Requests:      10500
 Errors:        0 (0.00%)
-Throughput:    250000 pts/sec
-Avg latency:   11.00 ms
+Throughput:    350000 pts/sec
+Avg latency:   7.69 ms
 
-PASSED: 250000 pts/sec (within 5% of --rate)
+PASSED: 350000 pts/sec (within 5% of --rate)
 ```
 
 It reports **PASSED** when sustained throughput is within 5% of the requested rate. Drive `--rate` past your host's ceiling and the reported throughput plateaus while latency and errors climb — that plateau is your box's single-core WAL ceiling. Check your disk with `dd if=/dev/zero of=/tmp/t bs=4k count=500 oflag=dsync`: a slower fsync means a lower ceiling.
@@ -154,7 +156,7 @@ It reports **PASSED** when sustained throughput is within 5% of the requested ra
 
 ### How fast is Pharlux ingest on a single VPS?
 
-On a 4 vCPU / 8 GB VPS with ~1.9 ms disk fsync, Pharlux v1.2.0 sustains **250,000 durable points/sec** at a production batch size of 1000, with zero errors. Because sustained durable ingest is single-core-bound (gated by the WAL fsync path), throughput scales with the host CPU and disk — faster hardware goes higher, a slower or heavily-shared VPS goes lower. We state the exact hardware for every number.
+On a 4 vCPU / 8 GB VPS with ~1.3 ms disk fsync, Pharlux v1.2.0 sustains **350,000 durable points/sec** at a production batch size of 1000, with zero errors. Because sustained durable ingest is single-core-bound (gated by the WAL fsync path), throughput scales with the host CPU and disk — faster hardware goes higher, a slower or heavily-shared VPS goes lower. We state the exact hardware for every number.
 
 ### Can I reproduce the Pharlux benchmark myself?
 

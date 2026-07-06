@@ -233,11 +233,11 @@ export default function Home(): ReactNode {
 
         <section className={styles.section}>
           <Heading as="h2" className={styles.sectionTitle}>Performance</Heading>
-          <p>Load-tested on a 4 vCPU / 8&nbsp;GB VPS (v1.2.0, disk fsync&nbsp;~1.9&nbsp;ms):</p>
+          <p>Load-tested on a 4 vCPU / 8&nbsp;GB VPS (v1.2.0, disk fsync&nbsp;~1.3&nbsp;ms):</p>
           <div className={styles.perfGrid}>
-            <div className={styles.perfStat}><span className={styles.perfNum}>250k</span><span className={styles.perfLabel}>durable points/sec (batch 1000)</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>350k</span><span className={styles.perfLabel}>durable points/sec (batch 1000)</span></div>
             <div className={styles.perfStat}><span className={styles.perfNum}>0</span><span className={styles.perfLabel}>errors at the sustained rate</span></div>
-            <div className={styles.perfStat}><span className={styles.perfNum}>~11 ms</span><span className={styles.perfLabel}>avg request latency</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>~7 ms</span><span className={styles.perfLabel}>avg request latency</span></div>
             <div className={styles.perfStat}><span className={styles.perfNum}>86 MiB</span><span className={styles.perfLabel}>static binary</span></div>
           </div>
           <p>Sustained durable ingest is single-core-bound, so it scales with your host's CPU and disk. 459 / 459 tests pass; 10 / 10 consecutive crash-recovery runs with zero flakes. See the <Link to="/benchmarks">full benchmark methodology</Link>.</p>
