@@ -200,7 +200,7 @@ What you give up at this scale, in V1:
 
 - **No traces yet.** Traces are on the roadmap. If you need distributed tracing today, run Pharlux for metrics + logs and a separate trace store in parallel.
 - **No PromQL yet.** Queries are SQL via DataFusion today; PromQL is on the roadmap. If your team has months of PromQL muscle memory, that is real switching cost.
-- **Single-VPS architecture.** Pharlux is single-node by design; it scales up on one box, not out across a cluster. The Scale tier lifts host and retention limits to unlimited and adds air-gapped / binary-redistribution rights, but Pharlux still runs on a single high-capacity VPS. Multi-VPS clustering and an S3 cold tier are on the roadmap. If you need a distributed, multi-node deployment, [tell us what you're running](mailto:licensing@pharlux.com?subject=Pharlux%20enquiry).
+- **Single-VPS architecture.** Pharlux is single-node by design; it scales up on one box, not out across a cluster. The Scale tier lifts host and retention limits to unlimited and adds air-gapped / binary-redistribution rights, but Pharlux still runs on a single high-capacity VPS. Multi-VPS clustering and an S3 cold tier are on the roadmap. If you need a distributed, multi-node deployment, [tell us what you're running](/contact?intent=licensing).
 - **No managed cloud option.** Pharlux is self-hosted-first. If you need a fully-managed SaaS with credit-card sign-up, that is not the V1 product.
 - **No SAML / OIDC / LDAP in Community.** Those are commercial-tier features. JWT and admin/read-only auth are in V1 Community.
 

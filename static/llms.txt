@@ -54,10 +54,7 @@ Performance on a 4 vCPU / 8 GB VPS: 250k points/sec sustained, ~11 ms average la
 
 ## Contact
 
-- [Contact page](https://pharlux.com/contact): contact form plus direct addresses for sales, support, licensing, and general enquiries.
-- General enquiries: hello@pharlux.com
-- Sales and pricing: sales@pharlux.com
-- Technical support: support@pharlux.com
-- Commercial licensing: licensing@pharlux.com
-- Security disclosures: security@pharlux.com (see also https://github.com/Veltara-Works/pharlux/blob/main/SECURITY.md)
+- [Contact page](https://pharlux.com/contact): a single contact form that routes to the right team — general enquiries, sales and pricing, technical support, or commercial licensing (pick the topic on the form).
+- Commercial licensing enquiries: https://pharlux.com/contact?intent=licensing
+- Security disclosures: see https://pharlux.com/.well-known/security.txt (RFC 9116) and https://github.com/Veltara-Works/pharlux/blob/main/SECURITY.md
 - Community support: https://github.com/Veltara-Works/pharlux/issues and https://github.com/Veltara-Works/pharlux/discussions

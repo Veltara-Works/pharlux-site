@@ -42,7 +42,7 @@ const TIERS: readonly Tier[] = [
     license: 'Commercial',
     summary: '25 hosts, 30-day retention, tamper-evident audit log',
     description: 'Commercial license for small teams that cannot accept AGPL terms. 25 hosts (fair-use), 30-day retention, and the tamper-evident audit log.',
-    cta: {label: 'Get license', href: 'mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry'},
+    cta: {label: 'Get license', href: '/contact?intent=licensing&tier=team'},
   },
   {
     name: 'Business',
@@ -52,7 +52,7 @@ const TIERS: readonly Tier[] = [
     license: 'Commercial',
     summary: '250 hosts, 90-day retention, audit log; SSO (SAML/OIDC/LDAP, roadmap)',
     description: 'Commercial license for growing teams. 250 hosts (fair-use), 90-day retention, tamper-evident audit log, and SSO (SAML/OIDC/LDAP) on the roadmap.',
-    cta: {label: 'Get license', href: 'mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry'},
+    cta: {label: 'Get license', href: '/contact?intent=licensing&tier=business'},
   },
   {
     name: 'Scale',
@@ -62,7 +62,7 @@ const TIERS: readonly Tier[] = [
     license: 'Commercial',
     summary: 'Unlimited hosts & retention, air-gapped / redistribution rights; sized for a single high-capacity VPS',
     description: 'Top self-serve tier. Unlimited hosts and retention, plus air-gapped / binary-redistribution rights. Sized for a single high-capacity VPS (Pharlux is single-node by design).',
-    cta: {label: 'Get license', href: 'mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry'},
+    cta: {label: 'Get license', href: '/contact?intent=licensing&tier=scale'},
   },
   {
     name: 'Custom / Air-gapped',
@@ -72,7 +72,7 @@ const TIERS: readonly Tier[] = [
     license: 'Commercial',
     summary: 'Unlimited, air-gapped, white-glove SLA (24×7 / 4h SEV-1) + source escrow',
     description: 'Quote-based white-glove tier. Same software as Scale, plus a 24×7 / 4-hour SEV-1 SLA, source escrow, and managed air-gap assistance.',
-    cta: {label: 'Talk to us', href: 'mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry'},
+    cta: {label: 'Talk to us', href: '/contact?intent=licensing&tier=custom'},
   },
   {
     name: 'Commercial-License-Only',
@@ -82,7 +82,7 @@ const TIERS: readonly Tier[] = [
     license: 'Commercial',
     summary: 'AGPL→commercial relicense, license only (no hosting limits applied)',
     description: 'An orthogonal SKU: the AGPL-to-commercial relicense without hosting. For teams that only need to remove the AGPL obligation, not a hosted feature tier.',
-    cta: {label: 'Get license', href: 'mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license-only%20enquiry'},
+    cta: {label: 'Get license', href: '/contact?intent=licensing'},
   },
 ];
 
@@ -194,7 +194,7 @@ export default function Pricing(): ReactNode {
             Running air-gapped, at fleet scale, or under data-sovereignty rules? See{' '}
             <Link to="/enterprise">Pharlux for air-gapped &amp; at-scale deployments</Link>,
             or{' '}
-            <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">
+            <Link to="/contact?intent=licensing&tier=custom">
               talk to us
             </Link>
             .
@@ -246,14 +246,14 @@ export default function Pricing(): ReactNode {
           <p>They&apos;re carried in your license and enforced locally by the binary &mdash; so it works fully air-gapped and never phones home. Hosts beyond your licensed count aren&apos;t admitted, and retention is clamped to your licensed maximum. The caps are set <em>generously</em> as fair-use ceilings that rarely bite at the single-VPS design centre; if your fleet is growing past yours, you upgrade a tier. There are no per-host overage bills and no surprise charges.</p>
 
           <Heading as="h3" className={styles.faqQ}>Is there a free trial of the commercial tiers?</Heading>
-          <p>We don&apos;t run a 14-day free trial. The Community tier <em>is</em> the trial: it&apos;s the same binary, runs in your own infrastructure, and lets you make a real evaluation against your real workload. When you&apos;re ready for the commercial license terms or the Enterprise features, contact <Link href="mailto:licensing@pharlux.com">licensing@pharlux.com</Link>.</p>
+          <p>We don&apos;t run a 14-day free trial. The Community tier <em>is</em> the trial: it&apos;s the same binary, runs in your own infrastructure, and lets you make a real evaluation against your real workload. When you&apos;re ready for the commercial license terms or the Enterprise features, <Link to="/contact?intent=licensing">contact our licensing team</Link>.</p>
 
           <Heading as="h3" className={styles.faqQ}>Annual vs monthly?</Heading>
-          <p>The list prices are monthly with no commitment. Annual prepay gets you two months free (effectively a 16.7% discount). Email <Link href="mailto:licensing@pharlux.com">licensing@pharlux.com</Link> for the annual quote on your tier.</p>
+          <p>The list prices are monthly with no commitment. Annual prepay gets you two months free (effectively a 16.7% discount). <Link to="/contact?intent=licensing">Contact our licensing team</Link> for the annual quote on your tier.</p>
 
           <Heading as="h3" className={styles.faqQ}>What about very large fleets, air-gapped, or multi-region?</Heading>
           <p>The Scale tier lifts the licensed host and retention limits entirely (unlimited) and adds air-gapped / binary-redistribution rights &mdash; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines; multi-VPS clustering and an S3 cold tier are on the roadmap. For air-gapped deployments with a 24×7 SLA and source escrow, the Custom / Air-gapped tier (from $12k/mo) is the quote-based white-glove option &mdash;{' '}
-            <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">
+            <Link to="/contact?intent=licensing&tier=custom">
               talk to us
             </Link>.
           </p>
@@ -265,7 +265,7 @@ export default function Pricing(): ReactNode {
         <section className={styles.section}>
           <div className={styles.contactBox}>
             <p><strong>Commercial licensing enquiries</strong></p>
-            <p><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">licensing@pharlux.com</Link></p>
+            <p><Link to="/contact?intent=licensing">Contact our licensing team &rarr;</Link></p>
             <p className={styles.meta}>Replies within 2 business days.</p>
           </div>
         </section>

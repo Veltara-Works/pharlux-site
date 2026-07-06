@@ -12,15 +12,16 @@ const INTENTS = [
   {value: 'licensing', label: 'Commercial licensing'},
 ];
 
-// Direct addresses — rendered as plain, crawler-readable mailto links (no
-// obfuscation) so both people and AI assistants can surface a real contact.
-const ADDRESSES = [
-  {label: 'General', addr: 'hello@pharlux.com'},
-  {label: 'Sales & pricing', addr: 'sales@pharlux.com'},
-  {label: 'Support', addr: 'support@pharlux.com'},
-  {label: 'Licensing', addr: 'licensing@pharlux.com'},
-  {label: 'Security', addr: 'security@pharlux.com'},
-];
+// This form is the single contact path — no email addresses appear anywhere in
+// the page HTML (spam/bot exposure by design). Tier CTAs elsewhere on the site
+// link here with ?intent=licensing&tier=<t> so the enquiry type and a starter
+// message are pre-filled.
+const TIER_LABELS: Record<string, string> = {
+  team: 'Team',
+  business: 'Business',
+  scale: 'Scale',
+  custom: 'Custom / air-gapped',
+};
 
 declare global {
   interface Window {
@@ -53,6 +54,21 @@ export default function Contact(): JSX.Element {
   const [token, setToken] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [intent, setIntent] = useState('general');
+  const [message, setMessage] = useState('');
+
+  // Pre-fill enquiry type + a starter message from ?intent= / ?tier= query params
+  // (e.g. a tier CTA links here with ?intent=licensing&tier=business). Client-only;
+  // unrecognised values are ignored. Runs after hydration to avoid SSR mismatch.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('intent');
+    if (q && INTENTS.some((i) => i.value === q)) setIntent(q);
+    const tier = params.get('tier');
+    if (tier && TIER_LABELS[tier]) {
+      setMessage(`I'd like to enquire about a ${TIER_LABELS[tier]} license.\n\n`);
+    }
+  }, []);
 
   // Load + render the Turnstile widget (client-only).
   useEffect(() => {
@@ -128,16 +144,17 @@ export default function Contact(): JSX.Element {
       if (res.ok) {
         setStatus('success');
         form.reset();
+        setMessage('');
         resetChallenge();
         return;
       }
       const data = (await res.json().catch(() => ({}))) as {error?: string};
       setStatus('error');
-      setErrorMsg(data.error || 'Something went wrong. Please email hello@pharlux.com.');
+      setErrorMsg(data.error || 'Something went wrong. Please try again in a moment.');
       resetChallenge();
     } catch {
       setStatus('error');
-      setErrorMsg('Network error. Please email hello@pharlux.com.');
+      setErrorMsg('Network error. Please check your connection and try again.');
       resetChallenge();
     }
   }
@@ -150,21 +167,13 @@ export default function Contact(): JSX.Element {
         <h1>Contact Pharlux</h1>
         <p>
           Questions about self-hosting Pharlux, pricing, a commercial licence, or
-          anything else? Send a message below, or email us directly — we read every one.
+          anything else? Send a message below — pick the topic and it reaches the
+          right people. We read every one and reply within two business days.
         </p>
-
-        <h2>Email us directly</h2>
-        <ul>
-          {ADDRESSES.map(({label, addr}) => (
-            <li key={addr}>
-              {label}: <a href={`mailto:${addr}`}>{addr}</a>
-            </li>
-          ))}
-        </ul>
         <p>
-          Prefer a form? Use the one below — it reaches the same inboxes. For security
-          disclosures, see our{' '}
-          <Link to="pathname:///.well-known/security.txt">security.txt</Link>.
+          For security disclosures, please use our{' '}
+          <Link to="pathname:///.well-known/security.txt">security.txt</Link>{' '}
+          rather than this form.
         </p>
 
         <h2>Send a message</h2>
@@ -197,7 +206,12 @@ export default function Contact(): JSX.Element {
 
             <label htmlFor="intent">
               What's this about?
-              <select id="intent" name="intent" defaultValue="general" style={inputStyle}>
+              <select
+                id="intent"
+                name="intent"
+                value={intent}
+                onChange={(e) => setIntent(e.target.value)}
+                style={inputStyle}>
                 {INTENTS.map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
@@ -214,6 +228,8 @@ export default function Contact(): JSX.Element {
                 required
                 maxLength={5000}
                 rows={6}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 style={{...inputStyle, resize: 'vertical'}}
               />
             </label>

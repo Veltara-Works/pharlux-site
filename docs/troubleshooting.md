@@ -410,7 +410,7 @@ Please include:
 - The minimal reproduction steps.
 - For ingest issues: the OTel Collector version and a sample of the rejected payload (with secrets redacted).
 
-**Do not file security vulnerabilities publicly.** See [`SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/SECURITY.md) for the security contact. Commercial-license and Enterprise-support contact is `licensing@pharlux.com`.
+**Do not file security vulnerabilities publicly.** See [`SECURITY.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/SECURITY.md) for the security contact. For commercial-license and Enterprise-support enquiries, use the [contact form](https://pharlux.com/contact?intent=licensing).
 
 ---
 

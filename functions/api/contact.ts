@@ -132,7 +132,7 @@ export const onRequestPost = async (context: {
     if (current >= RL_MAX) {
       return json(429, {
         ok: false,
-        error: "Too many messages from your network. Please try again later, or email hello@pharlux.com.",
+        error: "Too many messages from your network. Please try again in a little while.",
       });
     }
     await env.RATE_LIMIT.put(key, String(current + 1), { expirationTtl: RL_WINDOW_S });
@@ -169,7 +169,7 @@ export const onRequestPost = async (context: {
   } catch {
     return json(502, {
       ok: false,
-      error: "We couldn't send your message right now. Please email hello@pharlux.com.",
+      error: "We couldn't send your message right now. Please try again shortly.",
     });
   }
 
@@ -183,7 +183,7 @@ export const onRequestPost = async (context: {
   if (!sendResp.ok) {
     return json(502, {
       ok: false,
-      error: "We couldn't send your message right now. Please email hello@pharlux.com.",
+      error: "We couldn't send your message right now. Please try again shortly.",
     });
   }
 

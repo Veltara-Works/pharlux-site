@@ -23,7 +23,7 @@
 - Retention: 30 days
 - Features: everything in Community, plus a tamper-evident audit log
 - Support: email
-- CTA: licensing@pharlux.com
+- CTA: https://pharlux.com/contact?intent=licensing
 
 ## Business
 
@@ -33,7 +33,7 @@
 - Retention: 90 days
 - Features: everything in Team; SSO (SAML / OIDC / LDAP) is on the roadmap
 - Support: email
-- CTA: licensing@pharlux.com
+- CTA: https://pharlux.com/contact?intent=licensing
 
 ## Scale
 
@@ -43,7 +43,7 @@
 - Retention: unlimited
 - Features: everything in Business, plus air-gapped / binary-redistribution rights; sized for a single high-capacity VPS (Pharlux is single-node by design)
 - Support: email
-- CTA: licensing@pharlux.com
+- CTA: https://pharlux.com/contact?intent=licensing
 
 ## Custom / Air-gapped
 
@@ -53,17 +53,17 @@
 - Retention: unlimited
 - Features: everything in Scale, plus air-gapped deployment support, a white-glove 24×7 SLA, and source escrow
 - Support: white-glove, dedicated
-- CTA: licensing@pharlux.com
+- CTA: https://pharlux.com/contact?intent=licensing
 
 ## Commercial-License-Only
 
 - Price: $2,400/year (billed yearly)
 - License: commercial relicense of the AGPL-3.0 software, without hosting limits or Enterprise features
 - Use case: teams that cannot accept AGPL-3.0 terms but self-host and operate the software themselves
-- CTA: licensing@pharlux.com
+- CTA: https://pharlux.com/contact?intent=licensing
 
 ## Notes
 
 - Pharlux is self-hosted software distributed as a single statically-linked binary, not a SaaS. Your telemetry data stays on your own infrastructure on every tier.
-- The current release is v1.1.3. Metrics and logs are generally available; traces and PromQL remain on the roadmap. (V1.0.0 shipped 2026-04-17.)
-- Commercial licensing contact: licensing@pharlux.com
+- The current release is on the v1.2 line. Metrics and logs are generally available; traces and PromQL remain on the roadmap. (V1.0.0 shipped 2026-04-17.)
+- Commercial licensing contact: https://pharlux.com/contact?intent=licensing

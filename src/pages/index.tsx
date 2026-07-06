@@ -251,10 +251,10 @@ export default function Home(): ReactNode {
             </thead>
             <tbody>
               <tr><td>Community</td><td><span className={styles.mono}>Free</span></td><td>AGPL-3.0, self-hosted, full community feature set</td><td className={styles.ctaCol}><Link href="https://github.com/Veltara-Works/pharlux/releases/latest">Download</Link></td></tr>
-              <tr><td>Team</td><td><span className={styles.mono}>$49/mo</span></td><td>25 hosts, 30-day retention, tamper-evident audit log</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Team%20license%20enquiry">Get license</Link></td></tr>
-              <tr><td>Business</td><td><span className={styles.mono}>$199/mo</span></td><td>250 hosts, 90-day retention, audit log; SSO <em>(roadmap)</em></td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get license</Link></td></tr>
-              <tr><td>Scale</td><td><span className={styles.mono}>$899/mo</span></td><td>Unlimited hosts &amp; retention, air-gapped / redistribution rights</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Scale%20license%20enquiry">Get license</Link></td></tr>
-              <tr><td>Custom / Air-gapped</td><td><span className={styles.mono}>from $12k/mo</span></td><td>Unlimited, air-gapped, white-glove SLA + source escrow</td><td className={styles.ctaCol}><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">Talk to us</Link></td></tr>
+              <tr><td>Team</td><td><span className={styles.mono}>$49/mo</span></td><td>25 hosts, 30-day retention, tamper-evident audit log</td><td className={styles.ctaCol}><Link to="/contact?intent=licensing&tier=team">Get license</Link></td></tr>
+              <tr><td>Business</td><td><span className={styles.mono}>$199/mo</span></td><td>250 hosts, 90-day retention, audit log; SSO <em>(roadmap)</em></td><td className={styles.ctaCol}><Link to="/contact?intent=licensing&tier=business">Get license</Link></td></tr>
+              <tr><td>Scale</td><td><span className={styles.mono}>$899/mo</span></td><td>Unlimited hosts &amp; retention, air-gapped / redistribution rights</td><td className={styles.ctaCol}><Link to="/contact?intent=licensing&tier=scale">Get license</Link></td></tr>
+              <tr><td>Custom / Air-gapped</td><td><span className={styles.mono}>from $12k/mo</span></td><td>Unlimited, air-gapped, white-glove SLA + source escrow</td><td className={styles.ctaCol}><Link to="/contact?intent=licensing&tier=custom">Talk to us</Link></td></tr>
             </tbody>
           </table>
           <p>
@@ -263,7 +263,7 @@ export default function Home(): ReactNode {
             redistribution rights. The tamper-evident audit log is shipped and included on
             every commercial tier; SSO, white-label, and the S3 cold tier are on the roadmap.
             See the <Link to="/pricing">full feature comparison and pricing</Link>, or{' '}
-            <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">
+            <Link to="/contact?intent=licensing&tier=custom">
               talk to us
             </Link>{' '}about air-gapped or custom requirements.
           </p>
@@ -283,7 +283,7 @@ export default function Home(): ReactNode {
             <div className={styles.perfStat}><span className={styles.perfNum}>One</span><span className={styles.perfLabel}>binary at every tier, Community to air-gapped</span></div>
           </div>
           <div className={styles.ctaRow}>
-            <Link className={`${styles.btn} ${styles.btnPrimary}`} href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get a Business license</Link>
+            <Link className={`${styles.btn} ${styles.btnPrimary}`} to="/contact?intent=licensing&tier=business">Get a Business license</Link>
             <Link className={`${styles.btn} ${styles.btnSecondary}`} to="/enterprise">Air-gapped &amp; at-scale &rarr;</Link>
           </div>
         </section>
@@ -341,7 +341,7 @@ export default function Home(): ReactNode {
           </p>
           <div className={styles.contactBox}>
             <p><strong>Commercial licensing enquiries</strong></p>
-            <p><Link href="mailto:licensing@pharlux.com?subject=Pharlux%20commercial%20license%20enquiry">licensing@pharlux.com</Link></p>
+            <p><Link to="/contact?intent=licensing">Contact our licensing team &rarr;</Link></p>
             <p className={styles.meta}>Replies within 2 business days.</p>
           </div>
         </section>
@@ -352,7 +352,7 @@ export default function Home(): ReactNode {
             <li><strong>Bug reports:</strong>{' '}<Link href="https://github.com/Veltara-Works/pharlux/issues">GitHub Issues</Link></li>
             <li><strong>Questions and community help:</strong>{' '}<Link href="https://github.com/Veltara-Works/pharlux/discussions">GitHub Discussions</Link></li>
             <li><strong>Security reports:</strong> see{' '}<Link href="https://github.com/Veltara-Works/pharlux/blob/main/SECURITY.md">SECURITY.md</Link>{' '}for the coordinated disclosure process</li>
-            <li><strong>Commercial support:</strong>{' '}<Link href="mailto:licensing@pharlux.com">licensing@pharlux.com</Link></li>
+            <li><strong>Commercial support:</strong>{' '}<Link to="/contact?intent=licensing">contact the licensing team</Link></li>
           </ul>
         </section>
       </div>
