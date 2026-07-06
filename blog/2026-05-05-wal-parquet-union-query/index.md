@@ -47,7 +47,7 @@ Pharlux runs two storage layers in the same process:
 
 **The WAL** is an append-only file on disk with a strict frame format (length-prefixed prost-encoded protobuf records, each followed by a CRC32 — see [ADR-0018](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0018-wal-file-format-prost-crc32.md)). Every accepted batch is written to the WAL with a configurable fsync policy before the API returns 200 OK. On crash, replay reads the WAL forward, validates each record's CRC, truncates at the first invalid record (a partial write at the tail), and rebuilds the in-memory state. Crash recovery is gated by a hard test: 10 consecutive crash-recovery test runs with zero flakes is one of the V1 release gates.
 
-**Parquet** is the on-disk steady state. Per-signal schemas (metrics, logs, V1.1 traces) are frozen ([ADR-0003](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0003-separate-parquet-schemas-per-signal.md)). Files live under `/var/lib/pharlux/{metrics,logs}/{tenant_id}/YYYY/MM/DD/HH/` so retention and compaction can operate on time partitions without scanning the whole tree. Compression is column-stored, dictionary-encoded for high-repeat fields like `name` and `scope_name`, with timestamp-sorted row groups for predicate pushdown.
+**Parquet** is the on-disk steady state. Per-signal schemas (metrics, logs, and roadmap traces) are frozen ([ADR-0003](https://github.com/Veltara-Works/pharlux/blob/v1.0.0/adr/0003-separate-parquet-schemas-per-signal.md)). Files live under `/var/lib/pharlux/{metrics,logs}/{tenant_id}/YYYY/MM/DD/HH/` so retention and compaction can operate on time partitions without scanning the whole tree. Compression is column-stored, dictionary-encoded for high-repeat fields like `name` and `scope_name`, with timestamp-sorted row groups for predicate pushdown.
 
 **The link between them** is the `PharluxMetricsTable` (and its `PharluxLogsTable` sibling), which holds:
 
@@ -153,7 +153,7 @@ The design is honest about its limits:
 
 - **No per-record delete.** Parquet is append-only. GDPR-style erasure runs at the partition level via retention plus targeted deletes, not row-level.
 - **No incremental Parquet.** Flushed Parquet files are immutable; updates to old data require a rewrite of the affected file by the compaction job.
-- **DataFusion has no sparse indexes.** Full-text log search via `LIKE` on a large logs table is a Parquet full scan. ADR-0005 documents the V1 threshold (~10 GB/day) above which Tantivy indexing is the V1.1 scaling story.
+- **DataFusion has no sparse indexes.** Full-text log search via `LIKE` on a large logs table is a Parquet full scan. ADR-0005 documents the V1 threshold (~10 GB/day) above which Tantivy indexing is the roadmap scaling story.
 - **MemoryPool ceiling is real.** Unbounded `GROUP BY` over a long time range can fail with a 256 MB MemoryPool error. The error message names the cap and recommends narrowing the time range or adding `LIMIT`. We chose this over silent OOM.
 
 These trade-offs are listed in the ADRs. They are not surprises; they are the cost paid for the single-binary, embedded-execution architecture.

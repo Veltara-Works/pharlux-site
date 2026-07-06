@@ -200,7 +200,7 @@ export default function Pricing(): ReactNode {
 
         <section className={styles.section}>
           <Heading as="h2" className={styles.sectionTitle}>What you get in each tier</Heading>
-          <p>Every tier ships from the same source tree. The differences are licensing terms, fair-use scale ceilings, and which Enterprise features unlock. The <strong>tamper-evident audit log is shipped today</strong>; items marked <em>Roadmap</em> (SSO, white-label, S3 cold tier) are planned for V1.1+.</p>
+          <p>Every tier ships from the same source tree. The differences are licensing terms, fair-use scale ceilings, and which Enterprise features are included. The <strong>tamper-evident audit log is shipped today</strong>; items marked <em>Roadmap</em> (SSO, white-label, S3 cold tier) are on the roadmap.</p>
           <div className={styles.tableScroll}>
             <table className={styles.dataTable}>
               <thead>
@@ -249,7 +249,7 @@ export default function Pricing(): ReactNode {
           <p>The list prices are monthly with no commitment. Annual prepay gets you two months free (effectively a 16.7% discount). Email <Link href="mailto:licensing@pharlux.com">licensing@pharlux.com</Link> for the annual quote on your tier.</p>
 
           <Heading as="h3" className={styles.faqQ}>What about very large fleets, air-gapped, or multi-region?</Heading>
-          <p>The Scale tier lifts the licensed host and retention limits entirely (unlimited) and adds air-gapped / binary-redistribution rights &mdash; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines; multi-VPS clustering and an S3 cold tier are V1.1+ work. For air-gapped deployments with a 24×7 SLA and source escrow, the Custom / Air-gapped tier (from $12k/mo) is the quote-based white-glove option &mdash;{' '}
+          <p>The Scale tier lifts the licensed host and retention limits entirely (unlimited) and adds air-gapped / binary-redistribution rights &mdash; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines; multi-VPS clustering and an S3 cold tier are on the roadmap. For air-gapped deployments with a 24×7 SLA and source escrow, the Custom / Air-gapped tier (from $12k/mo) is the quote-based white-glove option &mdash;{' '}
             <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">
               talk to us
             </Link>.

@@ -9,7 +9,25 @@ This page mirrors [`CHANGELOG.md`](https://github.com/Veltara-Works/pharlux/blob
 
 ## Unreleased
 
-_No unreleased changes._
+### Added
+
+- **Dashboard global time range + auto-refresh** (bundled web UI, dashboard redesign Slices 5–6). Dashboards gain a header time-range picker (Last 15m / 1h / 2h / 24h, or a custom absolute window) and an auto-refresh interval (off / 10s / 30s / 1m / 5m). Panels reference the selected window through two reserved SQL tokens, `$__timeFrom` / `$__timeTo`, which resolve to safe SQL bounds (`now() - INTERVAL '…'` for presets, validated `TIMESTAMP '…'` literals for a custom window) — injection-safe by construction and substituted client-side, so the server still sees ordinary SQL. Both controls have a saved default in the layout JSON (optional top-level `timeRange` / `refresh` keys) that a viewer can override for their session without changing the saved dashboard; the keys round-trip through export/import. A panel that omits the tokens is not time-filtered. The change is entirely in the embedded `pharlux-ui`. Also adds responsive panel-grid stacking (tablet/mobile) and a `prefers-reduced-motion` pass.
+
+### Security
+
+- Bumped `opentelemetry-proto` `0.31.0` → `0.32.0`, which moves `opentelemetry` and `opentelemetry_sdk` to the `0.32` line and clears the outstanding RustSec advisory against `opentelemetry_sdk 0.31` (the vulnerable code path — the baggage propagator — is not reachable from Pharlux, but the bump removes the advisory at its source rather than suppressing it). The `prost` / `tonic` pins are unchanged; the only new transitive dependency is `portable-atomic`. OTLP 0.32 adds an experimental string-table (`strindex`) variant to `AnyValue` / `KeyValue`; the ingest translate path handles the new `AnyValue` variant best-effort without panicking on untrusted input. No behaviour change for conformant OTLP metrics/logs traffic.
+
+## 1.2.0 — 2026-06-30
+
+WAL group commit: the ingest writer now amortizes a single `fsync` across a whole group of queued records instead of one `fsync` per batch (ADR-0023). This removes the per-batch fsync bottleneck that capped sustained _durable_ ingest on slow-fsync disks. All 13 workspace crates at 1.2.0; no Rust / Cargo dependency changes. The on-disk WAL format is unchanged.
+
+### Changed
+
+- **WAL group commit (ADR-0023).** The ingest drain pulls up to 256 queued requests (`recv_many`), stages them into one buffer, and persists them with a single `write_all` + single `sync_data()` per group (`append_group`), instead of one `fsync` per batch. The on-disk record framing (length prefix + prost + CRC32 trailer, ADR-0018) is **unchanged** — a group is simply N framed records made durable together. The OTLP ack stays asynchronous (200 on channel-accept; durability follows within the next group fsync). The benefit is largest at small batch sizes, where per-batch fsync dominates; at large batches the per-batch cost is already amortized, so the gain narrows. Sustained-ingest throughput is reproducible with the `pharlux-loadtest` harness in the source tree. (#48)
+
+### Internal
+
+- **Group commit is all-or-nothing.** Every error path (allocation, encode, ceiling, write/fsync, boundary rotation) leaves the group neither durable nor seq-consuming. Rotation happens at the group boundary _before_ the next group is written, so a rotation failure can never strand an already-durable group behind an error. The staging buffer uses `try_reserve_exact`, surfacing an allocation failure as a recoverable error rather than aborting the process on the ingest hot path. (#48)
 
 ## 1.1.3 — 2026-06-26
 
@@ -147,7 +165,7 @@ Version 1.0.0 signals a commitment to semver on the public API surface: the REST
 
 ### Performance
 
-- 250k pts/sec sustained 30s, 0 errors, ~117&nbsp;ms avgnbsp;ms avg latency (4&nbsp;vCPU&nbsp;/&nbsp;8&nbsp;GB)
+- 250k pts/sec sustained 30s, 0 errors, ~117&nbsp;ms avg latency (4&nbsp;vCPU&nbsp;/&nbsp;8&nbsp;GB)
 - 81&nbsp;MB statically-linked musl binary
 
 ### Testing

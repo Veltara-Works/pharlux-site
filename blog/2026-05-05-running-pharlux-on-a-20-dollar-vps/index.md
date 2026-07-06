@@ -9,7 +9,7 @@ description: A practical setup guide for running Pharlux on a single sub-$25/mon
 
 # Running Pharlux on a $20/month VPS
 
-*Last updated: 2026-06-13 · Pharlux v1.0.0 · By Ian Holt*
+*Last updated: 2026-07-06 · Pharlux v1.2.0 · By Ian Holt*
 
 If your Datadog bill is creeping past the comfort line — or if your Loki + Mimir + Tempo + Grafana + Alertmanager stack has become a part-time job you didn't sign up for — there *is* a third option.
 
@@ -76,18 +76,18 @@ The canonical reference is the [Getting Started guide](/docs/getting-started/) �
 
 Ubuntu 24.04 LTS is the supported baseline. Other recent systemd-based distributions work too — the binary is statically-linked musl, so glibc version is not a constraint.
 
-### 2. Download the v1.0.0 binary
+### 2. Download the v1.2.0 binary
 
 ```bash
 sudo curl -fSL -o /usr/local/bin/pharlux \
-  https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64
+  https://github.com/Veltara-Works/pharlux/releases/download/v1.2.0/pharlux-v1.2.0-x86_64-unknown-linux-musl
 sudo chmod +x /usr/local/bin/pharlux
 ```
 
 The download is one file, 86 MiB. Verify the checksum from the release page:
 
 ```bash
-curl -fSL https://github.com/Veltara-Works/pharlux/releases/download/v1.0.0/pharlux-linux-amd64.sha256 \
+curl -fSL https://github.com/Veltara-Works/pharlux/releases/download/v1.2.0/pharlux-v1.2.0-x86_64-unknown-linux-musl.sha256 \
   | (cd /usr/local/bin && sha256sum -c -)
 ```
 
@@ -198,9 +198,9 @@ The point of citing ranges rather than a single Datadog number is that those num
 
 What you give up at this scale, in V1:
 
-- **No traces yet.** Traces ship in V1.1. If you need distributed tracing today, run Pharlux for metrics + logs and a separate trace store in parallel.
-- **No PromQL yet.** Queries are SQL via DataFusion in V1; PromQL ships in V1.1. If your team has months of PromQL muscle memory, that is real switching cost.
-- **Single-VPS architecture.** Pharlux is single-node by design; it scales up on one box, not out across a cluster. The Scale tier lifts host and retention limits to unlimited and adds air-gapped / binary-redistribution rights, but Pharlux still runs on a single high-capacity VPS. Multi-VPS clustering and an S3 cold tier are V1.1+ work. If you need a distributed, multi-node deployment, [tell us what you're running](mailto:licensing@pharlux.com?subject=Pharlux%20enquiry).
+- **No traces yet.** Traces are on the roadmap. If you need distributed tracing today, run Pharlux for metrics + logs and a separate trace store in parallel.
+- **No PromQL yet.** Queries are SQL via DataFusion today; PromQL is on the roadmap. If your team has months of PromQL muscle memory, that is real switching cost.
+- **Single-VPS architecture.** Pharlux is single-node by design; it scales up on one box, not out across a cluster. The Scale tier lifts host and retention limits to unlimited and adds air-gapped / binary-redistribution rights, but Pharlux still runs on a single high-capacity VPS. Multi-VPS clustering and an S3 cold tier are on the roadmap. If you need a distributed, multi-node deployment, [tell us what you're running](mailto:licensing@pharlux.com?subject=Pharlux%20enquiry).
 - **No managed cloud option.** Pharlux is self-hosted-first. If you need a fully-managed SaaS with credit-card sign-up, that is not the V1 product.
 - **No SAML / OIDC / LDAP in Community.** Those are commercial-tier features. JWT and admin/read-only auth are in V1 Community.
 
@@ -238,7 +238,7 @@ Yes. The Community edition is AGPL-3.0 and unmetered — run it at any scale. Th
 
 ## Get Pharlux
 
-- **Download v1.0.0** — [github.com/Veltara-Works/pharlux/releases/tag/v1.0.0](https://github.com/Veltara-Works/pharlux/releases/tag/v1.0.0)
+- **Download the latest release** — [github.com/Veltara-Works/pharlux/releases/latest](https://github.com/Veltara-Works/pharlux/releases/latest)
 - **Documentation** — [pharlux.com/docs/getting-started/](https://pharlux.com/docs/getting-started/)
 - **Source** — [github.com/Veltara-Works/pharlux](https://github.com/Veltara-Works/pharlux)
 

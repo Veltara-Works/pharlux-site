@@ -54,7 +54,7 @@ import Link from '@docusaurus/Link';
 
 **Last updated: 2026-07-06** · Applies to: the Pharlux v1.2 line
 
-VictoriaMetrics is a genuinely excellent metrics database — fast, efficient, and a near-drop-in for Prometheus. The word that matters is **metrics.** Logs live in a separate product (VictoriaLogs, with its own LogsQL), traces in another (VictoriaTraces), and at scale the metrics store itself splits into three components. Pharlux takes the other path: metrics **and** logs in a single 86 MiB binary, queried through one SQL surface, on a single VPS. If you want unified observability rather than a best-in-class metrics silo plus separate stores around it, that is the difference.
+VictoriaMetrics is a genuinely excellent metrics database — fast, efficient, and a near-drop-in for Prometheus. The word that matters is **metrics.** Logs live in a separate product (VictoriaLogs, with its own LogsQL), traces in another (VictoriaTraces), and at scale the metrics store itself splits into three components. Pharlux takes the other path: metrics **and** logs in a single 86 MiB binary, queried through one SQL surface, on a single VPS. If you want unified observability rather than a dedicated metrics silo plus separate stores around it, that is the difference.
 
 ## At a glance
 
