@@ -313,7 +313,7 @@ export default function Home(): ReactNode {
           <p>Not in V1. Pharlux is intentionally self-hosted-first &mdash; that&apos;s core to the value proposition. A hosted offering may follow at some point, but it&apos;s not on the near-term roadmap.</p>
 
           <Heading as="h3" className={styles.faqQ}>How do I know it&apos;s production-ready?</Heading>
-          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 459&nbsp;/&nbsp;459 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; Vectis&nbsp;Mail and ValidonX.</p>
+          <p>V1.0.0 shipped 2026-04-17 after a four-phase delivery plan with hard pass/fail gates. 459&nbsp;/&nbsp;459 tests pass; 10&nbsp;/&nbsp;10 consecutive crash-recovery runs with zero flakes; <code>cargo-deny</code> and <code>cargo-audit</code> gates green; AGPL-3.0 source available for review. Pharlux is currently dogfooded on Veltara Works&apos; own production stack &mdash; <Link href="https://vectismail.com">Vectis&nbsp;Mail</Link> and <Link href="https://validonx.com">ValidonX</Link>.</p>
         </section>
 
         <section className={styles.section}>
