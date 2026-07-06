@@ -269,6 +269,25 @@ export default function Home(): ReactNode {
           </p>
         </section>
 
+        <section className={styles.section}>
+          <Heading as="h2" className={styles.sectionTitle}>Own your observability at scale</Heading>
+          <p>
+            For the team with a real fleet and a budget: a flat price, on a VPS you
+            control, with your telemetry never leaving it. Pharlux&apos;s commercial
+            tiers ladder on features, rights, and support &mdash; not a per-host or
+            per-GB meter &mdash; so the bill doesn&apos;t move when your fleet does.
+          </p>
+          <div className={styles.perfGrid}>
+            <div className={styles.perfStat}><span className={styles.perfNum}>Flat</span><span className={styles.perfLabel}>monthly license &mdash; never a per-host meter</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>Zero</span><span className={styles.perfLabel}>data egress &mdash; telemetry stays on your VPS</span></div>
+            <div className={styles.perfStat}><span className={styles.perfNum}>One</span><span className={styles.perfLabel}>binary at every tier, Community to air-gapped</span></div>
+          </div>
+          <div className={styles.ctaRow}>
+            <Link className={`${styles.btn} ${styles.btnPrimary}`} href="mailto:licensing@pharlux.com?subject=Pharlux%20Business%20license%20enquiry">Get a Business license</Link>
+            <Link className={`${styles.btn} ${styles.btnSecondary}`} to="/enterprise">Air-gapped &amp; at-scale &rarr;</Link>
+          </div>
+        </section>
+
         <section className={`${styles.section} ${styles.faq}`}>
           <Heading as="h2" className={styles.sectionTitle}>Frequently asked questions</Heading>
 

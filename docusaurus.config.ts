@@ -85,6 +85,7 @@ const config: Config = {
       items: [
         {to: '/docs', label: 'Docs', position: 'left'},
         {to: '/pricing', label: 'Pricing', position: 'left'},
+        {to: '/enterprise', label: 'Enterprise', position: 'left'},
         {
           type: 'dropdown',
           label: 'Compare',
@@ -118,6 +119,7 @@ const config: Config = {
           title: 'Product',
           items: [
             {label: 'Pricing', to: '/pricing'},
+            {label: 'Enterprise', to: '/enterprise'},
             {label: 'Docs', to: '/docs'},
             {label: 'Benchmarks', to: '/benchmarks'},
             {label: 'Blog', to: '/blog'},

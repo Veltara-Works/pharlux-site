@@ -188,9 +188,12 @@ export default function Pricing(): ReactNode {
           </table>
           <p>
             Commercial tiers include the Pharlux Enterprise binary. Host and retention
-            figures are generous fair-use ceilings, not a per-host meter, so pricing
-            stays predictable with no surprise bills. For air-gapped deployments,
-            white-glove SLAs, or other custom requirements,{' '}
+            figures are generous fair-use ceilings, not a per-host meter:{' '}
+            <strong>no per-host billing, no per-GB ingest charge, no high-water-mark
+            surprises</strong> &mdash; your price doesn&apos;t move when your fleet does.
+            Running air-gapped, at fleet scale, or under data-sovereignty rules? See{' '}
+            <Link to="/enterprise">Pharlux for air-gapped &amp; at-scale deployments</Link>,
+            or{' '}
             <Link href="mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry">
               talk to us
             </Link>

@@ -1,0 +1,99 @@
+---
+title: "Pharlux for air-gapped & at-scale deployments"
+description: "Self-hosted observability that runs with zero egress: air-gapped operation, binary-redistribution rights, flat pricing, and source escrow. The Scale ($899/mo) and Custom (from $12k/mo) tiers for teams whose data cannot leave their infrastructure."
+---
+
+import Head from '@docusaurus/Head';
+
+<Head>
+  <meta property="og:title" content="Pharlux for air-gapped & at-scale deployments" />
+  <meta property="og:description" content="Self-hosted observability with zero egress: air-gapped operation, binary-redistribution rights, flat pricing, source escrow. Scale $899/mo and Custom from $12k/mo." />
+  <meta name="twitter:title" content="Pharlux for air-gapped & at-scale deployments" />
+  <meta name="twitter:description" content="Zero-egress, self-hosted observability. Air-gapped rights, flat pricing, source escrow. Scale $899/mo, Custom from $12k/mo." />
+  <link rel="canonical" href="https://pharlux.com/enterprise/" />
+  <script type="application/ld+json">{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': 'https://pharlux.com/enterprise/#page',
+        name: 'Pharlux for air-gapped & at-scale deployments',
+        description: 'Self-hosted observability that runs with zero egress: air-gapped operation, binary-redistribution rights, flat pricing, and source escrow.',
+        url: 'https://pharlux.com/enterprise/',
+        dateModified: '2026-07-06',
+        about: {'@id': 'https://pharlux.com/#pharlux'},
+        isPartOf: {'@type': 'WebSite', name: 'Pharlux', url: 'https://pharlux.com/'},
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {'@type': 'ListItem', position: 1, name: 'Home', item: 'https://pharlux.com/'},
+          {'@type': 'ListItem', position: 2, name: 'Enterprise', item: 'https://pharlux.com/enterprise/'},
+        ],
+      },
+    ],
+  })}</script>
+</Head>
+
+# Pharlux for air-gapped & at-scale deployments
+
+**Applies to: the Pharlux v1.2 line**
+
+Some teams can't send their telemetry to someone else's cloud — not because it's expensive, but because it isn't allowed. Air-gapped networks, data-sovereignty rules, on-prem appliances shipped to customers, environments with no outbound internet at all. For those, a managed SaaS backend isn't a pricier option; it's a non-starter.
+
+Pharlux is a single binary that ingests OpenTelemetry metrics and logs, stores them in local Parquet, and answers SQL queries — all on hardware you control. Nothing egresses. That property is the whole point of this page.
+
+## Runs where the cloud can't
+
+The license — host count and retention ceiling — is carried inside the binary and enforced locally. Pharlux **never phones home**, so it runs fully disconnected. There is no activation server to reach, no usage beacon, no telemetry leaving the box.
+
+- **Zero egress by construction.** Ingest, storage, and query are one process writing to your disk. No third-party data processor sits in the path.
+- **Binary-redistribution rights.** The Scale and Custom tiers grant the right to redistribute the Pharlux binary — for shipping it inside an on-prem appliance, or moving it across an air-gap boundary on your own media.
+- **Open, portable storage.** Telemetry lands in open Apache Parquet, not a proprietary store you can't read without the vendor. The WAL and per-signal Parquet schemas are frozen (ADR-0018, ADR-0003).
+
+## One node, sized up — on purpose
+
+Pharlux is single-node by design. It scales **up** on one large VPS, not **out** across a cluster — and that is a deliberate constraint, not a missing feature. It's what keeps the operational surface to one binary, one config, and one systemd unit at every tier, from a free Community install to an air-gapped Custom deployment.
+
+One node covers more than the phrase suggests: on a modest **4 vCPU / 8 GB VPS**, Pharlux sustains **250,000 durable metric points per second** with zero errors — a first-party, [reproducible benchmark](/benchmarks), not a headline claim. The ceiling scales with the CPU and disk you give the host.
+
+If you genuinely need multi-region horizontal scale-out with automatic failover, Pharlux is not that system, and we won't pretend otherwise — a managed platform built for planet-scale is the honest choice there. Most teams told they needed that scale never did.
+
+## Flat price, not a meter
+
+The commercial tiers ladder on features, rights, and support — **not** a per-host or per-GB meter. There is no per-host billing, no per-GB ingest charge, no per-million-events indexing fee, and no high-water-mark surprise when something autoscales overnight. Your price is a flat monthly number you can put in a budget twelve months out. Host and retention figures are generous fair-use ceilings, not usage charges.
+
+## You can outlive the vendor
+
+The most common objection at this tier is bus-factor: *what if the vendor disappears?* Source-available software answers it outright.
+
+- **Read and build it yourself.** The Community edition is [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html); the source is there to read, audit, and compile.
+- **Your data stays readable.** Frozen WAL and Parquet formats mean a deployment keeps working, and its data keeps being queryable, regardless of what happens to us.
+- **Source escrow.** The Custom tier includes source escrow, so the guarantee can be contractual, not just a licence you take on faith.
+
+Vendor risk is real for any tool. The difference is that only the self-hosted, source-available model hands you the source and the exit.
+
+## The two tiers for this deployment
+
+| | **Scale** | **Custom / Air-gapped** |
+|---|---|---|
+| **Price** | $899/mo, self-serve | From $12k/mo, quote-based |
+| **Hosts & retention** | Unlimited (fair-use) | Unlimited (fair-use) |
+| **Air-gapped + redistribution rights** | ✓ | ✓ |
+| **Support** | Email priority | 24×7, 4-hour SEV-1 SLA |
+| **Source escrow** | — | ✓ |
+| **Managed air-gap assistance** | — | ✓ |
+
+Scale is the self-serve answer for a team that operates its own infrastructure and needs the rights and the ceilings lifted. Custom adds the human layer — an SLA and escrow — for the deployment that can't rely on best-effort support.
+
+## What ships today
+
+Pharlux does OpenTelemetry-native **metrics and logs today**, queried with SQL through Apache DataFusion, with a tamper-evident audit log included on every commercial tier. **Distributed traces, PromQL, and SSO (SAML/OIDC/LDAP) are on the roadmap, not shipped** — if any of those is a hard requirement this quarter, tell us before you buy and we'll give you an honest read on timing rather than sell around it.
+
+## Talk to us
+
+Tell us what you're running — the fleet size, the constraints, whether it's air-gapped — and we'll tell you honestly whether Pharlux fits.
+
+**Air-gapped, at-scale, and custom enquiries:** [licensing@pharlux.com](mailto:licensing@pharlux.com?subject=Pharlux%20Custom%20%2F%20air-gapped%20enquiry) — replies within 2 business days.
+
+Or see the full [pricing and feature comparison](/pricing).
