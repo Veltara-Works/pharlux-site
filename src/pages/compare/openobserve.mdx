@@ -72,7 +72,7 @@ This is the closest comparison in the set, so it is worth being precise. Pharlux
 
 ## OpenObserve is a good tool — here is the real distinction
 
-Credit where due: OpenObserve is a capable, fast-moving project with a sizeable community (18,000+ GitHub stars), low-cost columnar storage, built-in VRL pipelines, and an honest open-standards posture (SQL, PromQL, OTLP, AGPL). If your plan is to consolidate logs, metrics, traces, and RUM at meaningful scale and you are prepared to run its clustered mode, OpenObserve is built for that ambition.
+Credit where due: OpenObserve is a capable, fast-moving project with a real community and a genuine open-standards posture (SQL, PromQL, OTLP, AGPL). Its scope is also its trade-off — it reaches for Datadog/Splunk/Elastic breadth across logs, metrics, traces, and RUM. If that is your plan and you are prepared to run its clustered mode, OpenObserve is built for that ambition; Pharlux is not trying to be.
 
 The distinction is not "single binary versus not" — both offer one. It is **how far the design stretches.** OpenObserve's reach to Datadog/Splunk/Elastic scale means its high-availability deployment brings in NATS for coordination, PostgreSQL for metadata, and OpenFGA for authorization. Pharlux made the opposite commitment: single-node by design, with embedded SQLite for metadata and zero clustering dependencies even at the Scale tier. The ceiling is lower and that is deliberate — it is what keeps the operational surface to one binary and one config, forever, for the team that will never run a cluster.
 
