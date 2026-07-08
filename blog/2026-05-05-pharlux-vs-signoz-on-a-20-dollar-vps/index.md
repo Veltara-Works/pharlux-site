@@ -8,6 +8,15 @@ description: We put Pharlux and SigNoz on two identical $20/month VPSes and meas
 draft: false
 ---
 
+{/* DRAFT for Ian's voice/tone review. This post is now backed by a REAL run
+    performed 2026-07-01 on two matched BinaryLane std-2vcpu VPSes — every number,
+    log line, and error here is from that run. Raw logs + RESULTS.md live in
+    pharlux/_internal/benchmarks-signoz-2026-07-01/. This supersedes the earlier
+    unverified draft (which used SigNoz v0.121.1 and an unmeasured "2h 38m"); the
+    core finding — OTLP ingestion is blocked until first-user onboarding — was
+    re-tested and reproduced on current v0.131.0. Editorial call is yours: it is a
+    competitor comparison, kept honest and Pharlux-forward per house style. Remove
+    `draft: true` to publish. */}
 
 # Pharlux vs SigNoz on a $20 VPS — a fair, reproducible test
 
@@ -39,7 +48,8 @@ Both fresh Ubuntu 24.04.4. The load generator is Pharlux's own `pharlux-loadtest
 Three commands, then it is ingesting:
 
 ```bash
-curl -L <release-url>/pharlux -o /usr/local/bin/pharlux && chmod +x /usr/local/bin/pharlux
+curl -L https://github.com/Veltara-Works/pharlux/releases/download/v1.2.0/pharlux-v1.2.0-x86_64-unknown-linux-musl \
+  -o /usr/local/bin/pharlux && chmod +x /usr/local/bin/pharlux
 sudo pharlux install          # writes systemd unit, generates JWT secret, prepares data dir
 sudo systemctl enable --now pharlux
 ```
@@ -65,7 +75,7 @@ This is where it gets interesting, and where we found something worth writing do
 **First: the install path changed.** The old `docker-compose` files and `install.sh` that most SigNoz blog posts reference are, as of v0.130.0, deprecated in the repository. The current canonical install is their own installer, Foundry:
 
 ```bash
-curl -fsSL <signoz-foundry-install-url> | bash   # from SigNoz's current install docs
+curl -fsSL https://signoz.io/foundry.sh | bash   # SigNoz's current installer
 # write casting.yaml (flavor: compose, mode: docker)
 foundryctl cast -f casting.yaml
 ```
