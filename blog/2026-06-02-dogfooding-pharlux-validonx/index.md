@@ -3,53 +3,50 @@ title: What dogfooding Pharlux on our own stack taught us
 slug: dogfooding-pharlux-validonx
 authors: [Ian]
 tags: [engineering, observability, self-hosting, case-study]
-date: 2026-06-02
-description: Pharlux is the observability layer for our own production services — ValidonX and Vectis Mail. Running it ourselves is the reason we trust the numbers we publish. Here is what it caught and what we learned.
+date: 2026-07-08
+description: Pharlux is the observability layer for our own production stack — Vectis Mail, ValidonX, and a client's storefront. Running it ourselves is the reason we trust the numbers we publish. Here is what it caught and what we learned.
 draft: false
 ---
 
-
-# What dogfooding Pharlux on our own stack taught us
-
-*Last updated: 2026-07-01 · Pharlux v1.2.0 · By Ian Holt*
-
-Every observability vendor says their product is production-grade. We can say something more specific: Pharlux is the observability layer for our own production services. When ValidonX or Vectis Mail has a problem, Pharlux is what we look at first — and if Pharlux is down, we find out the hard way, like anyone else running their own monitoring. That is the strongest reason we trust the numbers we publish.
+Every observability vendor says their product is production-grade. We can say something more specific: Pharlux is the observability layer for our own production stack. When Vectis Mail or ValidonX has a problem, Pharlux is what we look at first — and if Pharlux is down, we find out the hard way, like anyone else running their own monitoring. That is the strongest reason we trust the numbers we publish.
 
 <!-- truncate -->
 
 ## What "dogfooding" means here
 
-Pharlux runs in production as the metrics-and-logs layer for two of Veltara Works' own products:
+Pharlux runs in production as the metrics-and-logs layer for our own products — and one client's:
 
-- **ValidonX** — our software licensing and entitlement service. [IAN/VALIDONX: the shape of its workload as Pharlux sees it — request volume, and how many services/hosts report into Pharlux.]
-- **Vectis Mail** — our email-hosting platform. [IAN: the shape of Vectis Mail's workload as Pharlux sees it — messages/day, and which SMTP/IMAP hosts report in.]
+- **Vectis Mail** — our email-hosting platform. Three hosts report in: the primary mail server, the outbound relay (`mx1`), and a test box.
+- **ValidonX** — our software-licensing and entitlement service. It reports host metrics *plus its own application metrics* — tenants, subscriptions, audit events, job-queue depth, failed jobs — and an external HTTPS probe watching `validonx.com` from the outside.
+- **Cabbage Patch Studios** — the studio that designed this very site. We run the observability for their Magento storefront too, which is the honest test of whether this is a real product: someone outside the building depends on it.
+- **Pharlux itself.** The production box monitors its own health, because the tool that watches everything else should not be the one blind spot.
 
-This is not a staging deployment or a demo. It is the real thing: an OpenTelemetry Collector runs in front of each service and exports to a single Pharlux instance on its own VPS, and the on-call view we open when something looks off is the Pharlux dashboard.
+Altogether that is seven services across seven machines, each running an OpenTelemetry Collector that exports to a single Pharlux instance on one VPS. This is not a staging deployment or a demo. The on-call view we open when something looks off is the Pharlux dashboard.
 
 ## The numbers from our own production
 
-The benchmark on the [benchmarks page](/benchmarks) is a controlled load test. This is the other half — what the same software does in steady-state production on our stack:
+The benchmark on the [benchmarks page](/benchmarks) is a controlled load test. This is the other half — what the same software does in steady-state production on our own stack.
 
-[VALIDONX/IAN: the real figures — replace with what you can stand behind, this section is the whole credibility of the post:
-- sustained ingest rate in production (points/sec or points/day)
-- number of hosts / services reporting
-- retention window currently configured
-- typical query latency on the dashboards the team actually opens
-- resident memory under real load
-One real datapoint we already have from prod that you could use here: a full-table `count(*)` over ~25 million rows streamed in ~13 seconds at ~44 MB peak memory (the streaming-scan path added in v1.1.1), versus the ~1.8 GB the old buffered path would have needed. Confirm before publishing.]
+Day in, day out, that one instance takes in about **5.4 million metric points and 56,000 log events a day**, across 34 distinct metric series, and has done so continuously for the couple of weeks currently retained on the box. In that whole window, the `up` signal has **never once dropped to zero** — nothing we monitor has silently fallen off the map. It runs on exactly the single-binary, single-VPS setup we ship: no separate cluster behind the curtain, no ClickHouse warming in the background.
+
+That is the quiet part of the pitch. The steady state is boring, and boring is the point.
 
 ## What it caught
 
-The point of observability is the incident you catch before your customers do. [IAN: one real, sanitised story — a deploy that spiked error rates, a memory leak the dashboards surfaced, a cross-signal `JOIN` on `trace_id` that pinned down a root cause faster than grepping logs would have. Sanitise anything sensitive, but keep it concrete and true. This is the most valuable section of the post.]
+The point of observability is the thing you catch before your customers report it. Here is a real one, from the first week of July.
 
-What made that debuggable was the thing Pharlux is built around: metrics and logs in one place, queried with the same SQL, joined on `trace_id` in a single statement. We were not jumping between a metrics tool and a separate log tool and correlating timestamps by eye.
+For the two weeks before, ValidonX had logged a handful of audit events a day — four here, a dozen there, the shape of a young service ticking over. Then on the 4th that number jumped to around **1,600**, and the next day to roughly **2,600**. At the same time, two signals that had never moved before both moved: the job-queue depth, normally pinned at zero, lifted off it, and the failed-jobs counter logged its first non-zero readings of the entire deployment.
+
+Because ValidonX's own application metrics land in the *same* Pharlux as its host metrics, all of that sat on one screen, lined up in time — the activity spike, the queue backing up, and the first failures, together. It turned out to be a burst of automated activity rather than anything broken: `up` stayed green throughout and only a couple of jobs actually failed. But we knew that within minutes of looking, not from a customer email — and we knew it by reading three columns off one query, not by flipping between a metrics tool and a separate log tool and correlating timestamps by eye.
+
+That is the thing Pharlux is built around: metrics and logs in one place, queried with the same SQL, so "how many audit events, how deep is the queue, how many jobs failed" is a single `SELECT` with a shared time filter — not a scavenger hunt across three systems.
 
 ## What we learned — including the rough edges
 
 Dogfooding is also how we find what is missing. Running Pharlux on our own stack is why we know, first-hand:
 
-- [IAN: a genuine limitation you hit and how you worked around it — e.g. wanting distributed traces (on the roadmap), a query pattern that needed tuning, a retention/disk-growth lesson. Naming a real rough edge builds more trust than a flawless story.]
-- It is also why the roadmap priorities are what they are: [IAN: tie a roadmap feature — traces, PromQL, auto-compaction — to something you actually wanted while running it in production.]
+- **We wanted a trace, and didn't have one.** When that queue backed up, what I actually wanted was to follow a *single* job all the way through — accepted, queued, retried, failed — as one thread. Pharlux does metrics and logs today, not distributed traces, so I correlated by service and timestamp instead. It worked. But a trace would have been one click, and I felt the gap.
+- **That is why the roadmap is ordered the way it is.** Traces sit at the top not because a competitor has them, but because we hit the wall ourselves. The same goes for PromQL-style rate helpers — a couple of times I wrote more SQL than I wanted to for a per-second rate. Running it in production is what turns a roadmap from a guess into a priority list.
 
 ## Why this matters to you
 
@@ -57,4 +54,4 @@ If you are evaluating an observability tool, "the vendor runs it in their own pr
 
 [Download the latest release](https://github.com/Veltara-Works/pharlux/releases/latest), see the [reproducible benchmarks](/benchmarks), or read [why we built Pharlux](/blog/why-we-built-pharlux/).
 
-Pharlux is one of several developer tools built by [Veltara Works](https://veltaraworks.com/) — alongside email hosting, cloud infrastructure, and software license management. See [veltaraworks.com](https://veltaraworks.com/) for the full portfolio.
+Pharlux is one of several developer tools built by [Veltara Works](https://veltaraworks.com/) — alongside email hosting, cloud infrastructure, and software licence management. See [veltaraworks.com](https://veltaraworks.com/) for the full portfolio.
