@@ -1,54 +1,158 @@
 /**
- * Pharlux palette overrides for Infima (Docusaurus's CSS framework).
+ * Pharlux "Clarity" design system — site-wide theme.
  *
- * Source palette mirrors _pre-docusaurus/index.html:
- *   --bg #0b0d10 / --fg #e6e8eb / --fg-dim #9aa0a6
- *   --accent #7cc4ff / --accent-dim #3a6b8f / --border #1d2227
+ * Light is the default (docusaurus.config.ts colorMode.defaultMode = 'light');
+ * the dark toggle stays on and maps to an on-brand Clarity-dark variant
+ * (teal-on-navy — the same token family the product dashboard uses).
  *
- * Light mode is intentionally NOT used by the legacy site — kept here so the
- * theme toggle still works for users who explicitly switch, but defaultMode
- * is 'dark' in docusaurus.config.ts and respectPrefersColorScheme is off.
+ * Two layers:
+ *   1. --clx-* : the raw Clarity tokens, flipped per colour mode. The homepage
+ *      section components (src/components/home/*) reference these directly, so
+ *      the light body adapts to a proper dark variant when toggled.
+ *   2. --ifm-* : Infima (Docusaurus chrome) mapped onto the Clarity tokens, so
+ *      the navbar, footer, docs, pricing, blog and compare pages all match.
+ *
+ * The hero and final-CTA sections are intentionally dark navy in BOTH modes —
+ * that is the Clarity look, not a theme accident — so they carry their own
+ * hard-coded palette inside home.module.css.
  */
 
 :root {
-  /* Light mode — derived from the dark accent so the brand colour holds */
-  --ifm-color-primary: #1f6da8;
-  --ifm-color-primary-dark: #1c6298;
-  --ifm-color-primary-darker: #1a5d8f;
-  --ifm-color-primary-darkest: #154d76;
-  --ifm-color-primary-light: #2378b8;
-  --ifm-color-primary-lighter: #257dc1;
-  --ifm-color-primary-lightest: #2d8bd1;
-  --ifm-code-font-size: 95%;
-  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --ifm-font-family-monospace: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* ---- Clarity tokens (light) ---- */
+  --clx-paper: #ffffff;
+  --clx-mist: #f5f8f9;
+  --clx-mist-2: #eef3f4;
+  --clx-ink: #0d1a26;
+  --clx-ink-2: #33475a;
+  --clx-muted: #5f7284;
+  --clx-faint: #8494a2;
+  --clx-line: #e5ebee;
+  --clx-line-strong: #d4dce1;
+  --clx-teal: #0ba79c;
+  --clx-teal-deep: #0a8d84;
+  --clx-teal-bright: #2dd4bf;
+  --clx-teal-soft: #e2f6f3;
+  --clx-good: #16a34a;
+  --clx-info: #2563eb;
+  --clx-warn: #d97706;
+  --clx-crit: #dc2626;
+  --clx-card-shadow: 0 12px 34px rgba(13, 26, 38, 0.06);
+  --clx-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --clx-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+
+  /* ---- Infima mapping (light) ---- */
+  --ifm-color-primary: #0ba79c;
+  --ifm-color-primary-dark: #0a968c;
+  --ifm-color-primary-darker: #0a8d84;
+  --ifm-color-primary-darkest: #08736c;
+  --ifm-color-primary-light: #0eb8ab;
+  --ifm-color-primary-lighter: #10c3b5;
+  --ifm-color-primary-lightest: #14d6c7;
+
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f5f8f9;
+  --ifm-color-content: #0d1a26;
+  --ifm-color-content-secondary: #5f7284;
+  --ifm-heading-color: #0d1a26;
+
+  --ifm-toc-border-color: #e5ebee;
+  --ifm-color-emphasis-200: #eef3f4;
+  --ifm-color-emphasis-300: #d4dce1;
+
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.88);
+  --ifm-navbar-link-color: #33475a;
+  --ifm-navbar-link-hover-color: #0a8d84;
+  --ifm-navbar-shadow: inset 0 -1px 0 #e5ebee;
+
+  --ifm-footer-background-color: #081320;
+  --ifm-footer-color: #a9bccb;
+  --ifm-footer-link-color: #c3ccd6;
+  --ifm-footer-link-hover-color: #2dd4bf;
+  --ifm-footer-title-color: #ffffff;
+
+  --ifm-code-font-size: 92%;
+  --ifm-code-background: #eef3f4;
+  --ifm-font-family-base: var(--clx-sans);
+  --ifm-font-family-monospace: var(--clx-mono);
+  --docusaurus-highlighted-code-line-bg: rgba(11, 167, 156, 0.1);
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #7cc4ff;
-  --ifm-color-primary-dark: #5cb1ff;
-  --ifm-color-primary-darker: #4ca8ff;
-  --ifm-color-primary-darkest: #1c8eff;
-  --ifm-color-primary-light: #9cd1ff;
-  --ifm-color-primary-lighter: #abd6ff;
-  --ifm-color-primary-lightest: #cce5ff;
+  /* ---- Clarity tokens (dark / navy) ---- */
+  --clx-paper: #0f1620;
+  --clx-mist: #151f2b;
+  --clx-mist-2: #1a2632;
+  --clx-ink: #e7edf4;
+  --clx-ink-2: #aeb9c6;
+  --clx-muted: #8493a3;
+  --clx-faint: #61708b;
+  --clx-line: #22303f;
+  --clx-line-strong: #2c3c4d;
+  --clx-teal: #2dd4bf;
+  --clx-teal-deep: #14b8a6;
+  --clx-teal-bright: #5eead4;
+  --clx-teal-soft: rgba(45, 212, 191, 0.12);
+  --clx-good: #45d18a;
+  --clx-info: #6f9bf0;
+  --clx-warn: #e0a53e;
+  --clx-crit: #f2627a;
+  --clx-card-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 
-  --ifm-background-color: #0b0d10;
-  --ifm-background-surface-color: #10141a;
-  --ifm-color-content: #e6e8eb;
-  --ifm-color-content-secondary: #9aa0a6;
-  --ifm-toc-border-color: #1d2227;
-  --ifm-color-emphasis-200: #1d2227;
-  --ifm-color-emphasis-300: #2a3138;
+  /* ---- Infima mapping (dark) ---- */
+  --ifm-color-primary: #2dd4bf;
+  --ifm-color-primary-dark: #21c9b3;
+  --ifm-color-primary-darker: #1fbfaa;
+  --ifm-color-primary-darkest: #199e8d;
+  --ifm-color-primary-light: #45dac8;
+  --ifm-color-primary-lighter: #52ddcd;
+  --ifm-color-primary-lightest: #74e4d7;
 
-  --ifm-navbar-background-color: #0b0d10;
-  --ifm-footer-background-color: #0b0d10;
+  --ifm-background-color: #0f1620;
+  --ifm-background-surface-color: #151f2b;
+  --ifm-color-content: #e7edf4;
+  --ifm-color-content-secondary: #aeb9c6;
+  --ifm-heading-color: #ffffff;
 
-  --docusaurus-highlighted-code-line-bg: rgba(124, 196, 255, 0.1);
+  --ifm-toc-border-color: #22303f;
+  --ifm-color-emphasis-200: #1a2632;
+  --ifm-color-emphasis-300: #2c3c4d;
+
+  --ifm-navbar-background-color: rgba(15, 22, 32, 0.85);
+  --ifm-navbar-link-color: #aeb9c6;
+  --ifm-navbar-link-hover-color: #2dd4bf;
+  --ifm-navbar-shadow: inset 0 -1px 0 #22303f;
+
+  --ifm-footer-background-color: #0a0f17;
+  --ifm-footer-color: #aeb9c6;
+  --ifm-footer-link-color: #c3ccd6;
+  --ifm-footer-link-hover-color: #2dd4bf;
+  --ifm-footer-title-color: #ffffff;
+
+  --ifm-code-background: #1a2632;
+  --docusaurus-highlighted-code-line-bg: rgba(45, 212, 191, 0.12);
 }
 
-/* Slightly tighter line-height for the dev-blog feel of the legacy site */
+/* Global polish */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.navbar {
+  backdrop-filter: saturate(140%) blur(10px);
+}
+.navbar__title,
+.navbar__brand {
+  font-weight: 720;
+  letter-spacing: -0.02em;
+}
 .markdown {
-  line-height: 1.6;
+  line-height: 1.65;
+}
+:focus-visible {
+  outline: 2px solid var(--clx-teal);
+  outline-offset: 3px;
+  border-radius: 4px;
 }

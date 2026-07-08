@@ -75,7 +75,9 @@ const config: Config = {
   themeConfig: {
     image: 'og-image.png',
     colorMode: {
-      defaultMode: 'dark',
+      // Clarity: light is the default; the toggle stays on and maps to the
+      // on-brand Clarity-dark variant (teal-on-navy) via src/css/custom.css.
+      defaultMode: 'light',
       disableSwitch: false,
       respectPrefersColorScheme: false,
     },
