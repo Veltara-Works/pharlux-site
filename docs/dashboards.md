@@ -186,49 +186,9 @@ Panels wait for the variables to load before they run, so a panel never executes
 
 Variables round-trip through export/import like the rest of the layout, so a host-filtered dashboard is portable across deployments (the option query re-runs against the target's own data).
 
-## Global time range and auto-refresh
-
-A dashboard has a single **time range** and an **auto-refresh** control in its header, shared by every panel (V1.1). The time range is applied to panel SQL through two reserved tokens:
-
-- `$__timeFrom` — the start of the selected window
-- `$__timeTo` — the end of the selected window (now, for the relative presets)
-
-Reference them in a panel's `WHERE` clause exactly where you'd write a timestamp bound. Because Pharlux stores telemetry in per-hour partitions, a time predicate also lets the engine prune partitions, so a tighter range is a faster query:
-
-```sql
-SELECT date_bin(INTERVAL '1 minute', timestamp) AS bucket, count(*) AS value
-FROM metrics
-WHERE timestamp > $__timeFrom AND timestamp <= $__timeTo
-GROUP BY bucket ORDER BY bucket
-```
-
-The picker offers four relative presets — **Last 15 minutes / 1 hour / 2 hours / 24 hours** — and a **Custom…** option with start/end pickers for an absolute window. A relative preset resolves `$__timeFrom` to `now() - INTERVAL '…'` and `$__timeTo` to `now()`; a custom window resolves both to `TIMESTAMP` literals.
-
-**Auto-refresh** re-runs every panel on a fixed interval — **Off / 10s / 30s / 1m / 5m**. `Off` is the default; the manual **Refresh** button works regardless.
-
-### Saved default vs. session override
-
-Both controls have a **saved default** that lives in the layout JSON, plus a **session override**: whatever a viewer picks in the header applies to their view only and does **not** change the saved dashboard. Set the default with two optional top-level keys, alongside `panels` and `variables`:
-
-```json
-{
-  "version": 1,
-  "timeRange": { "kind": "preset", "preset": "1h" },
-  "refresh": "30s",
-  "panels": [ ... ]
-}
-```
-
-- `timeRange`: either `{ "kind": "preset", "preset": "15m" | "1h" | "2h" | "24h" }` or `{ "kind": "custom", "from": "<ISO-8601>", "to": "<ISO-8601>" }`.
-- `refresh`: one of `"off"` (default), `"10s"`, `"30s"`, `"1m"`, or `"5m"`.
-
-Both keys are optional — omit them and the dashboard opens on **Last 1 hour** with auto-refresh **Off**. A panel that doesn't reference `$__timeFrom`/`$__timeTo` simply ignores the range (it isn't force-filtered), so mixing time-scoped and all-time panels on one dashboard is fine. The keys round-trip through export/import with the rest of the layout.
-
-> **Security.** Like variable substitution, the time bounds are injection-safe by construction. A preset resolves to a fixed `now() - INTERVAL '…'` expression built from a closed allowlist — no user text is involved. A custom bound is accepted only if it is a well-formed ISO-8601 timestamp; it is emitted as a canonical `TIMESTAMP '…'` literal, and anything that isn't a valid instant is refused rather than passed through. Resolution happens in the browser, so the server still only ever sees ordinary, fully-formed SQL on `/api/v1/query`.
-
 ## The web UI editor
 
-The editor is at `/dashboards/:id`. It has three editable fields (name, description, layout JSON) and a live preview pane. The time-range and auto-refresh controls appear above the preview — seeded from the layout's saved defaults — and, when the layout defines variables, so does the filter bar, so you can test a selection and a window while authoring.
+The editor is at `/dashboards/:id`. It has three editable fields (name, description, layout JSON) and a live preview pane. When the layout defines variables, the filter bar appears above the preview too, so you can test a selection while authoring.
 
 The layout JSON box is a CodeMirror editor with line numbers and bracket matching. As you type valid JSON, the preview pane re-runs each panel's SQL and renders the result. If the JSON is invalid, the preview keeps the last valid render and a yellow banner above the editor shows the parse error. Save is disabled while the JSON is invalid, so you can't write a broken dashboard.
 
@@ -293,7 +253,7 @@ Things the V1 dashboards system does not have yet, with the V1.x or V1.2 line th
 - **Drag-drop layout editing** — V1 renders the grid from `x/y/w/h` statically. Operators edit the JSON directly. The data model already matches react-grid-layout, so a V1.x drag-drop editor can read the same payload.
 - **Read-only access for non-admin users** — V1 is admin-only; V1.2 RBAC enrichment lifts this.
 - **Panel type extensibility** — V1 ships bar, pie, and table; V1.1 adds time-series (line/area) and stat (single-value KPI with sparkline). Heatmap and other types remain V1.x.
-- **Per-panel time ranges** — the time range is dashboard-global (V1.1 adds the shared range + auto-refresh); a panel that wants a different window sets its own bound in SQL. Independent per-panel range pickers are V1.x.
+- **Auto-refresh** — V1 panels run their SQL once when the dashboard loads (and re-run on layout-JSON changes in the editor preview). A configurable refresh interval is V1.1.
 - **Panel-level options** — colours, axis formatting, legends are V1's defaults. Panel-level overrides via additional layout-JSON fields are V1.x and forward-compatible (unknown fields are preserved on round-trip).
 - **Storage unification** — dashboards live in `dashboards.db`, alongside `auth.db` and `alerts.db`. The unified `meta.sqlite` from [`spec/file-layout.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/spec/file-layout.md) is V1.x cleanup.
 
