@@ -148,12 +148,22 @@ body {
   font-weight: 720;
   letter-spacing: -0.02em;
 }
-/* Desktop (>= Infima navbar breakpoint): pin the wordmark to the left, centre
-   the primary nav links, and keep the utility items (Contact, GitHub, theme
-   toggle) hard right. Mobile keeps the default hamburger layout. */
+/* Desktop (>= Infima navbar breakpoint): contain the navbar row to the same
+   1160px content column as the page body, so the wordmark lines up with the
+   hero's left edge (not the screen edge) and the utility items sit at the
+   content's right edge. The bar background still spans the full viewport.
+   Within that column the wordmark is pinned left, the primary nav links are
+   centred, and Contact / GitHub / theme-toggle stay right. Mobile keeps the
+   default hamburger layout. */
 @media (min-width: 997px) {
+  .navbar {
+    padding-inline: 0;
+  }
   .navbar__inner {
     position: relative;
+    max-width: 1160px;
+    margin-inline: auto;
+    padding-inline: 24px;
   }
   .navbar__items:not(.navbar__items--right) {
     flex: 1;
@@ -161,7 +171,7 @@ body {
   }
   .navbar__brand {
     position: absolute;
-    left: 0;
+    left: 24px;
     margin-right: 0;
   }
 }
