@@ -178,6 +178,25 @@ body {
 .markdown {
   line-height: 1.65;
 }
+/* Footer bottom row: copyright left, design credit right, within the column. */
+.footer__bottom {
+  text-align: start;
+}
+.footer-bottom-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 24px;
+}
+.footer-credit a {
+  color: var(--ifm-footer-link-color);
+  text-decoration: none;
+}
+.footer-credit a:hover {
+  color: var(--ifm-footer-link-hover-color);
+  text-decoration: underline;
+}
 :focus-visible {
   outline: 2px solid var(--clx-teal);
   outline-offset: 3px;

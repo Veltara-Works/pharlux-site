@@ -157,7 +157,10 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Pharlux © ${new Date().getFullYear()} Veltara Works · AGPL-3.0 + Commercial`,
+      // Rendered as HTML inside .footer__copyright — a flex row places the
+      // copyright left and the design credit right within the content column
+      // (see .footer-bottom-row in src/css/custom.css).
+      copyright: `<span class="footer-bottom-row"><span>Pharlux © ${new Date().getFullYear()} Veltara Works · AGPL-3.0 + Commercial</span><span class="footer-credit">Website design by <a href="https://cabbagepatchstudios.com/" target="_blank" rel="noopener noreferrer">Cabbage Patch Studios</a></span></span>`,
     },
     prism: {
       theme: prismThemes.vsDark,
