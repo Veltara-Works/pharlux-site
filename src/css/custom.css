@@ -148,6 +148,23 @@ body {
   font-weight: 720;
   letter-spacing: -0.02em;
 }
+/* Desktop (>= Infima navbar breakpoint): pin the wordmark to the left, centre
+   the primary nav links, and keep the utility items (Contact, GitHub, theme
+   toggle) hard right. Mobile keeps the default hamburger layout. */
+@media (min-width: 997px) {
+  .navbar__inner {
+    position: relative;
+  }
+  .navbar__items:not(.navbar__items--right) {
+    flex: 1;
+    justify-content: center;
+  }
+  .navbar__brand {
+    position: absolute;
+    left: 0;
+    margin-right: 0;
+  }
+}
 .markdown {
   line-height: 1.65;
 }
