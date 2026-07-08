@@ -66,7 +66,7 @@ The numbers on this $20 box:
 | Disk after 30 M points | 213 MB (157 MB Parquet + 56 MB write-ahead log) |
 | Idle memory | ~62 MB resident |
 
-For context: sustained ingest is single-core-bound (the WAL fsync path runs on one core), which is why this 2 vCPU box lands near 100k where our [4 vCPU / 8 GB benchmark](/benchmarks) reaches 250k. A team running 1–10 services generates a few *thousand* points per second, so even the small box has one to two orders of magnitude of headroom.
+For context: sustained ingest is single-core-bound (the WAL fsync path runs on one core), which is why this 2 vCPU box lands near 100k where our [4 vCPU / 8 GB benchmark](/benchmarks) reaches 350k. A team running 1–10 services generates a few *thousand* points per second, so even the small box has one to two orders of magnitude of headroom.
 
 ## The SigNoz side
 
