@@ -34,6 +34,19 @@ export default function Pricing(): ReactNode {
               Download
             </Link>
           </div>
+          <div className={styles.tier}>
+            <div className={styles.tname}>Team</div>
+            <div className={styles.tprice}>$49<span className={styles.per}> / mo</span></div>
+            <div className={styles.tdesc}>For a small fleet getting started.</div>
+            <ul>
+              <li><span className={styles.chk}>✓</span> 25 hosts · 30-day retention</li>
+              <li><span className={styles.chk}>✓</span> Tamper-evident audit log</li>
+              <li><span className={styles.chk}>✓</span> Commercial license, no AGPL</li>
+            </ul>
+            <Link className={`${styles.btn} ${styles.btnGhost} ${styles.tierBtn}`} to="/contact?intent=licensing&tier=team">
+              Get a license
+            </Link>
+          </div>
           <div className={`${styles.tier} ${styles.tierPop}`}>
             <span className={styles.tag}>Most popular</span>
             <div className={styles.tname}>Business</div>
@@ -49,23 +62,25 @@ export default function Pricing(): ReactNode {
             </Link>
           </div>
           <div className={styles.tier}>
-            <div className={styles.tname}>Custom / Air-gapped</div>
-            <div className={styles.tprice}>from $12k<span className={styles.per}> / mo</span></div>
-            <div className={styles.tdesc}>Unlimited, air-gapped, white-glove.</div>
+            <div className={styles.tname}>Scale</div>
+            <div className={styles.tprice}>$899<span className={styles.per}> / mo</span></div>
+            <div className={styles.tdesc}>Unlimited scale on a single VPS.</div>
             <ul>
               <li><span className={styles.chk}>✓</span> Unlimited hosts &amp; retention</li>
-              <li><span className={styles.chk}>✓</span> Air-gapped deployment + SLA</li>
-              <li><span className={styles.chk}>✓</span> Source escrow on request</li>
+              <li><span className={styles.chk}>✓</span> Redistribution &amp; air-gap rights</li>
+              <li><span className={styles.chk}>✓</span> Commercial license, no AGPL</li>
             </ul>
-            <Link className={`${styles.btn} ${styles.btnGhost} ${styles.tierBtn}`} to="/contact?intent=licensing&tier=custom">
-              Talk to us
+            <Link className={`${styles.btn} ${styles.btnGhost} ${styles.tierBtn}`} to="/contact?intent=licensing&tier=scale">
+              Get a license
             </Link>
           </div>
         </div>
         <p className={styles.priceNote}>
-          Also <b>Team $49/mo</b> (25 hosts) and <b>Scale $899/mo</b> (unlimited + redistribution
-          rights). Figures are fair-use ceilings, not a meter.{' '}
-          <Link to="/pricing">See the full comparison →</Link>
+          Figures are fair-use ceilings, not a per-host or per-GB meter. Also{' '}
+          <Link to="/enterprise">Custom / Air-gapped</Link> from <b>$12k/mo</b> — quote-based,
+          unlimited, air-gapped, white-glove SLA — and a{' '}
+          <Link to="/contact?intent=licensing">commercial license without self-hosting</Link>{' '}
+          from <b>$2,400/yr</b>. <Link to="/pricing">See the full comparison →</Link>
         </p>
       </div>
     </section>
