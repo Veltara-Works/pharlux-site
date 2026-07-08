@@ -180,7 +180,7 @@ Cross-tenant attempts and nonexistent IDs both return 404 (deliberate — same a
 
 ### Update
 
-V1 has no in-place update endpoint. To change a rule's webhook URL, query, or `for_cycles`, delete and recreate. State is reset on recreate (the new rule is born `OK`). In-place update lands in V1.1.
+V1 has no in-place update endpoint. To change a rule's webhook URL, query, or `for_cycles`, delete and recreate. State is reset on recreate (the new rule is born `OK`). In-place update is planned.
 
 ## Configuration
 
@@ -217,12 +217,12 @@ CREATE TABLE alert_rules (
 
 ## Known V1 limitations
 
-- **No in-place update.** Delete + recreate is the V1 update path. V1.1 adds `PATCH /api/v1/admin/alerts/{id}`.
+- **No in-place update.** Delete + recreate is the V1 update path. A `PATCH /api/v1/admin/alerts/{id}` endpoint is planned.
 - **No notification retries.** Dispatch is fire-and-forget — a failed POST is logged but not retried. Operators wanting at-least-once delivery should run a queue (e.g. a small webhook receiver that posts to their final destination with retries).
 - **No notification batching.** Two rules transitioning to `FIRING` in the same cycle produce two independent notifications, even if they share a `slack_webhook_url`.
-- **No email channel in V1.** Email via `lettre` is V1.1; the dependency is already pinned in [`VERSIONS.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/VERSIONS.md).
+- **No email channel in V1.** Email via `lettre` is planned; the dependency is already pinned in [`VERSIONS.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/VERSIONS.md).
 - **No multi-channel routing per state.** A rule's webhook and Slack URLs apply to every transition; you cannot send `FIRING` to PagerDuty and `RESOLVED` to Slack only.
-- **No alert silencing / muting.** Operators can delete a noisy rule; there is no time-bounded "snooze." V1.2 work.
+- **No alert silencing / muting.** Operators can delete a noisy rule; there is no time-bounded "snooze." Silencing is planned.
 - **No alert grouping / deduplication.** Each rule is independent.
 - **No PromQL.** Pharlux's query language is SQL — there is no PromQL surface in V1 or planned.
 

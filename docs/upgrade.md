@@ -68,7 +68,7 @@ sudo pharlux migrate --config /etc/pharlux/pharlux.toml
 
 If `mismatched` is non-zero, **do not start the new binary against the same data directory**. The mismatched files belong to a future schema version that this build does not know how to read. Restore from your pre-upgrade backup and stay on the previous version until you have a build that supports the data.
 
-For V1.0.x, every Parquet file is version `1`, and the check is a low-cost sanity test rather than a real migration. The command becomes load-bearing in V1.1+ when the schema actually evolves.
+For V1.0.x, every Parquet file is version `1`, and the check is a low-cost sanity test rather than a real migration. The command becomes load-bearing in a future release, when the schema actually evolves.
 
 ## Rollback
 

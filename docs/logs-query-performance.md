@@ -11,7 +11,7 @@ Pharlux V1 uses DataFusion SQL `LIKE` / `ILIKE` operators for log body search, s
 | < 1 GB/day | < 2 seconds | < 1 second | Excellent |
 | 1–5 GB/day | 2–15 seconds | 1–8 seconds | Good |
 | 5–10 GB/day | 15–30 seconds | 8–15 seconds | Acceptable |
-| 10–20 GB/day | 30–60 seconds | 15–30 seconds | Degraded — consider tantivy index (V1.1) |
+| 10–20 GB/day | 30–60 seconds | 15–30 seconds | Degraded — consider the planned tantivy index |
 | > 20 GB/day | > 60 seconds | > 30 seconds | Not recommended without full-text index |
 
 **The recommended threshold for LIKE-based search is 10 GB/day sustained log volume.** Above this, 7-day `LIKE` scans will exceed the 30-second response time target on a typical 2-vCPU VPS.
@@ -54,8 +54,8 @@ Pharlux stores logs in hourly partitions (`data/logs/{tenant_id}/YYYY/MM/DD/HH/`
 
 **Always include a time range in log queries** to minimize scan volume.
 
-### Future: tantivy full-text index (V1.1)
+### Future: tantivy full-text index (planned)
 
-V1.1 will add an optional tantivy inverted index per log partition, enabling sub-second full-text search at any volume. The storage layer is designed so this can be added without schema changes — the index is a sidecar file alongside each Parquet partition.
+A planned tantivy inverted index per log partition will enable sub-second full-text search at any volume. The storage layer is designed so this can be added without schema changes — the index is a sidecar file alongside each Parquet partition.
 
-tantivy is not yet a Pharlux dependency; the V1.1 work will add it through the standard `VERSIONS.md` review process. See [DESIGN.md](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/DESIGN.md) §"Full-text log search" for the design-in note.
+tantivy is not yet a Pharlux dependency; the planned work will add it through the standard `VERSIONS.md` review process. See [DESIGN.md](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/DESIGN.md) §"Full-text log search" for the design-in note.

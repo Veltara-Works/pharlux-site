@@ -185,7 +185,7 @@ Default timeout is `[query].query_timeout_seconds` = 30s. Common causes and fixe
 - **No time filter.** Partition pruning only fires on `WHERE timestamp > ...` filters. Always include one. A full-table scan defeats the per-hour Parquet partition layout.
 - **Too many small Parquet files.** Run `sudo pharlux compact --config /etc/pharlux/pharlux.toml`. Compaction is crash-safe (uses a marker protocol).
 - **DataFusion `MemoryPool` exhaustion.** V1 caps DataFusion at 256 MB (ADR-0011). Queries needing more memory are rejected with an OOM error mid-flight, not a timeout. Rewrite to aggregate earlier or filter more aggressively.
-- **`LIKE` on logs above ~10 GB/day.** A documented V1 tradeoff — see [`logs-query-performance.md`](logs-query-performance.md). Tantivy full-text search is V1.1.
+- **`LIKE` on logs above ~10 GB/day.** A documented V1 tradeoff — see [`logs-query-performance.md`](logs-query-performance.md). Tantivy full-text search is planned.
 - **Genuinely large query.** Raise `[query].query_timeout_seconds`.
 
 Get the plan to confirm partition pruning is firing:
@@ -208,7 +208,7 @@ The full diagnosis is [RUNBOOK.md §10](https://github.com/Veltara-Works/pharlux
 
 ### "Permission denied" on a table or column
 
-Pharlux V1 has no per-table or per-column permissions — V1.2 work. The 403 you are seeing is the default-deny SQL-statement check (see [Read-only user gets 403 on a query](#read-only-user-gets-403-on-a-query)), not a row- or column-level permission.
+Pharlux V1 has no per-table or per-column permissions — planned. The 403 you are seeing is the default-deny SQL-statement check (see [Read-only user gets 403 on a query](#read-only-user-gets-403-on-a-query)), not a row- or column-level permission.
 
 ---
 
@@ -251,7 +251,7 @@ curl -s -X DELETE http://localhost:3100/api/v1/admin/alerts/$RULE_ID \
 # Then POST a fresh rule with the new webhook_url.
 ```
 
-State is reset on recreate (the new rule is born `OK`). In-place update lands in V1.1.
+State is reset on recreate (the new rule is born `OK`). In-place update is planned.
 
 ---
 
@@ -267,7 +267,7 @@ Either the dashboard id genuinely doesn't exist, or it exists in a different ten
 
 ### `403 Forbidden` for a read-only user
 
-V1 dashboards are admin-only across all seven endpoints, including `GET`. Read-only users get 403 on every dashboards endpoint. V1.2 RBAC enrichment lifts this. See [`dashboards.md` § Authentication and authorization](dashboards.md#authentication-and-authorization).
+V1 dashboards are admin-only across all seven endpoints, including `GET`. Read-only users get 403 on every dashboards endpoint. Planned RBAC enrichment lifts this. See [`dashboards.md` § Authentication and authorization](dashboards.md#authentication-and-authorization).
 
 ### Save button is disabled in the editor
 

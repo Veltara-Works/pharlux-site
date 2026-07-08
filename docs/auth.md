@@ -11,7 +11,7 @@ This page is the operator's guide to setting it up, creating users, rotating sec
 | **`admin`** | Full SQL surface against `/api/v1/query` (read and any DataFusion-supported write); manage users via `/api/v1/admin/users`; manage tenants via `/api/v1/admin/tenants`; receive a token where the JWT claim `pharlux.admin` is `true`. | — |
 | **`reader`** (non-admin) | `SELECT`, `EXPLAIN`, `SHOW`, `DESCRIBE`, and `WITH ... SELECT` queries against `/api/v1/query`, scoped to their own tenant. View `/api/v1/health` and `/api/v1/auth/login`. | Any other SQL statement type — `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `CREATE`, `DROP`, `ALTER`, `ATTACH`, `DETACH`, `TRUNCATE`, `COPY`, `REPLACE`, `GRANT`, `REVOKE`, `PRAGMA`, `SET`, plus any unrecognised verb — is rejected with HTTP 403 at the API layer. Cannot reach any `/api/v1/admin/*` endpoint. Cannot see or affect data in other tenants. |
 
-The role is encoded in the JWT itself (the `pharlux.admin` boolean claim) and cannot be changed without re-issuing the token. Resource-level RBAC is deferred to V1.2 — see [Known V1 limitations](#known-v1-limitations) below.
+The role is encoded in the JWT itself (the `pharlux.admin` boolean claim) and cannot be changed without re-issuing the token. Resource-level RBAC is planned — see [Known V1 limitations](#known-v1-limitations) below.
 
 ## Quick start
 
@@ -263,13 +263,13 @@ The data directory is owned by the systemd-managed dynamic UID at mode `0750` pe
 
 The two-role model, user CRUD, and CLI surface described above are the entirety of V1's authentication and authorization. The following are explicit limitations operators should be aware of:
 
-- **No resource-level RBAC.** The `users` table schema includes role and permission tables to support full RBAC without a future migration, but V1 only enforces the admin/reader distinction. Per-dashboard, per-tenant-data, or per-source permissions are V1.2 work. See ADR-0010.
+- **No resource-level RBAC.** The `users` table schema includes role and permission tables to support full RBAC without a future migration, but V1 only enforces the admin/reader distinction. Per-dashboard, per-tenant-data, or per-source permissions are planned. See ADR-0010.
 - **No external identity providers.** OIDC, SAML, and LDAP integration are not in V1. Pharlux's built-in user table is the only identity source.
 - **No token revocation before expiry.** A compromised token is valid until its `exp` passes. Mitigation is short `token_ttl_seconds` (default 1 hour) plus full secret rotation if needed.
 - **No automatic secret rotation.** Rotation is the manual procedure documented above.
 - **No password policy enforcement.** Pharlux does not enforce minimum length, character class, or complexity rules on passwords supplied to `pharlux user add` or `POST /api/v1/admin/users`. Operators are expected to enforce policy at the user-onboarding level.
 - **No login rate limiting at the Pharlux layer.** The reverse proxy (Caddy `rate_limit`, nginx `limit_req`) is the recommended location. See [`reverse-proxy.md`](reverse-proxy.md).
-- **No audit log of admin actions.** Tenant creation, user creation, and user deletion are logged via `tracing` to the service's stderr but are not written to a separate, durable audit trail. Audit logging is V1.2 work.
+- **No audit log of admin actions.** Tenant creation, user creation, and user deletion are logged via `tracing` to the service's stderr but are not written to a separate, durable audit trail. Audit logging is planned.
 - **`--password` is visible in shell history and `ps`.** Mitigated by the `read -rs` pattern shown in the [Quick start](#quick-start) section.
 
 ## See also

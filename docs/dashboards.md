@@ -91,7 +91,7 @@ Panel fields:
 | `unit`  | string | `stat` only (optional): suffix shown after the big number (e.g. `"pts"`, `"ms"`). |
 | `thresholds` | array | `stat` only (optional): ascending `{ "value": n, "color": "green"\|"amber"\|"red" }` entries; the highest one whose `value` is ≤ the current value colours the number. |
 
-`x/y/w/h` match react-grid-layout's default `cols: 12` convention. The V1 UI renders the grid statically (CSS Grid, sorted by `(y, x)`); a future drag-drop editor (V1.x) can read the same payload.
+`x/y/w/h` match react-grid-layout's default `cols: 12` convention. The V1 UI renders the grid statically (CSS Grid, sorted by `(y, x)`); a future drag-drop editor can read the same payload.
 
 Chart conventions:
 
@@ -236,7 +236,7 @@ V1 RBAC: **admin-only across all seven endpoints**. Read-only users get 403 on e
 
 [ADR-0010](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0010-auth-jwt-argon2id.md) calls out that V1 ships a coarse role model and the SQLite schema supports finer-grained RBAC for V1.2. The dashboards table captures `created_by` on every record so the V1.2 split between owner and non-owner reads needs no migration.
 
-The web UI does not currently surface dashboards to read-only users. If you need a read-only viewer, log in as admin or wait for the V1.2 RBAC enrichment.
+The web UI does not currently surface dashboards to read-only users. If you need a read-only viewer, log in as admin or wait for the planned RBAC enrichment.
 
 ## Multi-tenancy
 
@@ -248,14 +248,14 @@ The community deployment uses the constant `"default"` tenant — single-tenant 
 
 ## V1 limitations
 
-Things the V1 dashboards system does not have yet, with the V1.x or V1.2 line they belong on:
+Things the V1 dashboards system does not have yet, with where they sit on the roadmap:
 
-- **Drag-drop layout editing** — V1 renders the grid from `x/y/w/h` statically. Operators edit the JSON directly. The data model already matches react-grid-layout, so a V1.x drag-drop editor can read the same payload.
-- **Read-only access for non-admin users** — V1 is admin-only; V1.2 RBAC enrichment lifts this.
-- **Panel type extensibility** — V1 ships bar, pie, and table; V1.1 adds time-series (line/area) and stat (single-value KPI with sparkline). Heatmap and other types remain V1.x.
-- **Auto-refresh** — V1 panels run their SQL once when the dashboard loads (and re-run on layout-JSON changes in the editor preview). A configurable refresh interval is V1.1.
-- **Panel-level options** — colours, axis formatting, legends are V1's defaults. Panel-level overrides via additional layout-JSON fields are V1.x and forward-compatible (unknown fields are preserved on round-trip).
-- **Storage unification** — dashboards live in `dashboards.db`, alongside `auth.db` and `alerts.db`. The unified `meta.sqlite` from [`spec/file-layout.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/spec/file-layout.md) is V1.x cleanup.
+- **Drag-drop layout editing** — V1 renders the grid from `x/y/w/h` statically. Operators edit the JSON directly. The data model already matches react-grid-layout, so a future drag-drop editor can read the same payload.
+- **Read-only access for non-admin users** — V1 is admin-only; planned RBAC enrichment lifts this.
+- **Panel type extensibility** — V1 ships bar, pie, and table; time-series (line/area) and stat (single-value KPI with sparkline) are planned. Heatmap and other types remain on the roadmap.
+- **Auto-refresh** — V1 panels run their SQL once when the dashboard loads (and re-run on layout-JSON changes in the editor preview). A configurable refresh interval is planned.
+- **Panel-level options** — colours, axis formatting, legends are V1's defaults. Panel-level overrides via additional layout-JSON fields are planned and forward-compatible (unknown fields are preserved on round-trip).
+- **Storage unification** — dashboards live in `dashboards.db`, alongside `auth.db` and `alerts.db`. The unified `meta.sqlite` from [`spec/file-layout.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/spec/file-layout.md) is planned cleanup work.
 
 ## Storage and lifecycle
 

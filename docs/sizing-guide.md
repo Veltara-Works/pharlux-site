@@ -6,7 +6,7 @@ This guide covers memory accounting, disk accounting, the 10 GB/day full-text-se
 
 ## Quick reference
 
-| VPS size | Suitable for | Metric points/sec | Log volume/day | Trace volume (V1.1) | Default retention |
+| VPS size | Suitable for | Metric points/sec | Log volume/day | Trace volume (planned) | Default retention |
 | --- | --- | --- | --- | --- | --- |
 | **2 vCPU / 4 GB / 80 GB SSD** | 1–3 services, dev / staging | Up to 10,000 | Up to 2 GB | Up to 5,000 spans/sec | 7 days |
 | **4 vCPU / 8 GB / 200 GB SSD** | 5–10 services, small production | Up to 50,000 | Up to 10 GB | Up to 20,000 spans/sec | 30 days |
@@ -122,7 +122,7 @@ Above 10 GB/day, the options are:
 
 - **Move to the 4 vCPU / 8 GB or 8 vCPU / 16 GB tier** — more vCPU directly scales LIKE throughput.
 - **Always include a tight time range** in log queries (`WHERE timestamp > now() - INTERVAL '1 hour'`), which lets partition pruning skip most of the data on disk.
-- **Wait for V1.1**, which adds an optional Tantivy inverted index per partition for sub-second full-text search at any volume. The schema is forward-compatible — no migration needed when V1.1 ships.
+- **Wait for the planned Tantivy index**, an optional inverted index per partition for sub-second full-text search at any volume. The schema is forward-compatible — no migration needed when it ships.
 
 Full performance characteristics and tuning guidance for log queries are in [`logs-query-performance.md`](logs-query-performance.md).
 
@@ -181,7 +181,7 @@ Signs that you've outgrown the current VPS:
 | --- | --- |
 | `pharlux_active_queries` regularly maxes out at `[query].max_concurrent_queries` (default 16) | Scale vCPU; consider raising the cap. |
 | Parquet directory growth + `retention_days` no longer bounds the disk to a comfortable size | Scale disk, or shorten `retention_days`. |
-| 7-day log searches exceed 30 seconds | Move to a higher tier *or* tighten time ranges in your queries. Above 10 GB/day, V1.1's Tantivy index is the structural fix. |
+| 7-day log searches exceed 30 seconds | Move to a higher tier *or* tighten time ranges in your queries. Above 10 GB/day, the planned Tantivy index is the structural fix. |
 | Process RSS sits above 800 MB under steady-state load | Scale RAM; review whether `[query].memory_pool_mb` was raised too aggressively. |
 | Sustained ingest 429s | Scale vCPU + disk together — the backpressure indicates the storage layer is the bottleneck. |
 
@@ -196,7 +196,7 @@ If your workload genuinely exceeds the documented envelope, you're outside the V
 ## Known V1 limitations
 
 - **No bytes-based retention.** Retention is time-based only (`retention_days`). To bound disk by size, choose `retention_days` based on your expected daily volume.
-- **No automatic compaction in V1.** Compaction runs are manual via `pharlux compact`. Auto-compaction lands in V1.1.
+- **No automatic compaction in V1.** Compaction runs are manual via `pharlux compact`. Auto-compaction is planned.
 - **No tiering to cold storage in the AGPL build.** S3 cold-tier offload is a Pharlux Enterprise feature.
 - **No multi-VPS replication.** Backup-restore (see [`backup-restore.md`](backup-restore.md)) is the recovery path; cross-host hot replication is not on the V1 roadmap.
 
@@ -204,6 +204,6 @@ If your workload genuinely exceeds the documented envelope, you're outside the V
 
 - [`getting-started.md`](getting-started.md) — first-install walkthrough including a condensed sizing table.
 - [`otlp-configuration.md`](otlp-configuration.md) — full `pharlux.toml` reference for every key cited above.
-- [`logs-query-performance.md`](logs-query-performance.md) — deep dive on the 10 GB/day LIKE threshold and the V1.1 Tantivy plan.
+- [`logs-query-performance.md`](logs-query-performance.md) — deep dive on the 10 GB/day LIKE threshold and the planned Tantivy work.
 - [`backup-restore.md`](backup-restore.md) — backup, restore, and disk recovery procedures.
 - [`../../adr/0011-memory-budget-200-430mb.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/0011-memory-budget-200-430mb.md) — original decision record for the memory accounting.
