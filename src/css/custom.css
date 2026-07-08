@@ -178,6 +178,13 @@ body {
 .markdown {
   line-height: 1.65;
 }
+/* Match the footer's content column to the 1160px column used by the navbar
+   and page body (Infima's .container otherwise widens to 1320px on large
+   screens, so the footer looked wider than the header). */
+.footer .container {
+  max-width: 1160px;
+  padding-inline: 24px;
+}
 /* Footer bottom row: copyright left, design credit right, within the column. */
 .footer__bottom {
   text-align: start;
