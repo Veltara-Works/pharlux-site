@@ -5,13 +5,9 @@ authors: [Ian]
 tags: [engineering, observability, self-hosting, case-study]
 date: 2026-06-02
 description: Pharlux is the observability layer for our own production services — ValidonX and Vectis Mail. Running it ourselves is the reason we trust the numbers we publish. Here is what it caught and what we learned.
-draft: true
+draft: false
 ---
 
-{/* DRAFT for Ian's review. Placeholders marked [VALIDONX: ...] need REAL
-    production numbers from the ValidonX / Vectis Mail Pharlux deployment —
-    do not publish with invented figures. Set draft: false once the real
-    numbers and the incident story are in. */}
 
 # What dogfooding Pharlux on our own stack taught us
 

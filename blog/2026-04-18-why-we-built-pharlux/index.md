@@ -5,12 +5,9 @@ authors: [Ian]
 tags: [engineering, observability, self-hosting]
 date: 2026-04-18
 description: We were tired of operating five components to observe three services, and priced out of the SaaS alternative. So we built a single binary that does metrics and logs on one VPS. Here is the reasoning.
-draft: true
+draft: false
 ---
 
-{/* DRAFT for Ian's review and voice. Placeholders marked [IAN: ...] need your
-    first-hand detail — the post reads as a founder narrative and should be in
-    your voice, not a corporate one. Set draft: false when you're happy with it. */}
 
 # Why we built Pharlux
 
