@@ -94,7 +94,7 @@ Pharlux is built to scale **up**, on purpose. It is a statically-linked Rust bin
 
 Pharlux is OpenTelemetry-native, so you migrate gradually instead of ripping anything out:
 
-1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](/docs/getting-started)).
 2. Add a second exporter to your OpenTelemetry Collector pointing at Pharlux on `:4318`, alongside your existing Loki exporter.
 3. Run both in parallel. Rebuild the dashboards and alerts you actually use as Pharlux SQL queries and SQL alert rules.
 4. Once you trust the Pharlux view, retire Loki, Mimir, Grafana, and Alertmanager — and the object storage underneath them.

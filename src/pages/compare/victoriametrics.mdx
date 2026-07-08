@@ -85,7 +85,7 @@ Pharlux is solving a different problem. Most small teams don't have a metrics-ca
 
 ## Migrating from VictoriaMetrics to Pharlux
 
-1. Stand up Pharlux with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
+1. Stand up Pharlux with `sudo pharlux install` (see the [getting-started guide](/docs/getting-started)).
 2. Point your OpenTelemetry Collector at Pharlux on `:4318`; keep VictoriaMetrics ingesting in parallel.
 3. Rebuild the metric dashboards and alerts you rely on as Pharlux SQL, and bring your logs into the same system instead of a separate VictoriaLogs.
 4. Keep what fits. Some teams keep VictoriaMetrics for a heavy metrics workload and let Pharlux own logs plus unified querying.

@@ -88,7 +88,7 @@ Pharlux refused that dependency. Storage is a custom write-ahead log plus per-si
 
 Because both speak OpenTelemetry, you migrate without a rip-and-replace:
 
-1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](https://github.com/Veltara-Works/pharlux/blob/main/docs/user/getting-started.md)).
+1. Stand up Pharlux on a VPS with `sudo pharlux install` (see the [getting-started guide](/docs/getting-started)).
 2. Add a second exporter to your OpenTelemetry Collector pointing at Pharlux on `:4318`, alongside the one feeding SigNoz.
 3. Run both in parallel and rebuild the dashboards and alerts you actually use as Pharlux SQL.
 4. Retire SigNoz and its ClickHouse once you trust the Pharlux view.
