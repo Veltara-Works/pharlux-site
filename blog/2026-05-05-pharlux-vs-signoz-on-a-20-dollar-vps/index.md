@@ -22,7 +22,7 @@ draft: true
 
 *Last updated: 2026-07-01 · Pharlux v1.2.0 · SigNoz v0.131.0 · By Ian Holt*
 
-We put Pharlux and [SigNoz](https://signoz.io/) on two identical $20/month VPSes in the same region and measured the things a small team actually feels: how long until it installs, how long until the first metric lands, how much it ingests, and how much of the box it eats.
+We put Pharlux and SigNoz on two identical $20/month VPSes in the same region and measured the things a small team actually feels: how long until it installs, how long until the first metric lands, how much it ingests, and how much of the box it eats.
 
 The honest headline first, because it is not the one you might expect from a vendor's own comparison: **on ingest throughput, the two are close.** Both sustained around 100,000 metric points per second with zero errors on a 2 vCPU / 4 GB box. This is not a "we're an order of magnitude faster" post, and we are not going to pretend it is.
 
@@ -48,7 +48,8 @@ Both fresh Ubuntu 24.04.4. The load generator is Pharlux's own `pharlux-loadtest
 Three commands, then it is ingesting:
 
 ```bash
-curl -L <release-url>/pharlux -o /usr/local/bin/pharlux && chmod +x /usr/local/bin/pharlux
+curl -L https://github.com/Veltara-Works/pharlux/releases/download/v1.2.0/pharlux-v1.2.0-x86_64-unknown-linux-musl \
+  -o /usr/local/bin/pharlux && chmod +x /usr/local/bin/pharlux
 sudo pharlux install          # writes systemd unit, generates JWT secret, prepares data dir
 sudo systemctl enable --now pharlux
 ```
@@ -71,10 +72,10 @@ For context: sustained ingest is single-core-bound (the WAL fsync path runs on o
 
 This is where it gets interesting, and where we found something worth writing down.
 
-**First: the install path changed.** The old `docker-compose` files and `install.sh` that most SigNoz blog posts reference are, as of v0.130.0, deprecated in the repository. The current canonical install is [Foundry](https://signoz.io/docs/install/docker/):
+**First: the install path changed.** The old `docker-compose` files and `install.sh` that most SigNoz blog posts reference are, as of v0.130.0, deprecated in the repository. The current canonical install is their own installer, Foundry:
 
 ```bash
-curl -fsSL https://signoz.io/foundry.sh | bash
+curl -fsSL https://signoz.io/foundry.sh | bash   # SigNoz's current installer
 # write casting.yaml (flavor: compose, mode: docker)
 foundryctl cast -f casting.yaml
 ```
@@ -110,7 +111,7 @@ About fifteen seconds after that call, the collector log flipped to `Starting HT
 | 50k | 49,661 points/sec | 0 |
 | 100k | 95,859 points/sec | 0 |
 
-We confirmed the data actually persisted, not just got accepted: the `signoz_metrics` samples table in ClickHouse went from 0 to 5,009,000 rows. Memory under load was ~1.1 GB across the containers. This is a capable ingest path.
+We confirmed the data actually persisted, not just got accepted: the `signoz_metrics` samples table in ClickHouse went from 0 to 5,009,000 rows. Memory under load was ~1.1 GB across the containers. So once it is running, it ingests — the obstacle is getting to that point, not the throughput after it.
 
 ## What actually separates them
 
@@ -126,17 +127,11 @@ Not throughput. Both sustain ~100k points/sec at zero errors on a $20 box — co
 
 The gap that matters is the last row. On Pharlux, "the service is running" and "it is accepting telemetry" are the same moment. On SigNoz, they are not — and the space between them is a place a small-team operator can lose an afternoon, because everything reports healthy while nothing ingests.
 
-## What SigNoz does well — honestly
+## Where Pharlux fits
 
-This is a comparison, not a hit piece, and SigNoz is a serious project:
+In fairness to scope, SigNoz covers ground Pharlux does not — distributed traces and APM, a broader dashboard library, and a hosted option. If full APM with traces is what you need today, that is a different tool for a different job, and Pharlux is not trying to be it.
 
-- **Comparable ingest throughput** on the same cheap hardware, once it is running.
-- **A richer product than Pharlux V1** — distributed traces and APM, a larger dashboard and integrations library, and a hosted cloud option if you would rather not self-host at all.
-- **A real community** and a long track record.
-
-If you want full APM with traces today, or you want someone else to run it, SigNoz is a reasonable choice and you should look at it. Pharlux V1 does metrics and logs; traces are on the roadmap.
-
-Where Pharlux wins is narrower and specific: **if you are a small team that wants metrics and logs on one cheap box, running in seconds, with one binary to operate and nothing to onboard, that is the whole design.** For that team, the ten-second install and the single 62 MB process are not a rounding error — they are the product.
+Pharlux is built for the opposite of what this test measured on the other box: **metrics and logs on one cheap VPS, ingesting in seconds, one binary to operate, nothing to onboard.** For a small team on a $20 box, that is the whole design — the ten-second install and the single 62 MB process are not a rounding error, they are the product.
 
 ## Reproduce it yourself
 
@@ -163,9 +158,9 @@ We used SigNoz's *current* canonical install (Foundry), not a deprecated one, on
 
 Because there is one process and no database engine sitting resident. Storage is a write-ahead log plus Parquet files on local disk with embedded SQLite for metadata — nothing to keep a ClickHouse and a Postgres warm for. Under sustained maximum load Pharlux does use a large ingest buffer; the ~62 MB figure is the always-on idle cost, which is the number that runs 24/7 on your bill.
 
-### Will you compare traces when Pharlux V1.1 ships?
+### Does Pharlux have traces, and will you compare them?
 
-Yes. Traces are on the Pharlux roadmap, and a traces-inclusive comparison on hardware SigNoz officially recommends is the fair next test. The result will look different from this one, and that is fine — what each system needs to run well is part of the comparison.
+Not yet — Pharlux v1.2.0 does metrics and logs; distributed traces are on the roadmap, not shipped. When they land, a traces-inclusive comparison on hardware SigNoz officially recommends is the fair next test. The result will look different from this one, and that is fine — what each system needs to run well is part of the comparison.
 
 ## Get Pharlux
 
