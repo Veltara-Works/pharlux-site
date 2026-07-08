@@ -51,6 +51,6 @@ Pharlux does metrics and logs today. Distributed traces and PromQL are on the ro
 
 If you're running a small number of services, you want to keep an eye on them without standing up a whole stack to do it, and you want your data on hardware you control — that's who Pharlux is for. It's the tool we went looking for, couldn't find, and ended up building ourselves. And we run it ourselves, on our own production stack.
 
-[Download the latest release](https://github.com/Veltara-Works/pharlux/releases/latest), or read how to [run it on a $20-a-month VPS](/blog/running-pharlux-on-a-20-dollar-vps).
+[Download the latest release](https://github.com/Veltara-Works/pharlux/releases/latest), or read how to [run it on a $20-a-month VPS](/blog/pharlux-on-a-20-dollar-vps).
 
 Pharlux is one of several developer tools built by Veltara Works — alongside email hosting, cloud infrastructure, and software licence management. Have a look at [veltaraworks.com](https://veltaraworks.com) for the rest.
