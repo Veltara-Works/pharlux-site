@@ -1,6 +1,6 @@
 # Pharlux — Developer Architecture Overview
 
-This page summarises the architecture for developers working on the codebase. For the authoritative design document, see [`DESIGN.md`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/DESIGN.md). Architecture decisions are in [`adr/`](https://github.com/Veltara-Works/pharlux/blob/v1.1.3/adr/).
+This page summarises the architecture for developers working on the codebase. For the authoritative design document, see [`DESIGN.md`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/DESIGN.md). Architecture decisions are in [`adr/`](https://github.com/Veltara-Works/pharlux/blob/v1.2.0/adr/).
 
 ## Data flow
 
