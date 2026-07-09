@@ -9,9 +9,18 @@ This page mirrors [`CHANGELOG.md`](https://github.com/Veltara-Works/pharlux/blob
 
 ## Unreleased
 
+## 1.3.0 — 2026-07-09
+
+The bundled web UI is redesigned as the **Clarity console** — a fixed set of operational screens (Overview, Explore, Metrics, Logs, Alerts, Settings) with a first-class light/dark theme, alongside the existing user-built dashboards (now under **Manage**). This release also lands configurable ingest windows (ADR-0017) and the OTLP `0.32` proto bump. All 13 workspace crates at 1.3.0; the on-disk WAL and Parquet formats are unchanged.
+
 ### Added
 
+- **Clarity console redesign** (bundled `pharlux-ui`). The web UI is rebuilt as a fixed-screen console served from the same embedded binary: **Overview** (at-a-glance KPIs, ingest throughput, log severity, recent logs, firing alerts), **Explore** (SQL over metrics & logs with a schema rail and Table/Chart/JSON results), **Metrics** (a live small-multiples explorer of the metric names actually flowing in), **Logs** (severity histogram, event stream, and a detail drawer whose trace context is built from log records sharing a `trace_id`), **Alerts** (rule status + create/delete), and a read-only **Settings** screen with a live theme control. One design system, two themes (dark default + light + system, remembered per device). The existing user-built dashboards are kept and restyled under **Manage**. Every screen reads live data through the documented query and admin APIs — no new server endpoints. See [Dashboards & the console](/docs/dashboards).
 - **Dashboard global time range + auto-refresh** (bundled web UI, dashboard redesign Slices 5–6). Dashboards gain a header time-range picker (Last 15m / 1h / 2h / 24h, or a custom absolute window) and an auto-refresh interval (off / 10s / 30s / 1m / 5m). Panels reference the selected window through two reserved SQL tokens, `$__timeFrom` / `$__timeTo`, which resolve to safe SQL bounds (`now() - INTERVAL '…'` for presets, validated `TIMESTAMP '…'` literals for a custom window) — injection-safe by construction and substituted client-side, so the server still sees ordinary SQL. Both controls have a saved default in the layout JSON (optional top-level `timeRange` / `refresh` keys) that a viewer can override for their session without changing the saved dashboard; the keys round-trip through export/import. A panel that omits the tokens is not time-filtered. The change is entirely in the embedded `pharlux-ui`. Also adds responsive panel-grid stacking (tablet/mobile) and a `prefers-reduced-motion` pass.
+
+### Fixed
+
+- **Configured ingest windows are now honoured (ADR-0017).** The documented `[ingest].late_arrival_window_seconds` / `reject_future_seconds` settings were previously inert — timestamp validation hard-coded a ±1h bound. They are now threaded through the OTLP translate path (HTTP and gRPC) with an asymmetric accept window `(-reject_future .. +late_arrival)`. The default remains 1h/1h, so default runtime behaviour is unchanged. (#59)
 
 ### Security
 
