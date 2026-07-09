@@ -41,7 +41,7 @@ const SCHEMA_GRAPH = {
         {'@type': 'Offer', name: 'Business', price: '199', priceCurrency: 'USD', category: '250 hosts, 90-day retention, tamper-evident audit log; SSO — SAML/OIDC/LDAP (roadmap) — commercial license'},
         {'@type': 'Offer', name: 'Scale', price: '899', priceCurrency: 'USD', category: 'Unlimited hosts and retention, air-gapped / binary-redistribution rights, sized for a single high-capacity VPS — commercial license'},
         {'@type': 'Offer', name: 'Custom / Air-gapped', priceCurrency: 'USD', priceSpecification: {'@type': 'PriceSpecification', minPrice: '12000', priceCurrency: 'USD'}, category: 'Unlimited hosts and retention, air-gapped deployment, white-glove SLA, source escrow — quote-based, from $12,000/mo'},
-        {'@type': 'Offer', name: 'Commercial-License-Only', price: '2400', priceCurrency: 'USD', category: 'AGPL-to-commercial relicense without hosting — billed yearly'},
+        {'@type': 'Offer', name: 'Commercial-License-Only', price: '2990', priceCurrency: 'USD', category: 'AGPL-to-commercial relicense without hosting — billed yearly'},
       ],
       publisher: {'@id': 'https://pharlux.com/#veltara-works'},
       license: 'https://www.gnu.org/licenses/agpl-3.0.html',

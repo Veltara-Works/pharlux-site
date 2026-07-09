@@ -57,7 +57,7 @@
 
 ## Commercial-License-Only
 
-- Price: $2,400/year (billed yearly)
+- Price: $2,990/year (billed yearly)
 - License: commercial relicense of the AGPL-3.0 software, without hosting limits or Enterprise features
 - Use case: teams that cannot accept AGPL-3.0 terms but self-host and operate the software themselves
 - CTA: https://pharlux.com/contact?intent=licensing

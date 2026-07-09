@@ -76,8 +76,8 @@ const TIERS: readonly Tier[] = [
   },
   {
     name: 'Commercial-License-Only',
-    price: '$2,400/yr',
-    priceUSD: '2400',
+    price: '$2,990/yr',
+    priceUSD: '2990',
     billing: 'yearly',
     license: 'Commercial',
     summary: 'AGPL→commercial relicense, license only (no hosting limits applied)',
@@ -229,7 +229,7 @@ export default function Pricing(): ReactNode {
             </table>
           </div>
           <p className={styles.meta}>
-            <strong>Custom / Air-gapped</strong> (from $12k/mo, quote) is the same software as Scale plus white-glove services (24×7 / 4h SEV-1 SLA, source escrow, managed air-gap). <strong>Commercial-License-Only</strong> ($2,400/yr) is an orthogonal SKU — the AGPL→commercial relicense without hosting — not a feature tier.
+            <strong>Custom / Air-gapped</strong> (from $12k/mo, quote) is the same software as Scale plus white-glove services (24×7 / 4h SEV-1 SLA, source escrow, managed air-gap). <strong>Commercial-License-Only</strong> ($2,990/yr) is an orthogonal SKU — the AGPL→commercial relicense without hosting — not a feature tier.
           </p>
         </section>
 

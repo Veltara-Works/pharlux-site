@@ -80,7 +80,7 @@ export default function Pricing(): ReactNode {
           <Link to="/enterprise">Custom / Air-gapped</Link> from <b>$12k/mo</b> — quote-based,
           unlimited, air-gapped, white-glove SLA — and a{' '}
           <Link to="/contact?intent=licensing">commercial license without self-hosting</Link>{' '}
-          from <b>$2,400/yr</b>. <Link to="/pricing">See the full comparison →</Link>
+          from <b>$2,990/yr</b>. <Link to="/pricing">See the full comparison →</Link>
         </p>
       </div>
     </section>
