@@ -129,7 +129,7 @@ The gap that matters is the last row. On Pharlux, "the service is running" and "
 
 ## Where Pharlux fits
 
-In fairness to scope, SigNoz covers ground Pharlux does not — distributed traces and APM, a broader dashboard library, and a hosted option. If full APM with traces is what you need today, that is a different tool for a different job, and Pharlux is not trying to be it.
+In fairness to scope, SigNoz covers ground Pharlux currently does not — distributed traces and APM, a broader dashboard library, and a hosted option. If full APM with traces is what you need today, that is a different tool for a different job, and Pharlux is not trying to be it.
 
 Pharlux is built for the opposite of what this test measured on the other box: **metrics and logs on one cheap VPS, ingesting in seconds, one binary to operate, nothing to onboard.** For a small team on a $20 box, that is the whole design — the ten-second install and the single 62 MB process are not a rounding error, they are the product.
 
