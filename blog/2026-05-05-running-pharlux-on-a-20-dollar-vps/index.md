@@ -173,11 +173,11 @@ If you have been sending OTLP for at least a minute, you should see a non-zero c
 
 ## What you will see
 
-![Pharlux dashboard with the eight metric series from a 30-second OTLP load test — top metrics by count chart on the left, log severity distribution on the right (empty here because the test sent only metrics), recent logs panel below.](./dashboard.png)
+![The Pharlux Clarity console — the Overview screen showing live ingest rate, total metric points, active series, and an ingest-throughput chart from an OTLP load test. The log panels read empty because this test sent only metrics.](./dashboard.png)
 
-The shipped UI handles ad-hoc SQL, saved queries, and basic dashboards. Cross-signal queries — for example, joining metrics and logs by `trace_id` — are one-line SQL through the DataFusion `TableProvider`. The same data is queryable through the HTTP API by any tool that can speak HTTP and SQL.
+The bundled Clarity console gives you a fixed set of operational screens — Overview, Explore (ad-hoc SQL over metrics and logs), Metrics, Logs, and Alerts — plus your own saved dashboards. Cross-signal queries — for example, joining metrics and logs by `trace_id` — are one-line SQL through the DataFusion `TableProvider`. The same data is queryable through the HTTP API by any tool that can speak HTTP and SQL.
 
-![Pharlux SQL Query view — `SELECT name, count(*) AS cnt FROM metrics GROUP BY name ORDER BY cnt DESC` returns 8 rows in a few hundred milliseconds against ~60k metric points.](./query-results.png)
+![The Pharlux Clarity console — the Explore (SQL) screen running `SELECT name, count(*) AS points FROM metrics GROUP BY name ORDER BY points DESC` against the metrics table, returning eight rows via Apache DataFusion with the schema rail alongside.](./query-results.png)
 
 ## 12-month cost summary
 
