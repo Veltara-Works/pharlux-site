@@ -5,7 +5,7 @@ authors: [Ian]
 tags: [engineering, observability, self-hosting, case-study]
 date: 2026-07-08
 description: Pharlux is the observability layer for our own production stack — Vectis Mail, ValidonX, and a client's storefront. Running it ourselves is the reason we trust the numbers we publish. Here is what it caught and what we learned.
-draft: true
+draft: false
 ---
 
 Every observability vendor says their product is production-grade. We can say something more specific: Pharlux is the observability layer for our own production stack. When Vectis Mail or ValidonX has a problem, Pharlux is what we look at first — and if Pharlux is down, we find out the hard way, like anyone else running their own monitoring. That is the strongest reason we trust the numbers we publish.
