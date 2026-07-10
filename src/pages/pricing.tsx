@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import type {ReactNode} from 'react';
 import Link from '@docusaurus/Link';
 import Head from '@docusaurus/Head';
@@ -14,6 +15,7 @@ import styles from './index.module.css';
 type Tier = {
   name: string;
   price: string;
+  priceAnnual?: string;  // annual (2-months-free) display price — subscription tiers only
   priceUSD?: string;     // simple fixed price for Offer.price
   quoteMin?: string;     // quote-based floor → priceSpecification.minPrice
   billing: 'monthly' | 'yearly' | 'free';
@@ -37,6 +39,7 @@ const TIERS: readonly Tier[] = [
   {
     name: 'Team',
     price: '$49/mo',
+    priceAnnual: '$490/yr',
     priceUSD: '49',
     billing: 'monthly',
     license: 'Commercial',
@@ -47,6 +50,7 @@ const TIERS: readonly Tier[] = [
   {
     name: 'Business',
     price: '$199/mo',
+    priceAnnual: '$1,990/yr',
     priceUSD: '199',
     billing: 'monthly',
     license: 'Commercial',
@@ -57,6 +61,7 @@ const TIERS: readonly Tier[] = [
   {
     name: 'Scale',
     price: '$899/mo',
+    priceAnnual: '$8,990/yr',
     priceUSD: '899',
     billing: 'monthly',
     license: 'Commercial',
@@ -139,6 +144,7 @@ const FEATURE_ROWS: ReadonlyArray<readonly [string, Cell, Cell, Cell, Cell]> = [
 ];
 
 export default function Pricing(): ReactNode {
+  const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly');
   return (
     <Layout
       title="Pricing — Pharlux self-hosted observability"
@@ -169,6 +175,25 @@ export default function Pricing(): ReactNode {
 
         <section className={styles.section}>
           <Heading as="h2" className={styles.sectionTitle}>Tiers</Heading>
+          <div className={styles.billingRow}>
+            <div className={styles.billingToggle} role="group" aria-label="Billing period">
+              <button
+                type="button"
+                className={`${styles.billingToggleBtn} ${billing === 'monthly' ? styles.billingToggleBtnActive : ''}`}
+                aria-pressed={billing === 'monthly'}
+                onClick={() => setBilling('monthly')}>
+                Monthly
+              </button>
+              <button
+                type="button"
+                className={`${styles.billingToggleBtn} ${billing === 'annual' ? styles.billingToggleBtnActive : ''}`}
+                aria-pressed={billing === 'annual'}
+                onClick={() => setBilling('annual')}>
+                Annual
+              </button>
+            </div>
+            <span className={styles.saveBadge}>2 months free</span>
+          </div>
           <table className={styles.dataTable}>
             <thead>
               <tr><th>Tier</th><th>Price</th><th>Highlights</th><th className={styles.ctaCol}>Action</th></tr>
@@ -177,7 +202,7 @@ export default function Pricing(): ReactNode {
               {TIERS.map((t) => (
                 <tr key={t.name}>
                   <td>{t.name}</td>
-                  <td><span className={styles.mono}>{t.price}</span></td>
+                  <td><span className={styles.mono}>{billing === 'annual' && t.priceAnnual ? t.priceAnnual : t.price}</span></td>
                   <td>{t.summary}</td>
                   <td className={styles.ctaCol}>
                     <Link href={t.cta.href}>{t.cta.label}</Link>
@@ -249,7 +274,7 @@ export default function Pricing(): ReactNode {
           <p>We don&apos;t run a 14-day free trial. The Community tier <em>is</em> the trial: it&apos;s the same binary, runs in your own infrastructure, and lets you make a real evaluation against your real workload. When you&apos;re ready for the commercial license terms or the Enterprise features, <Link to="/contact?intent=licensing">contact our licensing team</Link>.</p>
 
           <Heading as="h3" className={styles.faqQ}>Annual vs monthly?</Heading>
-          <p>The list prices are monthly with no commitment. Annual prepay gets you two months free (effectively a 16.7% discount). <Link to="/contact?intent=licensing">Contact our licensing team</Link> for the annual quote on your tier.</p>
+          <p>List prices are monthly with no commitment. Annual prepay gets you <strong>two months free</strong> &mdash; pay for ten months, get twelve (≈16.7% off). Switch the Tiers table above to <strong>Annual</strong> to see each plan&apos;s yearly price: Team <span className={styles.mono}>$490/yr</span>, Business <span className={styles.mono}>$1,990/yr</span>, Scale <span className={styles.mono}>$8,990/yr</span>. Commercial-License-Only is billed annually already; Custom / Air-gapped annual terms are set per quote.</p>
 
           <Heading as="h3" className={styles.faqQ}>What about very large fleets, air-gapped, or multi-region?</Heading>
           <p>The Scale tier lifts the licensed host and retention limits entirely (unlimited) and adds air-gapped / binary-redistribution rights &mdash; it is sized for a single high-capacity VPS. Pharlux is single-node by design, so Scale raises the licensed ceilings rather than clustering across machines; multi-VPS clustering and an S3 cold tier are on the roadmap. For air-gapped deployments with a 24×7 SLA and source escrow, the Custom / Air-gapped tier (from $12k/mo) is the quote-based white-glove option &mdash;{' '}
