@@ -14,11 +14,14 @@ Every observability vendor says their product is production-grade. We can say so
 
 ## What "dogfooding" means here
 
-Pharlux runs in production as the metrics-and-logs layer for our own products — and one client's:
+Pharlux runs in production as the metrics-and-logs layer for our own products — and for external clients too:
 
 - **Vectis Mail** — our email-hosting platform. Three hosts report in: the primary mail server, the outbound relay (`mx1`), and a test box.
 - **ValidonX** — our software-licensing and entitlement service. It reports host metrics *plus its own application metrics* — tenants, subscriptions, audit events, job-queue depth, failed jobs — and an external HTTPS probe watching `validonx.com` from the outside.
-- **Cabbage Patch Studios** — the studio that designed this very site. We run the observability for their Magento storefront too, which is the honest test of whether this is a real product: someone outside the building depends on it.
+- **[Scrutique](https://scrutique.com)** — our SaaS platform for automated website QA, performance monitoring, and quality certification for web agencies and their clients.
+- **[Cabbage Patch Studios](https://cabbagepatchstudios.com)** — the studio that designed this very site. We run the observability for their Magento storefront too, which is the honest test of whether this is a real product: someone outside the building depends on it.
+- **[CustomCraft Australia](https://customcraftaustralia.com)** — an Australian maker of handcrafted hardwood boards and tables, running Pharlux to monitor its backend systems.
+- **[Kiyoqshi](https://kiyoqshi.com)** — an Australian retailer of curated art and design objects from independent makers, using Pharlux to keep watch over its backend systems.
 - **Pharlux itself.** The production box monitors its own health, because the tool that watches everything else should not be the one blind spot.
 
 Altogether that is seven services across seven machines, each running an OpenTelemetry Collector that exports to a single Pharlux instance on one VPS. This is not a staging deployment or a demo. The on-call view we open when something looks off is the Pharlux dashboard.

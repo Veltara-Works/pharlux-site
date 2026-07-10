@@ -8,16 +8,6 @@ description: We put Pharlux and SigNoz on two identical $20/month VPSes and meas
 draft: false
 ---
 
-{/* DRAFT for Ian's voice/tone review. This post is now backed by a REAL run
-    performed 2026-07-01 on two matched BinaryLane std-2vcpu VPSes — every number,
-    log line, and error here is from that run. Raw logs + RESULTS.md live in
-    pharlux/_internal/benchmarks-signoz-2026-07-01/. This supersedes the earlier
-    unverified draft (which used SigNoz v0.121.1 and an unmeasured "2h 38m"); the
-    core finding — OTLP ingestion is blocked until first-user onboarding — was
-    re-tested and reproduced on current v0.131.0. Editorial call is yours: it is a
-    competitor comparison, kept honest and Pharlux-forward per house style. Remove
-    `draft: true` to publish. */}
-
 # Pharlux vs SigNoz on a $20 VPS — a fair, reproducible test
 
 *Last updated: 2026-07-01 · Pharlux v1.2.0 · SigNoz v0.131.0 · By Ian Holt*
