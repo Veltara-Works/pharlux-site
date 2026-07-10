@@ -5,7 +5,7 @@ authors: [Ian]
 tags: [engineering, observability, self-hosting]
 date: 2026-04-18
 description: We were tired of operating five components to observe three services, and priced out of the SaaS alternative. So we built a single binary that does metrics and logs on one VPS. Here is the reasoning.
-draft: false
+draft: true
 ---
 
 Most observability tools are built for the company you're hoping to become one day. Pharlux is built for the one you're actually running right now — a handful of services on a VPS or two, no platform team, and an on-call roster that, often, is mostly just you.

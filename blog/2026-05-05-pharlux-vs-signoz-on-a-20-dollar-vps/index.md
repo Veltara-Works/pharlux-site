@@ -5,7 +5,7 @@ authors: [Ian]
 tags: [comparison, self-hosting, observability, signoz, otel]
 date: 2026-07-01
 description: We put Pharlux and SigNoz on two identical $20/month VPSes and measured install time, time-to-first-metric, ingest throughput, and footprint. The throughput is close. The operational story is not.
-draft: false
+draft: true
 ---
 
 # Pharlux vs SigNoz on a $20 VPS — a fair, reproducible test
