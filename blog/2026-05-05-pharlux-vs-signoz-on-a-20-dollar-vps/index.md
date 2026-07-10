@@ -58,7 +58,7 @@ The numbers on this $20 box:
 
 For context: sustained ingest is single-core-bound (the WAL fsync path runs on one core), which is why this 2 vCPU box lands near 100k where our [4 vCPU / 8 GB benchmark](/benchmarks) reaches 350k. A team running 1–10 services generates a few *thousand* points per second, so even the small box has one to two orders of magnitude of headroom.
 
-![The Pharlux Clarity console — the Explore screen charting points-per-metric from the ingest run (`SELECT name, count(*) AS points FROM metrics GROUP BY name`), answered in 271 ms by the bundled Apache DataFusion engine. SQL, chart, and schema browser all come from the single binary — nothing else to install.](./pharlux-console.png)
+![The Pharlux Clarity console — a user-built dashboard over the ingest run: points-per-metric, total metric points, active series, and a per-metric table, each panel backed by SQL and rendered by the bundled DataFusion engine. Dashboards are built in the UI, carry a time range and auto-refresh, and export to JSON for Git — all from the single binary, nothing else to install.](./pharlux-console.png)
 
 ## The SigNoz side
 
