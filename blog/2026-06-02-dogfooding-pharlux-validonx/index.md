@@ -4,7 +4,7 @@ slug: dogfooding-pharlux-validonx
 authors: [Ian]
 tags: [engineering, observability, self-hosting, case-study]
 date: 2026-07-08
-description: Pharlux is the observability layer for our own production stack — Vectis Mail, ValidonX, and a client's storefront. Running it ourselves is the reason we trust the numbers we publish. Here is what it caught and what we learned.
+description: Pharlux is the observability layer for our own production stack — Vectis Mail, ValidonX, a client's storefront — and for a growing set of external companies running it on their own. Running it ourselves is the reason we trust the numbers we publish. Here is what it caught and what we learned.
 draft: false
 ---
 
