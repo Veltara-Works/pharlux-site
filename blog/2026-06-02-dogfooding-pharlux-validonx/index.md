@@ -14,7 +14,7 @@ Every observability vendor says their product is production-grade. We can say so
 
 ## What "dogfooding" means here
 
-Pharlux runs in production as the metrics-and-logs layer for our own products — and one client's:
+Pharlux runs in production as the metrics-and-logs layer for our own products — and for external clients:
 
 - **Vectis Mail** — our email-hosting platform. Three hosts report in: the primary mail server, the outbound relay (`mx1`), and a test box.
 - **ValidonX** — our software-licensing and entitlement service. It reports host metrics *plus its own application metrics* — tenants, subscriptions, audit events, job-queue depth, failed jobs — and an external HTTPS probe watching `validonx.com` from the outside.
