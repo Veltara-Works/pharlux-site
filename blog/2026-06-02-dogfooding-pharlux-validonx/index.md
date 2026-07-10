@@ -23,7 +23,7 @@ Pharlux runs in production as the metrics-and-logs layer for our own products �
 
 Altogether that is seven services across seven machines, each running an OpenTelemetry Collector that exports to a single Pharlux instance on one VPS. This is not a staging deployment or a demo. The on-call view we open when something looks off is the Pharlux dashboard.
 
-And we are not the only ones running it for real. Pharlux is the production observability layer on other teams' own single-VPS instances too — **[CustomCraft Australia](https://customcraftaustralia.com)**, an Australian maker of handcrafted hardwood boards and tables; **[Kiyoqshi](https://kiyoqshi.com)**, an Australian retailer of curated art and design objects from independent makers; and **[Scrutique](https://scrutique.com)**, a SaaS platform for automated website QA and performance monitoring — each running the same single binary we ship, on their own box.
+And we are not the only ones running it for real. Pharlux is the production observability layer on other teams' own single-VPS instances too — **[CustomCraft Australia](https://customcraftaustralia.com)**, an Australian maker of handcrafted hardwood boards and tables; **[Kiyoqshi](https://kiyoqshi.com)**, an Australian retailer of curated art and design objects from independent makers; **[Kurraglen Industries](https://kurraglen.com.au)**, an Australian manufacturer of livestock-handling equipment; and **[Scrutique](https://scrutique.com)**, a SaaS platform for automated website QA and performance monitoring — each running the same single binary we ship, on their own box.
 
 ## The numbers from our own production
 
