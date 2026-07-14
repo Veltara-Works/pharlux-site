@@ -83,7 +83,12 @@ const config: Config = {
     },
     // /about is added back as IA-6 builds the page.
     navbar: {
-      title: 'Pharlux',
+      title: '',
+      logo: {
+        alt: 'Pharlux',
+        src: 'img/pharlux-wordmark.png',
+        srcDark: 'img/pharlux-wordmark-dark.png',
+      },
       items: [
         {to: '/docs', label: 'Docs', position: 'left'},
         {to: '/pricing', label: 'Pricing', position: 'left'},
