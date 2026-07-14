@@ -1,13 +1,20 @@
 # Cloudflare Pages — HTTP response headers
 # https://developers.cloudflare.com/pages/configuration/headers/
 
+# script-src sha256 hashes cover Docusaurus's two inline scripts: the color-mode
+# init (sets data-theme before paint — required for the theme toggle to render
+# correctly at first paint) and the base-url warning banner. Without them the CSP
+# blocks the inline color-mode script and the light/dark toggle only appears after
+# hydration. ⚠️ Regenerate these hashes if Docusaurus is upgraded or colorMode/
+# baseUrl config changes (they are content-hashed): grep the built HTML for inline
+# <script> blocks and sha256 them. Keeps script-src free of 'unsafe-inline'.
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
-  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self' https://challenges.cloudflare.com 'sha256-/2u/hrE9kipo/LKXsJxRNx2lCTiW7nuKLVzBc2JwcLw=' 'sha256-LF3Z8n3CoT6+StShrU4zdlpOt7gwSfDDuFOnesPW+JI='; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
 
 /robots.txt
   Content-Type: text/plain; charset=utf-8
