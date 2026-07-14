@@ -175,9 +175,9 @@ body {
   .navbar__items:not(.navbar__items--right) {
     flex: 1;
     justify-content: center;
-    /* Clear the left-pinned wordmark (~104px wide) so the centred links don't
+    /* Clear the left-pinned wordmark (~112px wide) so the centred links don't
        overlap it. */
-    padding-left: 80px;
+    padding-left: 88px;
   }
   .navbar__brand {
     position: absolute;
