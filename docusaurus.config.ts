@@ -165,6 +165,7 @@ const config: Config = {
           title: 'Legal',
           items: [
             {label: 'Terms of Service', to: '/terms'},
+            {label: 'Privacy Policy', to: '/privacy'},
             {label: 'Refund Policy', to: '/refund-policy'},
           ],
         },
