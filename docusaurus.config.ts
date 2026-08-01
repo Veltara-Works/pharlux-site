@@ -161,6 +161,13 @@ const config: Config = {
             {label: 'Veltara Works', href: 'https://veltaraworks.com/'},
           ],
         },
+        {
+          title: 'Legal',
+          items: [
+            {label: 'Terms of Service', to: '/terms'},
+            {label: 'Refund Policy', to: '/refund-policy'},
+          ],
+        },
       ],
       // Rendered as HTML inside .footer__copyright — a flex row places the
       // copyright left and the design credit right within the content column
